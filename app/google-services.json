@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "532986331050-4upmj99auabk9mab1t5napqpvq413ctc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hadar.exercise02",
+            "certificate_hash": "78bf9600638c76cd73be4efa8498b525174cfcc0"
+          }
+        },
+        {
           "client_id": "532986331050-gpnm7rhjv92hmeqf4ao4u43eudra29og.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
