@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 public class SplashActivity extends AppCompatActivity
 {
     @Override
@@ -33,5 +36,30 @@ public class SplashActivity extends AppCompatActivity
         };
 
         myThread.start();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        updateUI(account);
+    }
+
+    private void updateUI(GoogleSignInAccount account)
+    {
+        Intent nextActivityIntent;
+
+        if(account!=null) {
+            nextActivityIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
+
+        }
+        else {
+            nextActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        }
+
+        startActivity(nextActivityIntent);
+
     }
 }
