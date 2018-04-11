@@ -21,7 +21,6 @@ public class MainActivity extends Activity
 {
     private static int RC_SIGN_IN = 100;
     private FirebaseAuth mAuth;
-    //private SignInButton signInButton = findViewById(R.id.google_sign_in_button);
 
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -32,8 +31,6 @@ public class MainActivity extends Activity
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_main);
 
-        //THIS IS MY FIRST COMMIT
-
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -43,10 +40,16 @@ public class MainActivity extends Activity
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        findViewById(R.id.google_sign_in_button).setOnClickListener(this);
+        findViewById(R.id.google_sign_in_button).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                onClickGoogleButton();
+            }
+        });
     }
 
-    public void onClickGoogleButton(View v)
+    public void onClickGoogleButton()
     {
         Toast.makeText(MainActivity.this, "Google",Toast.LENGTH_SHORT).show();
         signIn();
@@ -90,6 +93,5 @@ public class MainActivity extends Activity
         Intent userDetails = new Intent(getApplicationContext(), UserDetailsActivity.class);
         userDetails.putExtra("Google Account", account);
         startActivity(userDetails);
-
     }
 }
