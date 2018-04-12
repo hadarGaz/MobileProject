@@ -3,13 +3,13 @@ package com.example.hadar.exercise02;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 public class SplashActivity extends AppCompatActivity
 {
-    GoogleSignInAccount m_googleAccount;
+    private UserDetails m_userDetails;
+    private GoogleSignInAccount m_googleAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -17,7 +17,8 @@ public class SplashActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Thread myThread = new Thread() {
+        Thread myThread = new Thread()
+        {
             @Override
             public void run()
             {
@@ -42,11 +43,12 @@ public class SplashActivity extends AppCompatActivity
     {
         Intent nextActivityIntent;
 
-        //Add || m_facebookAccount != null || m_emailPasswordAccount != null ...
+        //Add else if m_facebookAccount != null else if m_emailPasswordAccount != null ...
         if (m_googleAccount != null)
         {
             nextActivityIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
-            nextActivityIntent.putExtra("Google Account", m_googleAccount);
+            setUserDetailsFromGoogleAccount();
+            nextActivityIntent.putExtra("User Details", m_userDetails);
         }
         else
             nextActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
@@ -62,5 +64,10 @@ public class SplashActivity extends AppCompatActivity
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         m_googleAccount = GoogleSignIn.getLastSignedInAccount(this);
+    }
+
+    public void setUserDetailsFromGoogleAccount()
+    {
+        m_userDetails = new UserDetails(m_googleAccount);
     }
 }
