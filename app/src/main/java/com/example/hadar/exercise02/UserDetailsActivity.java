@@ -1,8 +1,10 @@
 package com.example.hadar.exercise02;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -43,6 +45,28 @@ public class UserDetailsActivity extends AppCompatActivity
                 signOutAllAccounts();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Exit App")
+                .setMessage("Are you sure you want to exit?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        Intent exitIntent = new Intent(Intent.ACTION_MAIN);
+                        exitIntent.addCategory(Intent.CATEGORY_HOME);
+                        exitIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(exitIntent);
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     public void displayUserDetails()
