@@ -24,7 +24,8 @@ public class UserDetails implements Serializable
         m_userName = i_firebaseUser.getDisplayName();
         m_userEmail = i_firebaseUser.getEmail();
         Uri uri = i_firebaseUser.getPhotoUrl();
-        if(uri!= null)
+
+        if(uri != null)
         {
             m_userPictureUrl = uri.toString();
         }

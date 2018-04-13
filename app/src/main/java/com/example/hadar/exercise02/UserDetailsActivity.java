@@ -2,22 +2,18 @@ package com.example.hadar.exercise02;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import java.io.FileNotFoundException;
 
 public class UserDetailsActivity extends AppCompatActivity
 {
@@ -140,7 +136,7 @@ public class UserDetailsActivity extends AppCompatActivity
     {
         Intent backToMainIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(backToMainIntent);
-       // overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        //overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
