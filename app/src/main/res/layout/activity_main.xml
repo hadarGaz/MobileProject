@@ -6,12 +6,81 @@
     android:layout_height="match_parent"
     tools:context="com.example.hadar.exercise02.MainActivity">
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_sign_in_button"
+
+    <EditText
+        android:id="@+id/editTextEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="210dp" />
+        android:layout_marginTop="89dp"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editTextEmail"
+        android:layout_below="@+id/editTextEmail"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword" />
+
+
+    <TextView
+        android:id="@+id/textViewForgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editTextPassword"
+        android:layout_below="@+id/editTextPassword"
+        android:layout_marginTop="13dp"
+        android:autoLink="all"
+        android:clickable="true"
+        android:linksClickable="true"
+        android:onClick="OnClickForgotPassword"
+        android:text="Forgot password?" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/google_sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonFacebook"
+        android:layout_alignStart="@+id/buttonFacebook"
+
+        />
+
+    <Button
+        android:id="@+id/buttonSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textViewForgotPassword"
+        android:layout_below="@+id/textViewForgotPassword"
+        android:layout_marginTop="21dp"
+        android:onClick="onEmailPasswordAuthClick"
+        android:text="Sign-in" />
+
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/buttonFacebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/buttonSignIn"
+        android:layout_below="@+id/buttonSignIn"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/buttonSignUP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/google_sign_in_button"
+        android:layout_marginBottom="77dp"
+
+        android:onClick="onEmailPasswordAuthClick"
+        android:text="Sign up" />
+
 
 </android.widget.RelativeLayout>
