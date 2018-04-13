@@ -15,5 +15,5 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:contentDescription="@string/app_name"
-        android:src="@mipmap/splashpic"></ImageView>
+        android:src="@mipmap/exercise2_splash"></ImageView>
 </RelativeLayout>
