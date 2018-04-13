@@ -32,6 +32,7 @@ dependencies {
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
     compile 'com.felipecsl:gifimageview:2.1.0'
 
+
 }
 allprojects {
     repositories {

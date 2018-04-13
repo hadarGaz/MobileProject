@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -15,14 +17,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+
 import pl.droidsonroids.gif.GifTextView;
+
+import static android.content.ContentValues.TAG;
 
 public class MainActivity extends Activity
 {
     private static int GOOGLE_SIGN_IN = 100;
     private FirebaseAuth m_firebaseAuth;
+
     private GoogleSignInClient m_googleSignInClient;
     private UserDetails m_userDetails;
     private GifTextView m_googleLoadingBar;
@@ -34,6 +45,7 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         m_firebaseAuth = FirebaseAuth.getInstance();
+
         m_googleLoadingBar=findViewById(R.id.google_load_bar);
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -81,6 +93,7 @@ public class MainActivity extends Activity
     {
         Intent signInIntent = m_googleSignInClient.getSignInIntent();
         playGif();
+
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
 
@@ -99,12 +112,14 @@ public class MainActivity extends Activity
         }
     }
 
+
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask)
     {
         try
         {
-            GoogleSignInAccount googleSignInAccount = completedTask.getResult(ApiException.class);
-            updateUI(googleSignInAccount); // Signed in successfully, show authenticated UI.
+           // GoogleSignInAccount googleSignInAccount = completedTask.getResult(ApiException.class);
+            GoogleSignInAccount account= completedTask.getResult(ApiException.class);
+            firebaseAuthWithGoogle(account);
         }
 
         catch (ApiException e)
@@ -116,17 +131,6 @@ public class MainActivity extends Activity
         }
     }
 
-    private void updateUI(GoogleSignInAccount i_GoogleSignInAccount)
-    {
-        if(i_GoogleSignInAccount != null)
-        {
-            Intent userDetails = new Intent(getApplicationContext(), UserDetailsActivity.class);
-            m_userDetails = new UserDetails(i_GoogleSignInAccount);
-            userDetails.putExtra("User Details", m_userDetails);
-            startActivity(userDetails);
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        }
-    }
 
 
     public void playGif(){
@@ -152,5 +156,43 @@ public class MainActivity extends Activity
         });
         m_googleLoadingBar.startAnimation(googleLoader);
     }
+
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        Log.e(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        m_firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+          //                  Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = m_firebaseAuth.getCurrentUser();
+                        //    updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+            //                Log.w(TAG, "signInWithCredential:failure", task.getException());
+              //              Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                            updateUI(null);
+                        }
+                    }
+                });
+    }
+
+
+    private void updateUI(FirebaseUser i_firebaseUser)
+    {
+        if(i_firebaseUser != null)
+        {
+            Intent userDetails = new Intent(getApplicationContext(), UserDetailsActivity.class);
+            m_userDetails = new UserDetails(i_firebaseUser);
+            userDetails.putExtra("User Details", m_userDetails);
+            startActivity(userDetails);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        }
+    }
+
 
 }

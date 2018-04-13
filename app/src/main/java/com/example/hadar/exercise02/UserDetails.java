@@ -2,6 +2,7 @@ package com.example.hadar.exercise02;
 
 import android.net.Uri;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.Serializable;
 
@@ -16,6 +17,17 @@ public class UserDetails implements Serializable
         m_userName = i_UserName;
         m_userEmail = i_UserEmail;
         m_userPictureUrl = i_UserPictureUrl;
+    }
+
+    public UserDetails(FirebaseUser i_firebaseUser)
+    {
+        String userName = i_firebaseUser.getDisplayName();
+        String userEmail = i_firebaseUser.getEmail();
+        String userPictureUrl = i_firebaseUser.getPhotoUrl().toString();
+
+        m_userName = userName;
+        m_userEmail = userEmail;
+        m_userPictureUrl = userPictureUrl;
     }
 
     public UserDetails(GoogleSignInAccount i_googleSignInAccount)
