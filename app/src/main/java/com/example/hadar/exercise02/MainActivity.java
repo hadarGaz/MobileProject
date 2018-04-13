@@ -212,7 +212,7 @@ public class MainActivity extends Activity
             m_userDetails = new UserDetails(i_firebaseUser);
             userDetails.putExtra("User Details", m_userDetails);
             startActivity(userDetails);
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+           // overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
     }
 
@@ -384,6 +384,7 @@ public class MainActivity extends Activity
 
                 //updateLoginStatus(task.isSuccessful() ? "N.A" : task.getException().getMessage());
                 Toast.makeText(MainActivity.this, mas, Toast.LENGTH_SHORT).show();
+                updateUI(m_firebaseAuth.getCurrentUser());
                 Log.e(TAG, "Email/Pass Auth: onComplete() <<");
             }
         });
