@@ -27,8 +27,8 @@ public class RegistrationActivity extends AppCompatActivity {
     private static final int RESULT_LOAD_IMAGE = 1;
     private FirebaseAuth m_firebaseAuth;
     boolean imageUploaded = false;
-    EditText mEmail, mName, mPassword;
-    ImageView mImageView;
+    EditText m_Email, m_Name, m_Password;
+    ImageView m_ImageView;
     Uri imageUri;
 
     @Override
@@ -43,17 +43,17 @@ public class RegistrationActivity extends AppCompatActivity {
     private void findViews()
     {
         m_firebaseAuth = FirebaseAuth.getInstance();
-        mEmail = findViewById(R.id.editTextEmail);
-        mPassword = findViewById(R.id.editTextPassword);
-        mName = findViewById(R.id.editTextPersonName);
-        mImageView = findViewById(R.id.imageViewSelectImage);
+        m_Email = findViewById(R.id.editTextEmail);
+        m_Password = findViewById(R.id.editTextPassword);
+        m_Name = findViewById(R.id.editTextPersonName);
+        m_ImageView = findViewById(R.id.imageViewSelectImage);
     }
     private void checkIfEmailHasAlreadyBeenWritten()
     {
         String emailStr;
         if( (emailStr = (String) getIntent().getSerializableExtra("Email")) != null)
         {
-            mEmail.setText(emailStr);
+            m_Email.setText(emailStr);
         }
     }
 
@@ -63,7 +63,7 @@ public class RegistrationActivity extends AppCompatActivity {
         if(detailsValidation()) {
 
             Task<AuthResult> authResult;
-            authResult = m_firebaseAuth.createUserWithEmailAndPassword(mEmail.getText().toString(), mPassword.getText().toString());
+            authResult = m_firebaseAuth.createUserWithEmailAndPassword(m_Email.getText().toString(), m_Password.getText().toString());
 
             authResult.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
@@ -86,7 +86,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private void updateNameAndUriToUserAndUpdateUI()
     {
         UserProfileChangeRequest.Builder updateProfile = new UserProfileChangeRequest.Builder();
-        updateProfile.setDisplayName(mName.getText().toString());
+        updateProfile.setDisplayName(m_Name.getText().toString());
         updateProfile.setPhotoUri(imageUri);
         Task authResult = m_firebaseAuth.getCurrentUser().updateProfile(updateProfile.build());
         authResult.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -121,7 +121,7 @@ public class RegistrationActivity extends AppCompatActivity {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null)
         {
             imageUri = data.getData();
-            mImageView.setImageURI(imageUri);
+            m_ImageView.setImageURI(imageUri);
 
             imageUploaded = true;
         }
@@ -130,15 +130,15 @@ public class RegistrationActivity extends AppCompatActivity {
     private boolean detailsValidation()
     {
         boolean resReturn = true;
-        if (!verifyName(mName.getText().toString())) {
+        if (!verifyName(m_Name.getText().toString())) {
             Toast.makeText(RegistrationActivity.this, "Invalid Name", Toast.LENGTH_SHORT).show();
             resReturn = false;
         }
-        else if (!verifyEmail(mEmail.getText().toString())) {
+        else if (!verifyEmail(m_Email.getText().toString())) {
             Toast.makeText(RegistrationActivity.this, "Invalid Email", Toast.LENGTH_SHORT).show();
             resReturn = false;
         }
-        else if (!verifyPassword(mPassword.getText().toString())) {
+        else if (!verifyPassword(m_Password.getText().toString())) {
             Toast.makeText(RegistrationActivity.this, "\n" +
                     "Password must contain at least 6 characters", Toast.LENGTH_SHORT).show();
             resReturn = false;

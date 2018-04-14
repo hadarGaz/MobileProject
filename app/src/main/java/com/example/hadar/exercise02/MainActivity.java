@@ -368,14 +368,15 @@ public class MainActivity extends Activity
 
     private boolean emailAndPasswordValidation ()
     {
-        return m_userEmail.toString().matches("") && m_userPassword.toString().matches("");
+        return !(m_userEmail.getText().toString().matches("") || m_userPassword.getText().toString().matches(""));
+
     }
 
     public void onEmailPasswordAuthClick(View V)
     {
         Log.e(TAG, "onEmailPasswordAuthClick() >>");
 
-        if(emailAndPasswordValidation()==false)
+        if(emailAndPasswordValidation()== false)
         {
             Log.e(TAG, "Invalid Email or Password");
             Toast.makeText(this, "Invalid User Name or Password",Toast.LENGTH_LONG).show();
@@ -384,38 +385,20 @@ public class MainActivity extends Activity
             String email = m_userEmail.getText().toString();
             String pass = m_userPassword.getText().toString();
 
-            Task<AuthResult> authResult;
-
-            switch (V.getId()) {
-                case R.id.buttonSignIn:
-                    //Email / Password sign-in
-                    authResult = m_firebaseAuth.signInWithEmailAndPassword(email, pass);
-                    break;
-
-                case R.id.sign_up_hyper_text:
-                    //Email / Password sign-up
-                    Toast.makeText(this, "works", Toast.LENGTH_SHORT).show();
-                    authResult = m_firebaseAuth.createUserWithEmailAndPassword(email, pass);
-                    break;
-
-                default:
-                    return;
-            }
+            //Email / Password sign-in
+            Task<AuthResult> authResult = m_firebaseAuth.signInWithEmailAndPassword(email, pass);
 
             authResult.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
 
                     Log.e(TAG, "Email/Pass Auth: onComplete() >> " + task.isSuccessful());
-                    String mas = "success";
-                    if (!task.isSuccessful())
-                        mas = task.getException().getMessage();
-
-                    //updateLoginStatus(task.isSuccessful() ? "N.A" : task.getException().getMessage());
-                    Toast.makeText(MainActivity.this, mas, Toast.LENGTH_SHORT).show();
-
-                    // Sign in success, update UI with the signed-in user's information
-                    updateUI(m_firebaseAuth.getCurrentUser());
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        updateUI(m_firebaseAuth.getCurrentUser());
+                    }
                     Log.e(TAG, "Email/Pass Auth: onComplete() <<");
                 }
             });
@@ -423,7 +406,6 @@ public class MainActivity extends Activity
             Log.e(TAG, "onEmailPasswordAuthClick() <<");
         }
     }
-
 
     public void onSignUp(View v)
     {
