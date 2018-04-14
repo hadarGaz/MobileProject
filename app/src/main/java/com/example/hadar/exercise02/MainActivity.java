@@ -14,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Toast;
-
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -35,10 +34,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
 import pl.droidsonroids.gif.GifTextView;
-
-import static android.content.ContentValues.TAG;
 
 public class MainActivity extends Activity
 {
@@ -46,12 +42,10 @@ public class MainActivity extends Activity
     private static int GOOGLE_SIGN_IN = 100;
     private FirebaseAuth m_firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private EditText mEmail;
-    private EditText mPass;
-
-    private GoogleSignInClient mGoogleSignInClient;
-    private CallbackManager mCallbackManager;
-    private AccessTokenTracker accessTokenTracker;
+    private EditText m_userEmail;
+    private EditText m_userPassword;
+    private CallbackManager m_callbackManager;
+    private AccessTokenTracker m_accessTokenTracker;
     private GoogleSignInClient m_googleSignInClient;
     private UserDetails m_userDetails;
     private GifTextView m_googleLoadingBar;
@@ -67,11 +61,14 @@ public class MainActivity extends Activity
 
         facebookLoginInit();
         firebaseAuthenticationInit();
-        mEmail = findViewById(R.id.editTextEmail);
-        mPass = findViewById(R.id.editTextPassword);
+        m_userEmail = findViewById(R.id.editTextEmail);
+        m_userPassword = findViewById(R.id.editTextPassword);
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestProfile()
                 .requestEmail()
                 .build();
 
@@ -118,12 +115,12 @@ public class MainActivity extends Activity
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
 
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
 
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        m_callbackManager.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == GOOGLE_SIGN_IN)
         {
@@ -133,7 +130,6 @@ public class MainActivity extends Activity
             handleSignInResult(task);
         }
     }
-
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask)
     {
@@ -153,17 +149,17 @@ public class MainActivity extends Activity
         }
     }
 
-
-
-    public void playGif(){
+    public void playGif()
+    {
         final Animation googleLoader = new AlphaAnimation(1.f, 1.f);
-        //googleLoader.setDuration(20000);
-        googleLoader.setAnimationListener(new Animation.AnimationListener() {
 
+        //googleLoader.setDuration(20000);
+
+        googleLoader.setAnimationListener(new Animation.AnimationListener()
+        {
             @Override
             public void onAnimationStart(Animation animation)
             {
-
                 m_googleLoadingBar.setBackgroundResource(R.drawable.google_dark_load);
             }
 
@@ -176,27 +172,30 @@ public class MainActivity extends Activity
                 m_googleLoadingBar.clearAnimation();
             }
         });
+
         m_googleLoadingBar.startAnimation(googleLoader);
     }
 
-
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct)
+    {
         Log.e(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+
         m_firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+                {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                    public void onComplete(@NonNull Task<AuthResult> task)
+                    {
+                        if (task.isSuccessful())
+                        {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = m_firebaseAuth.getCurrentUser();
-                        //    updateUI(user);
+                            updateUI(m_firebaseAuth.getCurrentUser());
                         }
                     }
                 });
     }
-
 
     private void updateUI(FirebaseUser i_firebaseUser)
     {
@@ -223,51 +222,58 @@ public class MainActivity extends Activity
         i++;
     }
 
-    private void facebookLoginInit() {
-
-
+    private void facebookLoginInit()
+    {
         Log.e(TAG, "facebookLoginInit() >>");
 
-        mCallbackManager = CallbackManager.Factory.create();
+        m_callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = findViewById(R.id.buttonFacebook);
         loginButton.setReadPermissions("email", "public_profile");
-        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+
+        loginButton.registerCallback(m_callbackManager, new FacebookCallback<LoginResult>()
+        {
             @Override
-            public void onSuccess(LoginResult loginResult) {
+            public void onSuccess(LoginResult loginResult)
+            {
                 Log.e(TAG, "facebook:onSuccess () >>" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
                 Log.e(TAG, "facebook:onSuccess () <<");
             }
 
             @Override
-            public void onCancel() {
+            public void onCancel()
+            {
                 Log.e(TAG, "facebook:onCancel() >>");
-              //  updateLoginStatus("Facebook login canceled");
+                //  updateLoginStatus("Facebook login canceled");
                 Log.e(TAG, "facebook:onCancel() <<");
 
             }
 
             @Override
-            public void onError(FacebookException error) {
+            public void onError(FacebookException error)
+            {
                 Log.e(TAG, "facebook:onError () >>" + error.getMessage());
-               // updateLoginStatus(error.getMessage());
+                // updateLoginStatus(error.getMessage());
                 Log.e(TAG, "facebook:onError <<");
             }
         });
 
-        accessTokenTracker = new AccessTokenTracker() {
+        m_accessTokenTracker = new AccessTokenTracker()
+        {
             @Override
             protected void onCurrentAccessTokenChanged(
                     AccessToken oldAccessToken,
-                    AccessToken currentAccessToken) {
-                if (currentAccessToken == null) {
+                    AccessToken currentAccessToken)
+            {
+                if (currentAccessToken == null)
+                {
                     m_firebaseAuth.signOut();
-                   // updateLoginStatus("Facebook signuout");
+                    // updateLoginStatus("Facebook signuout");
                 }
-                Log.e(TAG,"onCurrentAccessTokenChanged() >> currentAccessToken="+
-                        (currentAccessToken !=null ? currentAccessToken.getToken():"Null") +
+                Log.e(TAG, "onCurrentAccessTokenChanged() >> currentAccessToken=" +
+                        (currentAccessToken != null ? currentAccessToken.getToken() : "Null") +
                         " ,oldAccessToken=" +
-                        (oldAccessToken !=null ? oldAccessToken.getToken():"Null"));
+                        (oldAccessToken != null ? oldAccessToken.getToken() : "Null"));
 
             }
         };
@@ -349,25 +355,29 @@ public class MainActivity extends Activity
     {
         Log.e(TAG, "onEmailPasswordAuthClick() >>");
 
-        String email = mEmail.getText().toString();
-        String pass = mPass.getText().toString();
+        String email = m_userEmail.getText().toString();
+        String pass = m_userPassword.getText().toString();
 
         Task<AuthResult> authResult;
 
-        switch (V.getId()) {
+        switch (V.getId())
+        {
             case R.id.buttonSignIn:
                 //Email / Password sign-in
                 authResult = m_firebaseAuth.signInWithEmailAndPassword(email, pass);
                 break;
+
             case R.id.buttonSignUP:
                 //Email / Password sign-up
                 authResult = m_firebaseAuth.createUserWithEmailAndPassword(email, pass);
                 break;
+
             default:
                 return;
         }
-        authResult.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
+        authResult.addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
@@ -378,6 +388,8 @@ public class MainActivity extends Activity
 
                 //updateLoginStatus(task.isSuccessful() ? "N.A" : task.getException().getMessage());
                 Toast.makeText(MainActivity.this, mas, Toast.LENGTH_SHORT).show();
+
+                // Sign in success, update UI with the signed-in user's information
                 updateUI(m_firebaseAuth.getCurrentUser());
                 Log.e(TAG, "Email/Pass Auth: onComplete() <<");
             }
@@ -385,6 +397,7 @@ public class MainActivity extends Activity
 
         Log.e(TAG, "onEmailPasswordAuthClick() <<");
     }
+
 
     public void onSignUp(View v)
     {
@@ -396,3 +409,5 @@ public class MainActivity extends Activity
 
 
 }
+
+
