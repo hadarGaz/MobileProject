@@ -41,29 +41,32 @@
         android:id="@+id/textViewForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/pre_sign_up"
-        android:layout_below="@+id/pre_sign_up"
+        android:layout_alignStart="@+id/editTextPassword"
+        android:layout_below="@+id/editTextPassword"
         android:autoLink="all"
         android:clickable="true"
         android:linksClickable="true"
         android:onClick="OnClickForgotPassword"
-        android:text="Forgot password?" />
+        android:text="@string/forgot_password" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_sign_in_button"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
 
-        android:layout_below="@+id/buttonFacebook"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="187dp" />
 
     <Button
         android:id="@+id/buttonSignIn"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_alignStart="@+id/editTextPassword"
-        android:layout_below="@+id/editTextPassword"
-        android:onClick="onEmailPasswordAuthClick"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="226dp"
+        android:background="@drawable/button_bg"
+        android:onClick="onSignInClick"
         android:text="Sign-in" />
 
 
@@ -71,26 +74,27 @@
         android:id="@+id/buttonFacebook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewForgotPassword"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp"
+        android:layout_marginBottom="235dp"
         android:text="Button" />
 
     <pl.droidsonroids.gif.GifTextView
         android:id="@+id/google_load_bar"
-        android:layout_width="141dp"
-        android:layout_height="115dp"
-        android:layout_below="@+id/buttonFacebook"
+        android:layout_width="99dp"
+        android:layout_height="77dp"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="42dp"
+        android:layout_marginBottom="88dp"
         android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/pre_sign_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/buttonSignIn"
-        android:layout_below="@+id/buttonSignIn"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/editTextEmail"
+        android:layout_marginBottom="42dp"
         android:text="Don't have an account?" />
 
     <TextView
@@ -102,7 +106,7 @@
         android:layout_marginStart="11dp"
         android:layout_toEndOf="@+id/pre_sign_up"
         android:onClick="onSignUp"
-        android:text="sign up"
+        android:text="@string/sign_up"
         android:textColor="@android:color/holo_blue_bright" />
 
 

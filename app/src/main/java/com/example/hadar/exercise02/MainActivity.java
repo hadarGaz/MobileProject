@@ -382,22 +382,21 @@ public class MainActivity extends Activity
         Log.e(TAG, "OnClickForgotPassword() << ");
     }
 
-    private boolean emailAndPasswordValidation ()
+    private void emailAndPasswordValidation ()throws Exception
     {
-        return !(m_userEmail.getText().toString().matches("") || m_userPassword.getText().toString().matches(""));
+        if(m_userEmail.getText().toString().matches(""))
+            throw new Exception("Email field is empty");
+        else if(m_userPassword.getText().toString().matches(""))
+            throw new Exception("Password field is empty");
 
     }
 
-    public void onEmailPasswordAuthClick(View V)
+    public void onSignInClick(View V)
     {
-        Log.e(TAG, "onEmailPasswordAuthClick() >>");
+        Log.e(TAG, "onSignInClick() >>");
 
-        if(emailAndPasswordValidation()== false)
-        {
-            Log.e(TAG, "Invalid Email or Password");
-            Toast.makeText(this, "Invalid User Name or Password",Toast.LENGTH_LONG).show();
-        }
-        else {
+        try {
+            emailAndPasswordValidation();
             String email = m_userEmail.getText().toString();
             String pass = m_userPassword.getText().toString();
 
@@ -426,9 +425,13 @@ public class MainActivity extends Activity
                     Log.e(TAG, "Email/Pass Auth: onComplete() <<");
                 }
             });
-
-            Log.e(TAG, "onEmailPasswordAuthClick() <<");
         }
+        catch (Exception e) {
+            Log.e(TAG, "emailAndPasswordValidation"+ e.getMessage());
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+            Log.e(TAG, "onSignInClick() <<");
+
     }
 
     public void onSignUp(View v)
