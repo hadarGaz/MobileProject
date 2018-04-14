@@ -398,7 +398,15 @@ public class MainActivity extends Activity
                         Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        updateUI(m_firebaseAuth.getCurrentUser());
+                        if(m_firebaseAuth.getCurrentUser().isEmailVerified())
+                        {
+                            updateUI(m_firebaseAuth.getCurrentUser());
+                        }
+                        else
+                        {
+                            Toast.makeText(MainActivity.this, "Email wasn't verified yet", Toast.LENGTH_SHORT).show();
+                            m_firebaseAuth.signOut();
+                        }
                     }
                     Log.e(TAG, "Email/Pass Auth: onComplete() <<");
                 }

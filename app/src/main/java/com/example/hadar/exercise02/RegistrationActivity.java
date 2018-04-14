@@ -3,6 +3,7 @@ package com.example.hadar.exercise02;
 import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -104,22 +105,21 @@ public class RegistrationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent.");
-                            if(m_firebaseAuth.getCurrentUser().isEmailVerified())
-                                updateUI();
-
+                            Toast.makeText(RegistrationActivity.this,
+                                    "Verification email sent to " + m_firebaseAuth.getCurrentUser().getEmail(),
+                                    Toast.LENGTH_LONG).show();
+                            m_firebaseAuth.signOut();
+                            goBackToMainActivity();
                         }
                     }
                 });
     }
 
-    private void updateUI()
+    public void goBackToMainActivity()
     {
-        Intent userDetailsIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
-        UserDetails userDetails = new UserDetails(m_firebaseAuth.getCurrentUser());
-        userDetailsIntent.putExtra("User Details", userDetails);
-        startActivity(userDetailsIntent);
-        // overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        Intent backToMainIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(backToMainIntent);
+        //overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     public void onSelectImageClick(View v)
