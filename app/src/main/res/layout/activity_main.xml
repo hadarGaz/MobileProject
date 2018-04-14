@@ -87,7 +87,7 @@
         android:layout_alignStart="@+id/google_sign_in_button"
         android:layout_marginBottom="77dp"
 
-        android:onClick="onEmailPasswordAuthClick"
+        android:onClick="onSignUp"
         android:text="Sign up" />
 
     <pl.droidsonroids.gif.GifTextView

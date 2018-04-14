@@ -386,6 +386,13 @@ public class MainActivity extends Activity
         Log.e(TAG, "onEmailPasswordAuthClick() <<");
     }
 
+    public void onSignUp(View v)
+    {
+        Intent regIntent = new Intent(getApplicationContext(), RegistrationActivity.class);
+        regIntent.putExtra("Email", mEmail.getText().toString());
+        startActivity(regIntent);
+    }
+
 
 
 }
