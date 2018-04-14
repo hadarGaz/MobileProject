@@ -64,8 +64,8 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="35dp"
-        android:background="@drawable/button_bg"
+        android:layout_alignStart="@+id/buttonSelectImage"
+        android:layout_marginBottom="30dp"
         android:onClick="onSubmit"
         android:text="Sign Me Up!" />
 

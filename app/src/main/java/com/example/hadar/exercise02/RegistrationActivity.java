@@ -23,20 +23,18 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegistrationActivity extends AppCompatActivity
-{
+public class RegistrationActivity extends AppCompatActivity {
     public static final String TAG = "RegistrationActivity";
     private static final int RESULT_LOAD_IMAGE = 1;
     private FirebaseAuth m_firebaseAuth;
-    boolean m_isImageUploaded = false;
-    EditText m_userEmailEditText, m_userNameEditText, m_userPasswordEditText;
-    ImageView m_userPictureImageView;
-    Uri m_userPictureUri;
+    boolean imageUploaded = false;
+    EditText m_Email, m_Name, m_Password;
+    ImageView m_ImageView;
+    Uri imageUri;
 
     @Override
-    protected void onCreate(Bundle i_savedInstanceState)
-    {
-        super.onCreate(i_savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
         findViews();
@@ -46,76 +44,67 @@ public class RegistrationActivity extends AppCompatActivity
     private void findViews()
     {
         m_firebaseAuth = FirebaseAuth.getInstance();
-        m_userEmailEditText = findViewById(R.id.editTextEmail);
-        m_userPasswordEditText = findViewById(R.id.editTextPassword);
-        m_userNameEditText = findViewById(R.id.editTextPersonName);
-        m_userPictureImageView = findViewById(R.id.imageViewSelectImage);
+        m_Email = findViewById(R.id.editTextEmail);
+        m_Password = findViewById(R.id.editTextPassword);
+        m_Name = findViewById(R.id.editTextPersonName);
+        m_ImageView = findViewById(R.id.imageViewSelectImage);
     }
     private void checkIfEmailHasAlreadyBeenWritten()
     {
         String emailStr;
         if( (emailStr = (String) getIntent().getSerializableExtra("Email")) != null)
         {
-            m_userEmailEditText.setText(emailStr);
+            m_Email.setText(emailStr);
         }
     }
 
-    public void onSubmit(View i_view)
+    public void onSubmit(View v)
     {
         //check validation
-        if(detailsValidation())
-        {
-            Task<AuthResult> authResult;
-            authResult = m_firebaseAuth.createUserWithEmailAndPassword(m_userEmailEditText.getText().toString(), m_userPasswordEditText.getText().toString());
+        if(detailsValidation()) {
 
-            authResult.addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
-            {
+            Task<AuthResult> authResult;
+            authResult = m_firebaseAuth.createUserWithEmailAndPassword(m_Email.getText().toString(), m_Password.getText().toString());
+
+            authResult.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+
                 @Override
-                public void onComplete(@NonNull Task<AuthResult> task)
-                {
+                public void onComplete(@NonNull Task<AuthResult> task) {
                     Log.e(TAG, "Email/Pass Auth: onComplete() >> " + task.isSuccessful());
 
-                    if (task.isSuccessful() == false)
+                    if (!task.isSuccessful())
                         Toast.makeText(RegistrationActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    else {
+                        updateNameAndUriToUserAndSendVerification();
 
-                    else
-                    {
-                        updateNameAndUriToUserAndUpdateUI();
                     }
-
                     Log.e(TAG, "Email/Pass Auth: onComplete() <<");
                 }
             });
         }
     }
 
-    private void updateNameAndUriToUserAndUpdateUI()
+    private void updateNameAndUriToUserAndSendVerification()
     {
         UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
-            .setDisplayName(m_userNameEditText.getText().toString())
-            .setPhotoUri(m_userPictureUri).build();
-
+            .setDisplayName(m_Name.getText().toString())
+          .setPhotoUri(imageUri).build();
         m_firebaseAuth.getCurrentUser().updateProfile(updateProfile)
-            .addOnCompleteListener(this, new OnCompleteListener<Void>()
-            {
-                @Override
-                public void onComplete(@NonNull Task<Void> task)
-                {
-                    sendVerification();
-                }
+            .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                sendVerificationAndGoBackToMainActivity();
+            }
         });
     }
-
-    private void sendVerification()
+    private void sendVerificationAndGoBackToMainActivity()
     {
         m_firebaseAuth.getCurrentUser().sendEmailVerification()
-                .addOnCompleteListener(new OnCompleteListener<Void>()
-                {
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task)
-                    {
-                        if (task.isSuccessful())
-                        {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
                             Toast.makeText(RegistrationActivity.this,
                                     "Verification email sent to " + m_firebaseAuth.getCurrentUser().getEmail(),
                                     Toast.LENGTH_LONG).show();
@@ -133,81 +122,80 @@ public class RegistrationActivity extends AppCompatActivity
         //overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
-    public void onSelectImageClick(View i_view)
+    public void onSelectImageClick(View v)
     {
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(Intent.createChooser(i, "Select Picture"), RESULT_LOAD_IMAGE);
     }
 
     @Override
-    protected void onActivityResult(int i_requestCode, int i_resultCode, Intent i_dataIntent)
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        super.onActivityResult(i_requestCode, i_resultCode, i_dataIntent);
+        super.onActivityResult(requestCode, resultCode, data);
 
-        if (i_requestCode == RESULT_LOAD_IMAGE && i_resultCode == RESULT_OK && i_dataIntent != null)
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null)
         {
-            m_userPictureUri = i_dataIntent.getData();
-            m_userPictureImageView.setImageURI(m_userPictureUri);
+            imageUri = data.getData();
+            m_ImageView.setImageURI(imageUri);
 
-            m_isImageUploaded = true;
+            imageUploaded = true;
         }
     }
 
     private boolean detailsValidation()
     {
-        boolean resReturn = true;
-        if (!verifyName(m_userNameEditText.getText().toString())) {
-            Toast.makeText(RegistrationActivity.this, "Invalid Name", Toast.LENGTH_SHORT).show();
-            resReturn = false;
+        try {
+            verifyName(m_Name.getText().toString());
+            verifyEmail(m_Email.getText().toString());
+            verifyPassword(m_Password.getText().toString());
+
+             if(!imageUploaded) {
+                 throw new Exception("Must select an image");
+            }
         }
-        else if (!verifyEmail(m_userEmailEditText.getText().toString())) {
-            Toast.makeText(RegistrationActivity.this, "Invalid Email", Toast.LENGTH_SHORT).show();
-            resReturn = false;
+        catch (Exception e)
+        {
+            Toast.makeText(RegistrationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            return false;
         }
-        else if (!verifyPassword(m_userPasswordEditText.getText().toString())) {
-            Toast.makeText(RegistrationActivity.this, "\n" +
-                    "Password must contain at least 6 characters", Toast.LENGTH_SHORT).show();
-            resReturn = false;
-        }
-        else if(!m_isImageUploaded) {
-            Toast.makeText(RegistrationActivity.this, "Must select an image", Toast.LENGTH_SHORT).show();
-            resReturn = false;
-        }
-        return resReturn;
+        return true;
     }
 
-    public boolean verifyName(String i_fullName)
+    private void verifyName(String i_fullName)throws Exception
     {
         String RegEx = "^[a-zA-Z\\s]*$";
 
         if (i_fullName.matches(""))
-            return false;
+            throw new Exception("Name field is empty");
 
         Pattern pattern = Pattern.compile(RegEx);
         Matcher matcher = pattern.matcher(i_fullName);
 
-        return matcher.matches();
+        if(matcher.matches() == false)
+            throw new Exception("Invalid Name, only character");
+
     }
 
-    //Verifying an Email:
-    public boolean verifyEmail(String i_email)
+    private void verifyEmail(String i_Email)throws Exception
     {
         String RegEx = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
-        if (i_email.matches(""))
-            return false;
+        if (i_Email.matches(""))
+            throw new Exception("Email field is empty");
 
         Pattern pattern = Pattern.compile(RegEx);
-        Matcher matcher = pattern.matcher(i_email);
+        Matcher matcher = pattern.matcher(i_Email);
 
-        return matcher.matches();
+        if(matcher.matches() == false)
+            throw new Exception("Invalid Email, doesn't match to email format ");
     }
 
-    public boolean verifyPassword(String i_Password)
+    private void verifyPassword(String i_Password)throws Exception
     {
-        if(i_Password.length() < 6 || i_Password == null || i_Password.isEmpty())
-            return false;
+        if(i_Password.length() < 6 )
+            throw new Exception("Password must contain at least 6 characters");
 
-        return true;
+        else if(i_Password == null || i_Password.isEmpty())
+            throw new Exception("Password field is empty");
     }
 }
