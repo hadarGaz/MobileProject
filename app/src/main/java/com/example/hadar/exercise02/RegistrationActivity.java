@@ -85,17 +85,32 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void updateNameAndUriToUserAndUpdateUI()
     {
-        UserProfileChangeRequest.Builder updateProfile = new UserProfileChangeRequest.Builder();
-        updateProfile.setDisplayName(m_Name.getText().toString());
-        updateProfile.setPhotoUri(imageUri);
-        Task authResult = m_firebaseAuth.getCurrentUser().updateProfile(updateProfile.build());
-        authResult.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
+            .setDisplayName(m_Name.getText().toString())
+          .setPhotoUri(imageUri).build();
+        m_firebaseAuth.getCurrentUser().updateProfile(updateProfile)
+            .addOnCompleteListener(this, new OnCompleteListener<Void>() {
 
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                updateUI();
+            public void onComplete(@NonNull Task<Void> task) {
+                sendVerification();
             }
         });
+    }
+    private void sendVerification()
+    {
+        m_firebaseAuth.getCurrentUser().sendEmailVerification()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Email sent.");
+                            if(m_firebaseAuth.getCurrentUser().isEmailVerified())
+                                updateUI();
+
+                        }
+                    }
+                });
     }
 
     private void updateUI()

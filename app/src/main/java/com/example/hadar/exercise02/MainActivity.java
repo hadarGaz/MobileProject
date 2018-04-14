@@ -326,8 +326,8 @@ public class MainActivity extends Activity
 
         m_firebaseAuth.addAuthStateListener(mAuthListener);
         FirebaseUser currentUser = m_firebaseAuth.getCurrentUser();
-
-        //  updateLoginStatus("N.A");
+        if(currentUser!= null)
+            updateUI(currentUser);
 
         Log.e(TAG, "onStart() <<");
     }
