@@ -160,7 +160,7 @@ public class MainActivity extends Activity
         }
     }
 
-    public void playGif()
+    public void playGif() //plays google loading animation
     {
         final Animation googleLoader = new AlphaAnimation(1.f, 1.f);
 
@@ -216,7 +216,7 @@ public class MainActivity extends Activity
             m_userDetails = new UserDetails(i_firebaseUser);
             userDetails.putExtra("User Details", m_userDetails);
             startActivity(userDetails);
-           // overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
     }
 
@@ -377,7 +377,7 @@ public class MainActivity extends Activity
 
         if(emailAndPasswordValidation()==false)
         {
-            Log.e(TAG, "Invalid Mail or Password");
+            Log.e(TAG, "Invalid Email or Password");
             Toast.makeText(this, "Invalid User Name or Password",Toast.LENGTH_LONG).show();
         }
         else {
