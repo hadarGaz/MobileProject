@@ -15,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
+
 public class UserDetailsActivity extends AppCompatActivity
 {
     private ImageView m_userPictureImageView;
@@ -80,7 +81,7 @@ public class UserDetailsActivity extends AppCompatActivity
         //MUST TEST ON NON-PICTURE PROFILES!
         if (m_userPictureUrl != "null")
         {
-          Glide.with(this).load(m_userPictureUrl).into(m_userPictureImageView);
+         Glide.with(this).load(m_userPictureUrl).into(m_userPictureImageView);
         }
     }
 
