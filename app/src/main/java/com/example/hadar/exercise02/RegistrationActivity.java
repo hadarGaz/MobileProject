@@ -75,7 +75,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     if (!task.isSuccessful())
                         Toast.makeText(RegistrationActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     else {
-                        updateNameAndUriToUserAndUpdateUI();
+                        updateNameAndUriToUserAndSendVerification();
 
                     }
                     Log.e(TAG, "Email/Pass Auth: onComplete() <<");
@@ -84,7 +84,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
-    private void updateNameAndUriToUserAndUpdateUI()
+    private void updateNameAndUriToUserAndSendVerification()
     {
         UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
             .setDisplayName(m_Name.getText().toString())
@@ -94,11 +94,11 @@ public class RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                sendVerification();
+                sendVerificationAndGoBackToMainActivity();
             }
         });
     }
-    private void sendVerification()
+    private void sendVerificationAndGoBackToMainActivity()
     {
         m_firebaseAuth.getCurrentUser().sendEmailVerification()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -144,58 +144,58 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private boolean detailsValidation()
     {
-        boolean resReturn = true;
-        if (!verifyName(m_Name.getText().toString())) {
-            Toast.makeText(RegistrationActivity.this, "Invalid Name", Toast.LENGTH_SHORT).show();
-            resReturn = false;
+        try {
+            verifyName(m_Name.getText().toString());
+            verifyEmail(m_Email.getText().toString());
+            verifyPassword(m_Password.getText().toString());
+
+             if(!imageUploaded) {
+                 throw new Exception("Must select an image");
+            }
         }
-        else if (!verifyEmail(m_Email.getText().toString())) {
-            Toast.makeText(RegistrationActivity.this, "Invalid Email", Toast.LENGTH_SHORT).show();
-            resReturn = false;
+        catch (Exception e)
+        {
+            Toast.makeText(RegistrationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            return false;
         }
-        else if (!verifyPassword(m_Password.getText().toString())) {
-            Toast.makeText(RegistrationActivity.this, "\n" +
-                    "Password must contain at least 6 characters", Toast.LENGTH_SHORT).show();
-            resReturn = false;
-        }
-        else if(!imageUploaded) {
-            Toast.makeText(RegistrationActivity.this, "Must select an image", Toast.LENGTH_SHORT).show();
-            resReturn = false;
-        }
-        return resReturn;
+        return true;
     }
-    public boolean verifyName(String i_fullName)
+
+    private void verifyName(String i_fullName)throws Exception
     {
         String RegEx = "^[a-zA-Z\\s]*$";
 
         if (i_fullName.matches(""))
-            return false;
+            throw new Exception("Name field is empty");
 
         Pattern pattern = Pattern.compile(RegEx);
         Matcher matcher = pattern.matcher(i_fullName);
 
-        return matcher.matches();
+        if(matcher.matches() == false)
+            throw new Exception("Invalid Name, only character");
+
     }
 
-    //Verifying an Email:
-    public boolean verifyEmail(String i_Email)
+    private void verifyEmail(String i_Email)throws Exception
     {
         String RegEx = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
         if (i_Email.matches(""))
-            return false;
+            throw new Exception("Email field is empty");
 
         Pattern pattern = Pattern.compile(RegEx);
         Matcher matcher = pattern.matcher(i_Email);
 
-        return matcher.matches();
+        if(matcher.matches() == false)
+            throw new Exception("Invalid Email, doesn't match to email format ");
     }
 
-    public boolean verifyPassword(String i_Password)
+    private void verifyPassword(String i_Password)throws Exception
     {
-        if(i_Password.length() < 6 || i_Password == null || i_Password.isEmpty())
-            return false;
+        if(i_Password.length() < 6 )
+            throw new Exception("Password must contain at least 6 characters");
 
-        return true;
+        else if(i_Password == null || i_Password.isEmpty())
+            throw new Exception("Password field is empty");
     }
 }
