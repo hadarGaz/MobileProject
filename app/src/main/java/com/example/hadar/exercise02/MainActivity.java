@@ -303,13 +303,14 @@ public class MainActivity extends Activity
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task)
                     {
-                        //Log.e(TAG, "Facebook: onComplete() >> " + task.isSuccessful());
+                        Log.e(TAG, "Facebook: onComplete() >> " + task.isSuccessful());
 
-                        //updateLoginStatus(task.isSuccessful() ? "N.A" : task.getException().getMessage());
+                        if(task.isSuccessful())
+                            updateUI(m_firebaseAuth.getCurrentUser());
+                        else
+                            Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
-                        //Log.e(TAG, "Facebook: onComplete() <<");
-
-                        updateUI(m_firebaseAuth.getCurrentUser());
+                        Log.e(TAG, "Facebook: onComplete() <<");
                     }
                 });
 
