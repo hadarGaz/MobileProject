@@ -29,6 +29,7 @@ public class UserDetails implements Serializable
         {
             m_userPictureUrl = uri.toString();
         }
+
         else
         {
             m_userPictureUrl= null;
