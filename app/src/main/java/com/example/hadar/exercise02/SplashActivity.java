@@ -1,10 +1,20 @@
 package com.example.hadar.exercise02;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class SplashActivity extends AppCompatActivity
 {
@@ -54,7 +64,7 @@ public class SplashActivity extends AppCompatActivity
             nextActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
 
         startActivity(nextActivityIntent);
-       // overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override

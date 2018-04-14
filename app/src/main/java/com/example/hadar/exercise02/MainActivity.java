@@ -3,9 +3,13 @@ package com.example.hadar.exercise02;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.method.LinkMovementMethod;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -19,6 +23,8 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -34,6 +40,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
 import pl.droidsonroids.gif.GifTextView;
 
 public class MainActivity extends Activity
@@ -149,7 +160,7 @@ public class MainActivity extends Activity
         }
     }
 
-    public void playGif()
+    public void playGif() //plays google loading animation
     {
         final Animation googleLoader = new AlphaAnimation(1.f, 1.f);
 
@@ -205,7 +216,7 @@ public class MainActivity extends Activity
             m_userDetails = new UserDetails(i_firebaseUser);
             userDetails.putExtra("User Details", m_userDetails);
             startActivity(userDetails);
-           // overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
     }
 
@@ -228,13 +239,14 @@ public class MainActivity extends Activity
 
         m_callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = findViewById(R.id.buttonFacebook);
-        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.setReadPermissions("email", "public_profile", "user_friends");
 
         loginButton.registerCallback(m_callbackManager, new FacebookCallback<LoginResult>()
         {
             @Override
             public void onSuccess(LoginResult loginResult)
             {
+                Toast.makeText(MainActivity.this, "sucess", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "facebook:onSuccess () >>" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
                 Log.e(TAG, "facebook:onSuccess () <<");
@@ -252,6 +264,7 @@ public class MainActivity extends Activity
             @Override
             public void onError(FacebookException error)
             {
+                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "facebook:onError () >>" + error.getMessage());
                 // updateLoginStatus(error.getMessage());
                 Log.e(TAG, "facebook:onError <<");
@@ -280,30 +293,32 @@ public class MainActivity extends Activity
         Log.e(TAG, "facebookLoginInit() <<");
     }
 
-    private void handleFacebookAccessToken(AccessToken token) {
-
+    private void handleFacebookAccessToken(AccessToken token)
+    {
         Log.e(TAG, "handleFacebookAccessToken () >>" + token.getToken());
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         m_firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.e(TAG, "Facebook: onComplete() >> " + task.isSuccessful());
+                    public void onComplete(@NonNull Task<AuthResult> task)
+                    {
+                        //Log.e(TAG, "Facebook: onComplete() >> " + task.isSuccessful());
 
                         //updateLoginStatus(task.isSuccessful() ? "N.A" : task.getException().getMessage());
 
-                        Log.e(TAG, "Facebook: onComplete() <<");
+                        //Log.e(TAG, "Facebook: onComplete() <<");
+
+                        updateUI(m_firebaseAuth.getCurrentUser());
                     }
                 });
 
         Log.e(TAG, "handleFacebookAccessToken () <<");
-
     }
 
     @Override
-    protected void onStart() {
-
+    protected void onStart()
+    {
         Log.e(TAG, "onStart() >>");
 
         super.onStart();
@@ -314,7 +329,6 @@ public class MainActivity extends Activity
         //  updateLoginStatus("N.A");
 
         Log.e(TAG, "onStart() <<");
-
     }
 
     @Override
@@ -331,7 +345,8 @@ public class MainActivity extends Activity
 
     }
 
-    private void firebaseAuthenticationInit() {
+    private void firebaseAuthenticationInit()
+    {
 
         Log.e(TAG, "firebaseAuthenticationInit() >>");
         //Obtain reference to the current authentication
@@ -351,51 +366,62 @@ public class MainActivity extends Activity
         Log.e(TAG, "firebaseAuthenticationInit() <<");
     }
 
+    private boolean emailAndPasswordValidation ()
+    {
+        return m_userEmail.toString().matches("") && m_userPassword.toString().matches("");
+    }
+
     public void onEmailPasswordAuthClick(View V)
     {
         Log.e(TAG, "onEmailPasswordAuthClick() >>");
 
-        String email = m_userEmail.getText().toString();
-        String pass = m_userPassword.getText().toString();
-
-        Task<AuthResult> authResult;
-
-        switch (V.getId())
+        if(emailAndPasswordValidation()==false)
         {
-            case R.id.buttonSignIn:
-                //Email / Password sign-in
-                authResult = m_firebaseAuth.signInWithEmailAndPassword(email, pass);
-                break;
-
-            case R.id.buttonSignUP:
-                //Email / Password sign-up
-                authResult = m_firebaseAuth.createUserWithEmailAndPassword(email, pass);
-                break;
-
-            default:
-                return;
+            Log.e(TAG, "Invalid Email or Password");
+            Toast.makeText(this, "Invalid User Name or Password",Toast.LENGTH_LONG).show();
         }
+        else {
+            String email = m_userEmail.getText().toString();
+            String pass = m_userPassword.getText().toString();
 
-        authResult.addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+            Task<AuthResult> authResult;
 
-                Log.e(TAG, "Email/Pass Auth: onComplete() >> " + task.isSuccessful());
-                String mas = "success";
-                if(!task.isSuccessful())
-                     mas = task.getException().getMessage();
+            switch (V.getId()) {
+                case R.id.buttonSignIn:
+                    //Email / Password sign-in
+                    authResult = m_firebaseAuth.signInWithEmailAndPassword(email, pass);
+                    break;
 
-                //updateLoginStatus(task.isSuccessful() ? "N.A" : task.getException().getMessage());
-                Toast.makeText(MainActivity.this, mas, Toast.LENGTH_SHORT).show();
+                case R.id.sign_up_hyper_text:
+                    //Email / Password sign-up
+                    Toast.makeText(this, "works", Toast.LENGTH_SHORT).show();
+                    authResult = m_firebaseAuth.createUserWithEmailAndPassword(email, pass);
+                    break;
 
-                // Sign in success, update UI with the signed-in user's information
-                updateUI(m_firebaseAuth.getCurrentUser());
-                Log.e(TAG, "Email/Pass Auth: onComplete() <<");
+                default:
+                    return;
             }
-        });
 
-        Log.e(TAG, "onEmailPasswordAuthClick() <<");
+            authResult.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+
+                    Log.e(TAG, "Email/Pass Auth: onComplete() >> " + task.isSuccessful());
+                    String mas = "success";
+                    if (!task.isSuccessful())
+                        mas = task.getException().getMessage();
+
+                    //updateLoginStatus(task.isSuccessful() ? "N.A" : task.getException().getMessage());
+                    Toast.makeText(MainActivity.this, mas, Toast.LENGTH_SHORT).show();
+
+                    // Sign in success, update UI with the signed-in user's information
+                    updateUI(m_firebaseAuth.getCurrentUser());
+                    Log.e(TAG, "Email/Pass Auth: onComplete() <<");
+                }
+            });
+
+            Log.e(TAG, "onEmailPasswordAuthClick() <<");
+        }
     }
 
 

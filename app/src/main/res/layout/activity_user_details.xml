@@ -32,19 +32,18 @@
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/user_email"
-        android:layout_marginBottom="251dp"
+        android:layout_above="@+id/email_banner"
+        android:layout_marginBottom="22dp"
+        android:layout_toEndOf="@+id/user_name_banner"
         android:text="@User Name:" />
 
     <TextView
         android:id="@+id/user_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="211dp"
-        android:layout_marginStart="60dp"
+        android:layout_below="@+id/user_name_banner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="23dp"
         android:text="@Email:" />
 
     <ImageButton
@@ -55,6 +54,23 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="33dp"
         android:contentDescription="@Sign Out"
-        app:srcCompat="@mipmap/button" />
+        app:srcCompat="@mipmap/sign_out_button" />
+
+    <ImageView
+        android:id="@+id/user_name_banner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/email_banner"
+        android:layout_alignStart="@+id/user_picture"
+        app:srcCompat="@mipmap/user_name" />
+
+    <ImageView
+        android:id="@+id/email_banner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sign_out_button"
+        android:layout_alignStart="@+id/user_name_banner"
+        android:layout_marginBottom="30dp"
+        app:srcCompat="@mipmap/email" />
 
 </RelativeLayout>

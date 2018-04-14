@@ -86,12 +86,12 @@ public class UserDetailsActivity extends AppCompatActivity
 
     public void showUserName()
     {
-        m_TextViewUserName.setText("User Name: "+m_userDetails.getUserName());
+        m_TextViewUserName.setText(m_userDetails.getUserName());
     }
 
     public void showUserEmail()
     {
-        m_TextViewUserEmail.setText("Email: "+m_userDetails.getUserEmail());
+        m_TextViewUserEmail.setText(m_userDetails.getUserEmail());
     }
 
     private void getIntentInput()

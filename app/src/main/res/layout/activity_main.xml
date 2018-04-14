@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="94dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress" />
@@ -32,7 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/editTextEmail"
         android:layout_below="@+id/editTextEmail"
-        android:layout_marginTop="15dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword" />
@@ -42,9 +41,8 @@
         android:id="@+id/textViewForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/editTextPassword"
-        android:layout_below="@+id/editTextPassword"
-        android:layout_marginTop="13dp"
+        android:layout_alignStart="@+id/pre_sign_up"
+        android:layout_below="@+id/pre_sign_up"
         android:autoLink="all"
         android:clickable="true"
         android:linksClickable="true"
@@ -54,19 +52,17 @@
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_sign_in_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonFacebook"
-        android:layout_alignStart="@+id/buttonFacebook"
+        android:layout_height="40dp"
 
-        />
+        android:layout_below="@+id/buttonFacebook"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/buttonSignIn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textViewForgotPassword"
-        android:layout_below="@+id/textViewForgotPassword"
-        android:layout_marginTop="21dp"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/editTextPassword"
+        android:layout_below="@+id/editTextPassword"
         android:onClick="onEmailPasswordAuthClick"
         android:text="Sign-in" />
 
@@ -75,8 +71,9 @@
         android:id="@+id/buttonFacebook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/buttonSignIn"
-        android:layout_below="@+id/buttonSignIn"
+        android:layout_below="@+id/textViewForgotPassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="43dp"
         android:text="Button" />
 
     <Button
@@ -94,11 +91,30 @@
         android:id="@+id/google_load_bar"
         android:layout_width="141dp"
         android:layout_height="115dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="146dp"
-        android:layout_marginEnd="34dp"
+        android:layout_below="@+id/buttonFacebook"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="42dp"
         android:scaleType="fitXY" />
+
+    <TextView
+        android:id="@+id/pre_sign_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/buttonSignIn"
+        android:layout_below="@+id/buttonSignIn"
+        android:text="Don't have an account?" />
+
+    <TextView
+        android:id="@+id/sign_up_hyper_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/pre_sign_up"
+        android:layout_alignBottom="@+id/pre_sign_up"
+        android:layout_marginStart="11dp"
+        android:layout_toEndOf="@+id/pre_sign_up"
+        android:onClick="onEmailPasswordAuthClick"
+        android:text="sign up"
+        android:textColor="@android:color/holo_blue_bright" />
 
 
 </android.widget.RelativeLayout>
