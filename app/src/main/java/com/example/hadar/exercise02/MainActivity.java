@@ -220,18 +220,7 @@ public class MainActivity extends Activity
         }
     }
 
-    private void linkForgotPassword()
-    {
-        //Forgot password test
-        TextView t2 = (TextView) findViewById(R.id.textViewForgotPassword);
-        t2.setMovementMethod(LinkMovementMethod.getInstance());
-    }
 
-    public void OnClickForgotPassword(View v)
-    {
-        int i=3;
-        i++;
-    }
 
     private void facebookLoginInit()
     {
@@ -365,6 +354,32 @@ public class MainActivity extends Activity
         };
 
         Log.e(TAG, "firebaseAuthenticationInit() <<");
+    }
+
+    public void OnClickForgotPassword(View v)
+    {
+        String emailStr = m_userEmail.getText().toString();
+        Log.e(TAG, "OnClickForgotPassword() >> ");
+        if(emailStr.isEmpty())
+            Toast.makeText(MainActivity.this, "Please type the email address of your user for sending password reset email ", Toast.LENGTH_LONG).show();
+        else {
+            (m_firebaseAuth.sendPasswordResetEmail(emailStr))
+                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.e(TAG, "OnClickForgotPassword: onComplete() >> " + task.isSuccessful());
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(MainActivity.this,
+                                        "Password reset email sent to " + m_userEmail.getText().toString(), Toast.LENGTH_SHORT).show();
+                            }
+                            Log.e(TAG, "OnClickForgotPassword: onComplete() << " + task.isSuccessful());
+                        }
+
+                    });
+        }
+        Log.e(TAG, "OnClickForgotPassword() << ");
     }
 
     private boolean emailAndPasswordValidation ()
