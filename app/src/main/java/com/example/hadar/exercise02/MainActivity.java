@@ -235,7 +235,7 @@ public class MainActivity extends Activity
             @Override
             public void onSuccess(LoginResult loginResult)
             {
-                Toast.makeText(MainActivity.this, "sucess", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "facebook login success", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "facebook:onSuccess () >>" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
                 Log.e(TAG, "facebook:onSuccess () <<");
