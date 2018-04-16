@@ -1,5 +1,6 @@
 package com.example.hadar.exercise02;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -52,6 +53,9 @@ public class MainActivity extends Activity
     private SignInButton m_googleSignInButton;
     private LoginButton m_facebookLoginButton;
     private UserDetails m_userDetails;
+    private GifTextView m_LoadingBar;
+
+    private boolean m_googleSignedIn=false, m_faceboolSignedIn=false;
     private GifTextView m_googleLoadingBar;
     private FirebaseUser m_firebaseUser = null;
 
@@ -62,6 +66,8 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
 
         m_firebaseAuth = FirebaseAuth.getInstance();
+        m_LoadingBar=findViewById(R.id.load_bar);
+
         findViews();
         facebookLoginInit();
         googleSignInInit();
@@ -122,6 +128,9 @@ public class MainActivity extends Activity
     public void onClickGoogleButton()
     {
         Intent signInIntent = m_googleSignInClient.getSignInIntent();
+        m_googleSignedIn=true;
+        m_faceboolSignedIn=false;
+
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
 
@@ -138,6 +147,10 @@ public class MainActivity extends Activity
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(i_dataIntent);
             handleGoogleSignInResult(task);
         }
+        else
+        {
+            m_googleSignedIn=false;
+        }
     }
 
     private void handleGoogleSignInResult(Task<GoogleSignInAccount> completedTask)
@@ -147,6 +160,7 @@ public class MainActivity extends Activity
         try
         {
             GoogleSignInAccount account= completedTask.getResult(ApiException.class);
+            Log.e(TAG, "firebase <= google");
             firebaseAuthWithGoogle(account);
         }
 
@@ -160,14 +174,27 @@ public class MainActivity extends Activity
 
     public void playGif() //plays google loading animation
     {
-        final Animation googleLoader = new AlphaAnimation(1.f, 1.f);
-
-        googleLoader.setAnimationListener(new Animation.AnimationListener()
+        final Animation Loader = new AlphaAnimation(1.f, 1.f);
+        Log.e(TAG, "play gif >> "+ m_faceboolSignedIn);
+        Loader.setAnimationListener(new Animation.AnimationListener()
         {
             @Override
-            public void onAnimationStart(Animation animation)
-            {
-                m_googleLoadingBar.setBackgroundResource(R.drawable.google_dark_load);
+            public void onAnimationStart(Animation animation) {
+                Log.e(TAG, "google login anim= "+m_googleSignedIn );
+                Log.e(TAG, "facebook login anim= "+m_googleSignedIn );
+
+                if (m_googleSignedIn == true)
+                {
+                    m_LoadingBar.setBackgroundResource(R.drawable.google_dark_load);
+                    //m_LoadingBar.setX(460);
+                    //m_LoadingBar.setY(1650);
+                }
+
+                if(m_faceboolSignedIn==true) {
+                    m_LoadingBar.setBackgroundResource(R.drawable.facebook_load_anim);
+                    //m_LoadingBar.setX(460);
+                    //m_LoadingBar.setY(1200);
+                }
             }
 
             @Override
@@ -176,14 +203,14 @@ public class MainActivity extends Activity
             @Override
             public void onAnimationEnd(Animation animation)
             {
-                m_googleLoadingBar.clearAnimation();
+                m_LoadingBar.clearAnimation();
             }
         });
 
         m_googleLoadingBar.startAnimation(googleLoader);
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount i_googleSignInAccount)
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount i_googleSignInAccount)
     {
         Log.e(TAG, "firebaseAuthWithGoogle() >>, id = " + i_googleSignInAccount.getId());
 
@@ -197,8 +224,12 @@ public class MainActivity extends Activity
                     {
                         if (task.isSuccessful())
                         {
-                           Toast.makeText(MainActivity.this, "Google sign in success!", Toast.LENGTH_SHORT).show();
-                           handleAllSignInSuccess("Google");
+                            m_firebaseAuth.getCurrentUser().updateEmail(i_googleSignInAccount.getEmail());
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.e(TAG, "calling updateUI 2 " + m_firebaseAuth.getCurrentUser().getEmail());
+
+                            Toast.makeText(MainActivity.this, "Google sign in success!", Toast.LENGTH_SHORT).show();
+                            handleAllSignInSuccess("Google");
                         }
 
                         else
@@ -282,8 +313,9 @@ public class MainActivity extends Activity
     private void facebookLoginInit()
     {
         Log.e(TAG, "facebookLoginInit() >>");
-
         m_callbackManager = CallbackManager.Factory.create();
+        LoginButton loginButton = findViewById(R.id.buttonFacebook);
+        loginButton.setReadPermissions("email", "public_profile", "user_friends");
 
         m_facebookLoginButton.setReadPermissions("email", "public_profile", "user_friends");
 
@@ -294,12 +326,15 @@ public class MainActivity extends Activity
             {
                 Toast.makeText(MainActivity.this, "Facebook sign in success!", Toast.LENGTH_SHORT).show();
                 handleFacebookAccessToken(i_loginResult.getAccessToken());
+                m_faceboolSignedIn=true;
+                m_googleSignedIn=false;
             }
 
             @Override
             public void onCancel()
             {
                 Toast.makeText(MainActivity.this, "Facebook sign in canceled", Toast.LENGTH_SHORT).show();
+                m_faceboolSignedIn=false;
             }
 
             @Override
@@ -482,6 +517,8 @@ public class MainActivity extends Activity
                     {
                         if (m_firebaseAuth.getCurrentUser().isEmailVerified())
                         {
+                            Log.e(TAG, "calling updateUI 5");
+                            updateUI(m_firebaseAuth.getCurrentUser());
                             handleAllSignInSuccess("EmailPassword");
                         }
 
