@@ -1,5 +1,6 @@
 package com.example.hadar.exercise02;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -59,7 +60,9 @@ public class MainActivity extends Activity
     private AccessTokenTracker m_accessTokenTracker;
     private GoogleSignInClient m_googleSignInClient;
     private UserDetails m_userDetails;
-    private GifTextView m_googleLoadingBar;
+    private GifTextView m_LoadingBar;
+
+    private boolean m_googleSignedIn=false, m_faceboolSignedIn=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -67,11 +70,11 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         m_firebaseAuth = FirebaseAuth.getInstance();
-
-        m_googleLoadingBar=findViewById(R.id.google_load_bar);
+        m_LoadingBar=findViewById(R.id.load_bar);
 
         facebookLoginInit();
         firebaseAuthenticationInit();
+
         m_userEmail = findViewById(R.id.editTextEmail);
         m_userPassword = findViewById(R.id.editTextPassword);
         // Configure sign-in to request the user's ID, email address, and basic
@@ -92,6 +95,7 @@ public class MainActivity extends Activity
             public void onClick(View view)
             {
                 onClickGoogleButton();
+
             }
         });
     }
@@ -121,6 +125,8 @@ public class MainActivity extends Activity
     public void onClickGoogleButton()
     {
         Intent signInIntent = m_googleSignInClient.getSignInIntent();
+        m_googleSignedIn=true;
+        m_faceboolSignedIn=false;
         playGif();
 
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
@@ -133,12 +139,18 @@ public class MainActivity extends Activity
 
         m_callbackManager.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        Log.e(TAG, "onActivityResult >>");
         if (requestCode == GOOGLE_SIGN_IN)
         {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            Log.e(TAG, "onActivityResult <<");
             handleSignInResult(task);
+        }
+        else
+        {
+            m_googleSignedIn=false;
         }
     }
 
@@ -148,6 +160,7 @@ public class MainActivity extends Activity
         {
            // GoogleSignInAccount googleSignInAccount = completedTask.getResult(ApiException.class);
             GoogleSignInAccount account= completedTask.getResult(ApiException.class);
+            Log.e(TAG, "firebase <= google");
             firebaseAuthWithGoogle(account);
         }
 
@@ -155,23 +168,35 @@ public class MainActivity extends Activity
         {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            //Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            Log.e(TAG, "signInResult:failed code=" + e.getStatusCode());
+            Log.e(TAG, "calling updateUI 1");
             updateUI(null);
         }
     }
 
     public void playGif() //plays google loading animation
     {
-        final Animation googleLoader = new AlphaAnimation(1.f, 1.f);
-
-        //googleLoader.setDuration(20000);
-
-        googleLoader.setAnimationListener(new Animation.AnimationListener()
+        final Animation Loader = new AlphaAnimation(1.f, 1.f);
+        Log.e(TAG, "play gif >> "+ m_faceboolSignedIn);
+        Loader.setAnimationListener(new Animation.AnimationListener()
         {
             @Override
-            public void onAnimationStart(Animation animation)
-            {
-                m_googleLoadingBar.setBackgroundResource(R.drawable.google_dark_load);
+            public void onAnimationStart(Animation animation) {
+                Log.e(TAG, "google login anim= "+m_googleSignedIn );
+                Log.e(TAG, "facebook login anim= "+m_googleSignedIn );
+
+                if (m_googleSignedIn == true)
+                {
+                    m_LoadingBar.setBackgroundResource(R.drawable.google_dark_load);
+                    //m_LoadingBar.setX(460);
+                    //m_LoadingBar.setY(1650);
+                }
+
+                if(m_faceboolSignedIn==true) {
+                    m_LoadingBar.setBackgroundResource(R.drawable.facebook_load_anim);
+                    //m_LoadingBar.setX(460);
+                    //m_LoadingBar.setY(1200);
+                }
             }
 
             @Override
@@ -180,18 +205,19 @@ public class MainActivity extends Activity
             @Override
             public void onAnimationEnd(Animation animation)
             {
-                m_googleLoadingBar.clearAnimation();
+                m_LoadingBar.clearAnimation();
             }
         });
 
-        m_googleLoadingBar.startAnimation(googleLoader);
+        if((m_googleSignedIn || m_faceboolSignedIn) && m_LoadingBar.getResources()!=null) {
+            m_LoadingBar.startAnimation(Loader);
+        }
+        Log.e(TAG, "play gif <<");
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct)
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount googleAccount)
     {
-        Log.e(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        AuthCredential credential = GoogleAuthProvider.getCredential(googleAccount.getIdToken(), null);
 
         m_firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
@@ -201,7 +227,10 @@ public class MainActivity extends Activity
                     {
                         if (task.isSuccessful())
                         {
+                            m_firebaseAuth.getCurrentUser().updateEmail(googleAccount.getEmail());
                             // Sign in success, update UI with the signed-in user's information
+                            Log.e(TAG, "calling updateUI 2 " + m_firebaseAuth.getCurrentUser().getEmail());
+
                             updateUI(m_firebaseAuth.getCurrentUser());
                         }
                     }
@@ -214,7 +243,9 @@ public class MainActivity extends Activity
         {
             Intent userDetails = new Intent(getApplicationContext(), UserDetailsActivity.class);
             m_userDetails = new UserDetails(i_firebaseUser);
+
             userDetails.putExtra("User Details", m_userDetails);
+            Log.e(TAG, "updateUI >> "+ m_userDetails.getUserName());
             startActivity(userDetails);
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
@@ -225,9 +256,17 @@ public class MainActivity extends Activity
     private void facebookLoginInit()
     {
         Log.e(TAG, "facebookLoginInit() >>");
-
         m_callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = findViewById(R.id.buttonFacebook);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_faceboolSignedIn=true;
+                m_googleSignedIn=false;
+                playGif();
+            }
+        });
+
         loginButton.setReadPermissions("email", "public_profile", "user_friends");
 
         loginButton.registerCallback(m_callbackManager, new FacebookCallback<LoginResult>()
@@ -237,6 +276,7 @@ public class MainActivity extends Activity
             {
                 Toast.makeText(MainActivity.this, "sucess", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "facebook:onSuccess () >>" + loginResult);
+
                 handleFacebookAccessToken(loginResult.getAccessToken());
                 Log.e(TAG, "facebook:onSuccess () <<");
             }
@@ -247,7 +287,7 @@ public class MainActivity extends Activity
                 Log.e(TAG, "facebook:onCancel() >>");
                 //  updateLoginStatus("Facebook login canceled");
                 Log.e(TAG, "facebook:onCancel() <<");
-
+                m_faceboolSignedIn=false;
             }
 
             @Override
@@ -294,8 +334,10 @@ public class MainActivity extends Activity
                     {
                         Log.e(TAG, "Facebook: onComplete() >> " + task.isSuccessful());
 
-                        if(task.isSuccessful())
+                        if(task.isSuccessful()) {
+                            Log.e(TAG, "calling updateUI 3");
                             updateUI(m_firebaseAuth.getCurrentUser());
+                        }
                         else
                             Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -315,9 +357,10 @@ public class MainActivity extends Activity
 
         m_firebaseAuth.addAuthStateListener(mAuthListener);
         FirebaseUser currentUser = m_firebaseAuth.getCurrentUser();
-        if(currentUser!= null)
+        if(currentUser!= null) {
+            Log.e(TAG, "calling updateUI 4");
             updateUI(currentUser);
-
+        }
         Log.e(TAG, "onStart() <<");
     }
 
@@ -414,6 +457,7 @@ public class MainActivity extends Activity
                     else {
                         if(m_firebaseAuth.getCurrentUser().isEmailVerified())
                         {
+                            Log.e(TAG, "calling updateUI 5");
                             updateUI(m_firebaseAuth.getCurrentUser());
                         }
                         else
