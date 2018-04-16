@@ -76,7 +76,7 @@ public class MainActivity extends Activity
 
     public void findViews()
     {
-        m_googleLoadingBar=findViewById(R.id.google_load_bar);
+        //m_googleLoadingBar=findViewById(R.id.google_load_bar);
         m_userEmail = findViewById(R.id.editTextEmail);
         m_userPassword = findViewById(R.id.editTextPassword);
         m_googleSignInButton = findViewById(R.id.google_sign_in_button);
@@ -191,7 +191,7 @@ public class MainActivity extends Activity
                 }
 
                 if(m_faceboolSignedIn==true) {
-                    m_LoadingBar.setBackgroundResource(R.drawable.facebook_load_anim);
+                    //m_LoadingBar.setBackgroundResource(R.drawable.facebook_load_anim);
                     //m_LoadingBar.setX(460);
                     //m_LoadingBar.setY(1200);
                 }
@@ -207,7 +207,7 @@ public class MainActivity extends Activity
             }
         });
 
-        m_googleLoadingBar.startAnimation(googleLoader);
+        //m_googleLoadingBar.startAnimation(googleLoader);
     }
 
     private void firebaseAuthWithGoogle(final GoogleSignInAccount i_googleSignInAccount)
@@ -370,23 +370,22 @@ public class MainActivity extends Activity
 
         AuthCredential credential = FacebookAuthProvider.getCredential(i_accessToken.getToken());
         m_firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task)
-                    {
-                        Log.e(TAG, "Facebook: onComplete() >> " + task.isSuccessful());
+        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task)
+            {
+                Log.e(TAG, "Facebook: onComplete() >> " + task.isSuccessful());
 
-                        if(task.isSuccessful())
-                        {
-                          handleAllSignInSuccess("Facebook");
-                        }
+                if (task.isSuccessful())
+                {
+                    handleAllSignInSuccess("Facebook");
+                } else
+                    Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
-                        else
-                            Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
-                        Log.e(TAG, "Facebook: onComplete() <<");
-                    }
-                });
+                Log.e(TAG, "Facebook: onComplete() <<");
+            }
+        });
 
         Log.e(TAG, "handleFacebookAccessToken () <<");
     }
@@ -450,26 +449,24 @@ public class MainActivity extends Activity
         else
         {
             m_firebaseAuth.sendPasswordResetEmail(emailStr)
-                    .addOnCompleteListener(this, new OnCompleteListener<Void>()
+            .addOnCompleteListener(this, new OnCompleteListener<Void>()
+            {
+                @Override
+                public void onComplete(@NonNull Task<Void> i_completedTask)
+                {
+                    Log.e(TAG, "OnClickForgotPassword: onComplete() >> " + i_completedTask.isSuccessful());
+
+                    if (i_completedTask.isSuccessful())
                     {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> i_completedTask)
-                        {
-                            Log.e(TAG, "OnClickForgotPassword: onComplete() >> " + i_completedTask.isSuccessful());
+                        showPasswordResetWasSentDialog();
+                    } else
+                    {
+                        Toast.makeText(MainActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    }
 
-                            if (i_completedTask.isSuccessful())
-                            {
-                                showPasswordResetWasSentDialog();
-                            }
-
-                            else
-                            {
-                                Toast.makeText(MainActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_LONG).show();
-                            }
-
-                            Log.e(TAG, "OnClickForgotPassword: onComplete() << " + i_completedTask.isSuccessful());
-                        }
-                    });
+                    Log.e(TAG, "OnClickForgotPassword: onComplete() << " + i_completedTask.isSuccessful());
+                }
+            });
         }
 
         Log.e(TAG, "OnClickForgotPassword() << ");
@@ -508,17 +505,12 @@ public class MainActivity extends Activity
 
                     Log.e(TAG, "Email/Pass Auth: onComplete() >> " + i_completedTask.isSuccessful());
 
-                    if (!i_completedTask.isSuccessful())
-                    {
-                        Toast.makeText(MainActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
-
-                    else
+                    if (i_completedTask.isSuccessful())
                     {
                         if (m_firebaseAuth.getCurrentUser().isEmailVerified())
                         {
                             Log.e(TAG, "calling updateUI 5");
-                            updateUI(m_firebaseAuth.getCurrentUser());
+                            updateUIAndMoveToUserDetailsActivity();
                             handleAllSignInSuccess("EmailPassword");
                         }
 
@@ -527,6 +519,11 @@ public class MainActivity extends Activity
                             showWaitingForEmailVerificationDialog();
                             m_firebaseAuth.signOut();
                         }
+                    }
+
+                    else
+                    {
+                        Toast.makeText(MainActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                     Log.e(TAG, "Email/Pass Auth: onComplete() <<");
