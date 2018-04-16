@@ -1,6 +1,5 @@
 package com.example.hadar.exercise02;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,13 +55,12 @@ public class MainActivity extends Activity
     private GifTextView m_LoadingBar;
 
     private boolean m_googleSignedIn=false, m_faceboolSignedIn=false;
-    private GifTextView m_googleLoadingBar;
     private FirebaseUser m_firebaseUser = null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate(Bundle i_savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
+        super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_main);
 
         m_firebaseAuth = FirebaseAuth.getInstance();
@@ -129,8 +127,7 @@ public class MainActivity extends Activity
     {
         Intent signInIntent = m_googleSignInClient.getSignInIntent();
         m_googleSignedIn=true;
-        m_faceboolSignedIn=false;
-
+        playGif();
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
 
@@ -153,13 +150,13 @@ public class MainActivity extends Activity
         }
     }
 
-    private void handleGoogleSignInResult(Task<GoogleSignInAccount> completedTask)
+    private void handleGoogleSignInResult(Task<GoogleSignInAccount> i_completedTask)
     {
         Log.e(TAG, "handleSignInResult() >>");
 
         try
         {
-            GoogleSignInAccount account= completedTask.getResult(ApiException.class);
+            GoogleSignInAccount account= i_completedTask.getResult(ApiException.class);
             Log.e(TAG, "firebase <= google");
             firebaseAuthWithGoogle(account);
         }
@@ -172,7 +169,7 @@ public class MainActivity extends Activity
         Log.e(TAG, "handleSignInResult() <<");
     }
 
-    public void playGif() //plays google loading animation
+    public void playGif() //plays loading animations
     {
         final Animation Loader = new AlphaAnimation(1.f, 1.f);
         Log.e(TAG, "play gif >> "+ m_faceboolSignedIn);
@@ -186,14 +183,12 @@ public class MainActivity extends Activity
                 if (m_googleSignedIn == true)
                 {
                     m_LoadingBar.setBackgroundResource(R.drawable.google_dark_load);
-                    //m_LoadingBar.setX(460);
-                    //m_LoadingBar.setY(1650);
+
                 }
 
                 if(m_faceboolSignedIn==true) {
-                    //m_LoadingBar.setBackgroundResource(R.drawable.facebook_load_anim);
-                    //m_LoadingBar.setX(460);
-                    //m_LoadingBar.setY(1200);
+                    m_LoadingBar.setBackgroundResource(R.drawable.facebook_load_anim);
+
                 }
             }
 
@@ -207,7 +202,7 @@ public class MainActivity extends Activity
             }
         });
 
-        //m_googleLoadingBar.startAnimation(googleLoader);
+        m_LoadingBar.startAnimation(Loader);
     }
 
     private void firebaseAuthWithGoogle(final GoogleSignInAccount i_googleSignInAccount)
@@ -316,7 +311,13 @@ public class MainActivity extends Activity
         m_callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = findViewById(R.id.buttonFacebook);
         loginButton.setReadPermissions("email", "public_profile", "user_friends");
-
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_faceboolSignedIn=true;
+                playGif();
+            }
+        });
         m_facebookLoginButton.setReadPermissions("email", "public_profile", "user_friends");
 
         m_facebookLoginButton.registerCallback(m_callbackManager, new FacebookCallback<LoginResult>()
