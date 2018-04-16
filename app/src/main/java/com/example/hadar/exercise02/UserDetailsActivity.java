@@ -80,8 +80,9 @@ public class UserDetailsActivity extends AppCompatActivity
         m_userPictureUrl = m_userDetails.getUserPictureUrl();
 
         //MUST TEST ON NON-PICTURE PROFILES!
-        if (m_userPictureUrl != "null")
+        if (m_userPictureUrl != null)
         {
+         m_userPictureImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
          Glide.with(this).load(m_userPictureUrl).into(m_userPictureImageView);
         }
     }

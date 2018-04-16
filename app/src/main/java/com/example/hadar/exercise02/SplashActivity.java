@@ -9,7 +9,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 public class SplashActivity extends AppCompatActivity
 {
     private UserDetails m_userDetails;
-    private GoogleSignInAccount m_googleAccount;
+    private GoogleSignInAccount m_googleSignInAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,7 +44,7 @@ public class SplashActivity extends AppCompatActivity
         Intent nextActivityIntent;
 
         //Add else if m_facebookAccount != null else if m_emailPasswordAccount != null ...
-        if (m_googleAccount != null)
+        if (m_googleSignInAccount != null)
         {
             nextActivityIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
             setUserDetailsFromGoogleAccount();
@@ -64,11 +64,23 @@ public class SplashActivity extends AppCompatActivity
 
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
-        m_googleAccount = GoogleSignIn.getLastSignedInAccount(this);
+        m_googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
     }
 
     public void setUserDetailsFromGoogleAccount()
     {
-        m_userDetails = new UserDetails(m_googleAccount);
+        m_userDetails = new UserDetails(m_googleSignInAccount);
+        changeUserDetailsPictureUrl(MainActivity.GOOGLE_URL_PATH_TO_REMOVE, MainActivity.GOOGLE_URL_PATH_TO_ADD);
+    }
+
+    public void changeUserDetailsPictureUrl(String i_originalPieceOfUrlToRemove, String i_newPieceOfUrlToAdd)
+    {
+        String userDetailsPhotoUrl = m_userDetails.getUserPictureUrl();
+
+        if(userDetailsPhotoUrl != null)
+        {
+            String newPhotoPath = userDetailsPhotoUrl.replace(i_originalPieceOfUrlToRemove, i_newPieceOfUrlToAdd);
+            m_userDetails.setUserPictureUrl(newPhotoPath);
+        }
     }
 }
