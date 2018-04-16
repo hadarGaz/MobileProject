@@ -17,6 +17,8 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -34,6 +36,9 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import org.json.JSONObject;
+
 import pl.droidsonroids.gif.GifTextView;
 
 public class MainActivity extends Activity
@@ -53,8 +58,8 @@ public class MainActivity extends Activity
     private LoginButton m_facebookLoginButton;
     private UserDetails m_userDetails;
     private GifTextView m_LoadingBar;
-
-    private boolean m_googleSignedIn=false, m_faceboolSignedIn=false;
+    private GoogleSignInAccount m_googleSignInAccount;
+    private boolean m_googleSignedIn = false, m_facebookSignedIn = false;
     private FirebaseUser m_firebaseUser = null;
 
     @Override
@@ -96,6 +101,8 @@ public class MainActivity extends Activity
             @Override
             public void onClick(View view)
             {
+                m_googleSignedIn = true;
+                playGif();
                 onClickGoogleButton();
             }
         });
@@ -126,7 +133,6 @@ public class MainActivity extends Activity
     public void onClickGoogleButton()
     {
         Intent signInIntent = m_googleSignInClient.getSignInIntent();
-        m_googleSignedIn=true;
         playGif();
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
@@ -140,13 +146,8 @@ public class MainActivity extends Activity
 
         if (i_requestCode == GOOGLE_SIGN_IN)
         {
-            playGif();
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(i_dataIntent);
             handleGoogleSignInResult(task);
-        }
-        else
-        {
-            m_googleSignedIn=false;
         }
     }
 
@@ -156,9 +157,9 @@ public class MainActivity extends Activity
 
         try
         {
-            GoogleSignInAccount account= i_completedTask.getResult(ApiException.class);
+            m_googleSignInAccount = i_completedTask.getResult(ApiException.class);
             Log.e(TAG, "firebase <= google");
-            firebaseAuthWithGoogle(account);
+            firebaseAuthWithGoogle(m_googleSignInAccount);
         }
 
         catch (ApiException e)
@@ -172,13 +173,14 @@ public class MainActivity extends Activity
     public void playGif() //plays loading animations
     {
         final Animation Loader = new AlphaAnimation(1.f, 1.f);
-        Log.e(TAG, "play gif >> "+ m_faceboolSignedIn);
+        Log.e(TAG, "play gif >> "+ m_facebookSignedIn);
         Loader.setAnimationListener(new Animation.AnimationListener()
         {
             @Override
-            public void onAnimationStart(Animation animation) {
+            public void onAnimationStart(Animation animation)
+            {
                 Log.e(TAG, "google login anim= "+m_googleSignedIn );
-                Log.e(TAG, "facebook login anim= "+m_googleSignedIn );
+                Log.e(TAG, "facebook login anim= "+m_facebookSignedIn );
 
                 if (m_googleSignedIn == true)
                 {
@@ -186,14 +188,17 @@ public class MainActivity extends Activity
 
                 }
 
-                if(m_faceboolSignedIn==true) {
+                else if(m_facebookSignedIn == true)
+                {
                     m_LoadingBar.setBackgroundResource(R.drawable.facebook_load_anim);
 
                 }
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation){}
+            public void onAnimationRepeat(Animation animation)
+            {
+            }
 
             @Override
             public void onAnimationEnd(Animation animation)
@@ -212,27 +217,27 @@ public class MainActivity extends Activity
         AuthCredential credential = GoogleAuthProvider.getCredential(i_googleSignInAccount.getIdToken(), null);
 
         m_firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task)
+            {
+                if (task.isSuccessful())
                 {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-                            m_firebaseAuth.getCurrentUser().updateEmail(i_googleSignInAccount.getEmail());
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.e(TAG, "calling updateUI 2 " + m_firebaseAuth.getCurrentUser().getEmail());
+                    //m_firebaseAuth.getCurrentUser().updateEmail(i_googleSignInAccount.getEmail());
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.e(TAG, "calling updateUI 2 " + m_firebaseAuth.getCurrentUser().getEmail());
 
-                            Toast.makeText(MainActivity.this, "Google sign in success!", Toast.LENGTH_SHORT).show();
-                            handleAllSignInSuccess("Google");
-                        }
+                    Toast.makeText(MainActivity.this, "Google sign in success!", Toast.LENGTH_SHORT).show();
+                    handleAllSignInSuccess("Google");
+                }
 
-                        else
-                        {
-                            Toast.makeText(MainActivity.this, "Google sign in error :(", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                else
+                {
+                    Toast.makeText(MainActivity.this, "Google sign in error :(", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         Log.e(TAG, "firebaseAuthWithGoogle() <<");
     }
@@ -252,16 +257,17 @@ public class MainActivity extends Activity
     {
         m_firebaseUser = m_firebaseAuth.getCurrentUser();
         createUserDetailsFromFirebaseUser();
-        overrideUserDetailsPictureUrl(i_loginMethod);
+        overrideUserDetailsInformation(i_loginMethod);
         updateUIAndMoveToUserDetailsActivity();
     }
 
-    public void overrideUserDetailsPictureUrl(String i_loginMethod)
+    public void overrideUserDetailsInformation(String i_loginMethod)
     {
         switch (i_loginMethod)
         {
             case "Google":
                 changeUserDetailsPictureUrlForGoogle(GOOGLE_URL_PATH_TO_REMOVE, GOOGLE_URL_PATH_TO_ADD);
+                m_userDetails.setUserEmail(m_googleSignInAccount.getEmail().toString());
                 break;
 
             case "Facebook":
@@ -311,10 +317,12 @@ public class MainActivity extends Activity
         m_callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = findViewById(R.id.buttonFacebook);
         loginButton.setReadPermissions("email", "public_profile", "user_friends");
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-                m_faceboolSignedIn=true;
+            public void onClick(View view)
+            {
+                m_facebookSignedIn = true;
                 playGif();
             }
         });
@@ -327,15 +335,12 @@ public class MainActivity extends Activity
             {
                 Toast.makeText(MainActivity.this, "Facebook sign in success!", Toast.LENGTH_SHORT).show();
                 handleFacebookAccessToken(i_loginResult.getAccessToken());
-                m_faceboolSignedIn=true;
-                m_googleSignedIn=false;
             }
 
             @Override
             public void onCancel()
             {
                 Toast.makeText(MainActivity.this, "Facebook sign in canceled", Toast.LENGTH_SHORT).show();
-                m_faceboolSignedIn=false;
             }
 
             @Override
@@ -370,6 +375,7 @@ public class MainActivity extends Activity
         Log.e(TAG, "handleFacebookAccessToken () >>" + i_accessToken.getToken());
 
         AuthCredential credential = FacebookAuthProvider.getCredential(i_accessToken.getToken());
+
         m_firebaseAuth.signInWithCredential(credential)
         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
         {
