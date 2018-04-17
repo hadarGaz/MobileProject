@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SplashActivity extends AppCompatActivity
 {
@@ -42,6 +44,8 @@ public class SplashActivity extends AppCompatActivity
     public void moveToNextActivity()
     {
         Intent nextActivityIntent;
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser;
 
         //Add else if m_facebookAccount != null else if m_emailPasswordAccount != null ...
         if (m_googleSignInAccount != null)
@@ -50,8 +54,15 @@ public class SplashActivity extends AppCompatActivity
             setUserDetailsFromGoogleAccount();
             nextActivityIntent.putExtra("User Details", m_userDetails);
         }
+        else if((currentUser = firebaseAuth.getCurrentUser()) != null)
+        {
+            nextActivityIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
+            m_userDetails = new UserDetails(currentUser);
+            nextActivityIntent.putExtra("User Details", m_userDetails);
+        }
         else
             nextActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+
 
         startActivity(nextActivityIntent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

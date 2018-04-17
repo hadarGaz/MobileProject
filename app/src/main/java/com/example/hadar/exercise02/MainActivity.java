@@ -36,6 +36,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 
 import org.json.JSONObject;
 
@@ -55,7 +56,6 @@ public class MainActivity extends Activity
     private AccessTokenTracker m_accessTokenTracker;
     private GoogleSignInClient m_googleSignInClient;
     private SignInButton m_googleSignInButton;
-    private LoginButton m_facebookLoginButton;
     private UserDetails m_userDetails;
     private GifTextView m_LoadingBar;
     private GoogleSignInAccount m_googleSignInAccount;
@@ -83,7 +83,6 @@ public class MainActivity extends Activity
         m_userEmail = findViewById(R.id.editTextEmail);
         m_userPassword = findViewById(R.id.editTextPassword);
         m_googleSignInButton = findViewById(R.id.google_sign_in_button);
-        m_facebookLoginButton = findViewById(R.id.buttonFacebook);
     }
 
     public void googleSignInInit()
@@ -272,6 +271,7 @@ public class MainActivity extends Activity
 
             case "Facebook":
                 changeUserDetailsPictureUrlForFacebook();
+                setUserEmailToFacebookUser();
                 break;
 
             case "EmailPassword":
@@ -282,6 +282,17 @@ public class MainActivity extends Activity
 
             default:
                 return;
+        }
+    }
+
+    private void setUserEmailToFacebookUser()
+    {
+        for (UserInfo userInfo: m_firebaseUser.getProviderData())
+        {
+            if(userInfo.getProviderId().equals("facebook.com"))
+            {
+                m_userDetails.setUserEmail(userInfo.getEmail());
+            }
         }
     }
 
@@ -314,9 +325,10 @@ public class MainActivity extends Activity
     private void facebookLoginInit()
     {
         Log.e(TAG, "facebookLoginInit() >>");
+
         m_callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = findViewById(R.id.buttonFacebook);
-        loginButton.setReadPermissions("email", "public_profile", "user_friends");
+        loginButton.setReadPermissions("email", "public_profile");
         loginButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -326,15 +338,16 @@ public class MainActivity extends Activity
                 playGif();
             }
         });
-        m_facebookLoginButton.setReadPermissions("email", "public_profile", "user_friends");
 
-        m_facebookLoginButton.registerCallback(m_callbackManager, new FacebookCallback<LoginResult>()
+        loginButton.registerCallback(m_callbackManager, new FacebookCallback<LoginResult>()
         {
             @Override
             public void onSuccess(LoginResult i_loginResult)
             {
                 Toast.makeText(MainActivity.this, "Facebook sign in success!", Toast.LENGTH_SHORT).show();
                 handleFacebookAccessToken(i_loginResult.getAccessToken());
+
+
             }
 
             @Override
@@ -387,7 +400,8 @@ public class MainActivity extends Activity
                 if (task.isSuccessful())
                 {
                     handleAllSignInSuccess("Facebook");
-                } else
+                }
+                else
                     Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
                 Log.e(TAG, "Facebook: onComplete() <<");
@@ -405,9 +419,7 @@ public class MainActivity extends Activity
         super.onStart();
 
         m_firebaseAuth.addAuthStateListener(m_AuthListener);
-        FirebaseUser currentUser = m_firebaseAuth.getCurrentUser();
-        if(currentUser!= null)
-            updateUIAndMoveToUserDetailsActivity();
+
 
         Log.e(TAG, "onStart() <<");
     }
