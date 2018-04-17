@@ -70,7 +70,6 @@ public class UserDetailsActivity extends AppCompatActivity
                         exitIntent.addCategory(Intent.CATEGORY_HOME);
                         exitIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(exitIntent);
-                        finish();
                     }
                 })
                 .setNegativeButton("No", null)
