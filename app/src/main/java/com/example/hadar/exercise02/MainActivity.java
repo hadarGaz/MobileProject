@@ -229,8 +229,6 @@ public class MainActivity extends Activity
             {
                 if (task.isSuccessful())
                 {
-                    //m_firebaseAuth.getCurrentUser().updateEmail(i_googleSignInAccount.getEmail());
-                    // Sign in success, update UI with the signed-in user's information
                     Log.e(TAG, "calling updateUI 2 " + m_firebaseAuth.getCurrentUser().getEmail());
 
                     Toast.makeText(MainActivity.this, "Google sign in success!", Toast.LENGTH_SHORT).show();
@@ -276,14 +274,8 @@ public class MainActivity extends Activity
                 break;
 
             case "Facebook":
-                changeUserDetailsPictureUrlForFacebook();
-                setUserEmailToFacebookUser();
-                break;
-
-            case "EmailPassword":
-                //Check if email / password quality is good enough *****************************************
-                //If it is, remove this case from switch ************************************************************
-                // ******************************************************************************************
+                changeUserDetailsPictureUrlForFacebook(m_userDetails);
+                setUserEmailToFacebookUser(m_userDetails, m_firebaseUser);
                 break;
             case "Anonymously":
                 break;
@@ -292,22 +284,27 @@ public class MainActivity extends Activity
         }
     }
 
-    private void setUserEmailToFacebookUser()
+    public static void setUserEmailToFacebookUser(UserDetails i_userDetails, FirebaseUser i_firebaseUser)
     {
-        for (UserInfo userInfo: m_firebaseUser.getProviderData())
+        for (UserInfo userInfo: i_firebaseUser.getProviderData())
         {
             if(userInfo.getProviderId().equals("facebook.com"))
             {
-                m_userDetails.setUserEmail(userInfo.getEmail());
+                i_userDetails.setUserEmail(userInfo.getEmail());
             }
         }
     }
 
-    public void changeUserDetailsPictureUrlForFacebook()
+    public static void changeUserDetailsPictureUrlForFacebook(UserDetails i_userDetails)
     {
-        String newPicturePath = Profile.getCurrentProfile().getProfilePictureUri(500, 500).toString();
+        Profile facebookProfile = Profile.getCurrentProfile();
 
-        m_userDetails.setUserPictureUrl(newPicturePath);
+        if(facebookProfile != null)
+        {
+            String newPicturePath = facebookProfile.getProfilePictureUri(500, 500).toString();
+
+            i_userDetails.setUserPictureUrl(newPicturePath);
+        }
     }
 
     public void changeUserDetailsPictureUrlForGoogle(String i_originalPieceOfUrlToRemove, String i_newPieceOfUrlToAdd)
