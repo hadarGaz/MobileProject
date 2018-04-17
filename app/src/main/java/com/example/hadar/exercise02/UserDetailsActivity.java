@@ -22,14 +22,15 @@ public class UserDetailsActivity extends AppCompatActivity
     private ImageView m_userPictureImageView;
     private String m_userPictureUrl;
     private ImageButton m_signOutButton;
-    private TextView m_TextViewUserName, m_TextViewUserEmail;
+    private TextView m_UserNameTextView;
+    private TextView m_UserEmailTextView;
     private Intent m_inputIntent;
     private UserDetails m_userDetails;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate(Bundle i_savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
+        super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_user_details);
 
         findViews();
@@ -41,9 +42,17 @@ public class UserDetailsActivity extends AppCompatActivity
             @Override
             public void onClick(View i_view)
             {
+                turnOffAllGifs();
                 signOutAllAccounts();
             }
         });
+    }
+
+    public void turnOffAllGifs()
+    {
+        GifPlayer.setAnonymousSignIn(false);
+        GifPlayer.setFacebookSignIn(false);
+        GifPlayer.setGoogleSignIn(false);
     }
 
     @Override
@@ -89,15 +98,15 @@ public class UserDetailsActivity extends AppCompatActivity
 
     public void showUserName()
     {
-        m_TextViewUserName.setText(m_userDetails.getUserName());
+        m_UserNameTextView.setText(m_userDetails.getUserName());
     }
 
     public void showUserEmail()
     {
-        m_TextViewUserEmail.setText(m_userDetails.getUserEmail());
+        m_UserEmailTextView.setText(m_userDetails.getUserEmail());
     }
 
-    private void getIntentInput()
+    public void getIntentInput()
     {
         m_inputIntent = getIntent();
         m_userDetails = (UserDetails) m_inputIntent.getSerializableExtra("User Details");
@@ -105,8 +114,8 @@ public class UserDetailsActivity extends AppCompatActivity
 
     public void findViews()
     {
-        m_TextViewUserName = findViewById(R.id.user_name);
-        m_TextViewUserEmail = findViewById(R.id.user_email);
+        m_UserNameTextView = findViewById(R.id.user_name);
+        m_UserEmailTextView = findViewById(R.id.user_email);
         m_signOutButton = findViewById(R.id.sign_out_button);
         m_userPictureImageView = findViewById(R.id.user_picture);
     }
@@ -117,7 +126,7 @@ public class UserDetailsActivity extends AppCompatActivity
         signOutGoogleAccount();
     }
 
-    private void signOutEmailPassAndFacebookAccount()
+    public void signOutEmailPassAndFacebookAccount()
     {
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
@@ -146,13 +155,14 @@ public class UserDetailsActivity extends AppCompatActivity
     {
         Intent backToMainIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(backToMainIntent);
-        //overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
     }
 
     @Override
     public void finish()
     {
         super.finish();
-      //  overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

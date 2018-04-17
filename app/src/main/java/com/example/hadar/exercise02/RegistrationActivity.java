@@ -26,13 +26,16 @@ public class RegistrationActivity extends AppCompatActivity
     public static final String TAG = "RegistrationActivity";
     private static final int RESULT_LOAD_IMAGE = 1;
     private FirebaseAuth m_firebaseAuth;
-    private boolean m_isImageUploaded = false;
-    private EditText m_Email, m_Name, m_Password;
-    private ImageView m_ImageView;
+    private boolean m_isPictureUploaded = false;
+    private EditText m_emailEditText;
+    private EditText m_userNameEditText;
+    private EditText m_passwordEditText;
+    private ImageView m_uploadedPictureImageView;
     private Uri m_userPictureUri;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
@@ -58,20 +61,21 @@ public class RegistrationActivity extends AppCompatActivity
                 .show();
     }
 
-    private void findViews()
+    public void findViews()
     {
         m_firebaseAuth = FirebaseAuth.getInstance();
-        m_Email = findViewById(R.id.editTextEmail);
-        m_Password = findViewById(R.id.editTextPassword);
-        m_Name = findViewById(R.id.editTextPersonName);
-        m_ImageView = findViewById(R.id.imageViewSelectImage);
+        m_emailEditText = findViewById(R.id.editTextEmail);
+        m_passwordEditText = findViewById(R.id.editTextPassword);
+        m_userNameEditText = findViewById(R.id.editTextPersonName);
+        m_uploadedPictureImageView = findViewById(R.id.imageViewSelectImage);
     }
-    private void checkIfEmailHasAlreadyBeenWritten()
+
+    public void checkIfEmailHasAlreadyBeenWritten()
     {
         String emailStr;
         if( (emailStr = (String) getIntent().getSerializableExtra("Email")) != null)
         {
-            m_Email.setText(emailStr);
+            m_emailEditText.setText(emailStr);
         }
     }
 
@@ -80,18 +84,18 @@ public class RegistrationActivity extends AppCompatActivity
         //check validation
         if(detailsValidation())
         {
-            Task<AuthResult> authResult = m_firebaseAuth.createUserWithEmailAndPassword(m_Email.getText().toString(), m_Password.getText().toString());
+            Task<AuthResult> authResult = m_firebaseAuth.createUserWithEmailAndPassword(m_emailEditText.getText().toString(), m_passwordEditText.getText().toString());
 
             authResult.addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
             {
                 @Override
-                public void onComplete(@NonNull Task<AuthResult> task)
+                public void onComplete(@NonNull Task<AuthResult> i_completedTask)
                 {
-                    Log.e(TAG, "Email/Pass Auth: onComplete() >> " + task.isSuccessful());
+                    Log.e(TAG, "Email/Pass Auth: onComplete() >> " + i_completedTask.isSuccessful());
 
-                    if (!task.isSuccessful())
+                    if (!i_completedTask.isSuccessful())
                     {
-                        Toast.makeText(RegistrationActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegistrationActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                     else
@@ -105,36 +109,37 @@ public class RegistrationActivity extends AppCompatActivity
         }
     }
 
-    private void updateNameAndUriToUserAndSendVerification()
+    public void updateNameAndUriToUserAndSendVerification()
     {
         UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
-            .setDisplayName(m_Name.getText().toString())
+            .setDisplayName(m_userNameEditText.getText().toString())
             .setPhotoUri(m_userPictureUri).build();
 
         m_firebaseAuth.getCurrentUser().updateProfile(updateProfile)
             .addOnCompleteListener(this, new OnCompleteListener<Void>()
             {
                 @Override
-                public void onComplete(@NonNull Task<Void> task)
+                public void onComplete(@NonNull Task<Void> i_completedTask)
                 {
                     sendVerificationAndGoBackToMainActivity();
                 }
             });
     }
-    private void sendVerificationAndGoBackToMainActivity()
+
+    public void sendVerificationAndGoBackToMainActivity()
     {
         m_firebaseAuth.getCurrentUser().sendEmailVerification()
-        .addOnCompleteListener(new OnCompleteListener<Void>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<Void> i_task)
+            .addOnCompleteListener(new OnCompleteListener<Void>()
             {
-                if (i_task.isSuccessful())
+                @Override
+                public void onComplete(@NonNull Task<Void> i_completedTask)
                 {
-                    showEmailSentDialogAndGoBackToMail();
+                    if (i_completedTask.isSuccessful())
+                    {
+                        showEmailSentDialogAndGoBackToMail();
+                    }
                 }
-            }
-        });
+            });
     }
 
     public void showEmailSentDialogAndGoBackToMail()
@@ -173,21 +178,21 @@ public class RegistrationActivity extends AppCompatActivity
         if (i_requestCode == RESULT_LOAD_IMAGE && i_resultCode == RESULT_OK && i_dataIntent != null)
         {
             m_userPictureUri = i_dataIntent.getData();
-            m_ImageView.setImageURI(m_userPictureUri);
+            m_uploadedPictureImageView.setImageURI(m_userPictureUri);
 
-            m_isImageUploaded = true;
+            m_isPictureUploaded = true;
         }
     }
 
-    private boolean detailsValidation()
+    public boolean detailsValidation()
     {
         try
         {
-            verifyName(m_Name.getText().toString());
-            verifyEmail(m_Email.getText().toString());
-            verifyPassword(m_Password.getText().toString());
+            verifyName(m_userNameEditText.getText().toString());
+            verifyEmail(m_emailEditText.getText().toString());
+            verifyPassword(m_passwordEditText.getText().toString());
 
-             if(!m_isImageUploaded)
+             if(m_isPictureUploaded == false)
              {
                  throw new Exception("Please choose an image");
              }
@@ -202,41 +207,53 @@ public class RegistrationActivity extends AppCompatActivity
         return true;
     }
 
-    private void verifyName(String i_fullName)throws Exception
+    public void verifyName(String i_fullName)throws Exception
     {
         String RegEx = "^[a-zA-Z\\s]*$";
 
         if (i_fullName.matches(""))
+        {
             throw new Exception("Name field is empty");
+        }
 
         Pattern pattern = Pattern.compile(RegEx);
         Matcher matcher = pattern.matcher(i_fullName);
 
         if(matcher.matches() == false)
+        {
             throw new Exception("Invalid Name, only character");
+        }
 
     }
 
-    private void verifyEmail(String i_email)throws Exception
+    public void verifyEmail(String i_email)throws Exception
     {
         String RegEx = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
         if (i_email.matches(""))
+        {
             throw new Exception("Email field is empty");
+        }
 
         Pattern pattern = Pattern.compile(RegEx);
         Matcher matcher = pattern.matcher(i_email);
 
         if(matcher.matches() == false)
+        {
             throw new Exception("Invalid Email, doesn't match to email format ");
+        }
     }
 
-    private void verifyPassword(String i_password)throws Exception
+    public void verifyPassword(String i_password)throws Exception
     {
         if(i_password.length() < 6 )
+        {
             throw new Exception("Password must contain at least 6 characters");
+        }
 
         else if(i_password == null || i_password.isEmpty())
+        {
             throw new Exception("Password field is empty");
+        }
     }
 }
