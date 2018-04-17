@@ -45,6 +45,7 @@ import pl.droidsonroids.gif.GifTextView;
 public class MainActivity extends Activity
 {
     public static final String TAG = "MainActivity";
+    //public static final int CLEAR_ANIMATION = 0;
     public static final String GOOGLE_URL_PATH_TO_REMOVE = "s96-c/photo.jpg";
     public static final String GOOGLE_URL_PATH_TO_ADD = "s400-c/photo.jpg";
     private static int GOOGLE_SIGN_IN = 100;
@@ -57,9 +58,9 @@ public class MainActivity extends Activity
     private GoogleSignInClient m_googleSignInClient;
     private SignInButton m_googleSignInButton;
     private UserDetails m_userDetails;
-    private GifTextView m_LoadingBar;
+    //private GifTextView m_LoadingBar;
     private GoogleSignInAccount m_googleSignInAccount;
-    private boolean m_googleSignedIn = false, m_facebookSignedIn = false;
+    //private boolean m_googleSignedIn = false, m_facebookSignedIn = false;
     private FirebaseUser m_firebaseUser = null;
 
     @Override
@@ -69,8 +70,7 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
 
         m_firebaseAuth = FirebaseAuth.getInstance();
-        m_LoadingBar=findViewById(R.id.load_bar);
-
+        GifPlayer.m_LoadingBar=findViewById(R.id.load_bar);
         findViews();
         facebookLoginInit();
         googleSignInInit();
@@ -100,8 +100,8 @@ public class MainActivity extends Activity
             @Override
             public void onClick(View view)
             {
-                m_googleSignedIn = true;
-                playGif();
+                GifPlayer.setGoogleSignIn(true);
+                GifPlayer.playGif();
                 onClickGoogleButton();
             }
         });
@@ -132,7 +132,7 @@ public class MainActivity extends Activity
     public void onClickGoogleButton()
     {
         Intent signInIntent = m_googleSignInClient.getSignInIntent();
-        playGif();
+        GifPlayer.playGif();
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
 
@@ -148,6 +148,7 @@ public class MainActivity extends Activity
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(i_dataIntent);
             handleGoogleSignInResult(task);
         }
+
     }
 
     private void handleGoogleSignInResult(Task<GoogleSignInAccount> i_completedTask)
@@ -163,51 +164,15 @@ public class MainActivity extends Activity
 
         catch (ApiException e)
         {
-            Log.e(TAG, e.toString());
+
+            GifPlayer.stopGif();
+
+            Log.e(TAG, "unsuccessful sign in to google");
         }
 
         Log.e(TAG, "handleSignInResult() <<");
     }
 
-    public void playGif() //plays loading animations
-    {
-        final Animation Loader = new AlphaAnimation(1.f, 1.f);
-        Log.e(TAG, "play gif >> "+ m_facebookSignedIn);
-        Loader.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation)
-            {
-                Log.e(TAG, "google login anim= "+m_googleSignedIn );
-                Log.e(TAG, "facebook login anim= "+m_facebookSignedIn );
-
-                if (m_googleSignedIn == true)
-                {
-                    m_LoadingBar.setBackgroundResource(R.drawable.google_dark_load);
-
-                }
-
-                else if(m_facebookSignedIn == true)
-                {
-                    m_LoadingBar.setBackgroundResource(R.drawable.facebook_load_anim);
-
-                }
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-                m_LoadingBar.clearAnimation();
-            }
-        });
-
-        m_LoadingBar.startAnimation(Loader);
-    }
 
     private void firebaseAuthWithGoogle(final GoogleSignInAccount i_googleSignInAccount)
     {
@@ -334,8 +299,8 @@ public class MainActivity extends Activity
             @Override
             public void onClick(View view)
             {
-                m_facebookSignedIn = true;
-                playGif();
+                GifPlayer.setFacebookSignIn(true);
+                GifPlayer.playGif();
             }
         });
 
@@ -401,8 +366,13 @@ public class MainActivity extends Activity
                 {
                     handleAllSignInSuccess("Facebook");
                 }
+
                 else
+                    {
+                    GifPlayer.stopGif();
+                    Log.e(TAG, "unsuccessful sign in to google");
                     Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
 
                 Log.e(TAG, "Facebook: onComplete() <<");
             }
