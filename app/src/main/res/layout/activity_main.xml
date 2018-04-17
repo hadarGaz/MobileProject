@@ -42,13 +42,13 @@
         android:id="@+id/textViewForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/editTextPassword"
+        android:layout_alignStart="@+id/editTextEmail"
         android:layout_below="@+id/editTextPassword"
         android:autoLink="all"
         android:clickable="true"
         android:linksClickable="true"
         android:onClick="OnClickForgotPassword"
-        android:text="@string/forgot_password" />
+        android:text="Forgot password?" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_sign_in_button"
@@ -109,7 +109,7 @@
         android:layout_marginStart="11dp"
         android:layout_toEndOf="@+id/pre_sign_up"
         android:onClick="onSignUp"
-        android:text="@string/sign_up"
+        android:text="Sign Up!"
         android:textColor="@android:color/holo_blue_bright" />
 
     <TextView
@@ -119,9 +119,10 @@
         android:layout_alignEnd="@+id/google_sign_in_button"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="74dp"
-        android:text="Sign up anonymously"
-        android:visibility="visible"
-        android:onClick="onSignUpAnonymouslyClick"/>
+        android:onClick="onSignInAnonymouslyClick"
+        android:text="Sign in anonymously"
+        android:textColor="@android:color/holo_blue_bright"
+        android:visibility="visible" />
 
 
 </android.widget.RelativeLayout>
