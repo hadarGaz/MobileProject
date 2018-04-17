@@ -5,20 +5,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.support.v7.app.AlertDialog;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.Toast;
+
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -37,10 +34,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserInfo;
-
-import org.json.JSONObject;
-
-import pl.droidsonroids.gif.GifTextView;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 public class MainActivity extends Activity
 {
@@ -62,6 +57,7 @@ public class MainActivity extends Activity
     private GoogleSignInAccount m_googleSignInAccount;
     //private boolean m_googleSignedIn = false, m_facebookSignedIn = false;
     private FirebaseUser m_firebaseUser = null;
+    private FirebaseRemoteConfig m_FirebaseRemoteConfig;
 
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
@@ -71,6 +67,9 @@ public class MainActivity extends Activity
 
         m_firebaseAuth = FirebaseAuth.getInstance();
         GifPlayer.m_LoadingBar=findViewById(R.id.load_bar);
+        m_FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        m_LoadingBar=findViewById(R.id.load_bar);
+
         findViews();
         facebookLoginInit();
         googleSignInInit();
@@ -148,7 +147,6 @@ public class MainActivity extends Activity
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(i_dataIntent);
             handleGoogleSignInResult(task);
         }
-
     }
 
     private void handleGoogleSignInResult(Task<GoogleSignInAccount> i_completedTask)
@@ -188,8 +186,6 @@ public class MainActivity extends Activity
             {
                 if (task.isSuccessful())
                 {
-                    //m_firebaseAuth.getCurrentUser().updateEmail(i_googleSignInAccount.getEmail());
-                    // Sign in success, update UI with the signed-in user's information
                     Log.e(TAG, "calling updateUI 2 " + m_firebaseAuth.getCurrentUser().getEmail());
 
                     Toast.makeText(MainActivity.this, "Google sign in success!", Toast.LENGTH_SHORT).show();
@@ -235,37 +231,37 @@ public class MainActivity extends Activity
                 break;
 
             case "Facebook":
-                changeUserDetailsPictureUrlForFacebook();
-                setUserEmailToFacebookUser();
+                changeUserDetailsPictureUrlForFacebook(m_userDetails);
+                setUserEmailToFacebookUser(m_userDetails, m_firebaseUser);
                 break;
-
-            case "EmailPassword":
-                //Check if email / password quality is good enough *****************************************
-                //If it is, remove this case from switch ************************************************************
-                // ******************************************************************************************
+            case "Anonymously":
                 break;
-
             default:
                 return;
         }
     }
 
-    private void setUserEmailToFacebookUser()
+    public static void setUserEmailToFacebookUser(UserDetails i_userDetails, FirebaseUser i_firebaseUser)
     {
-        for (UserInfo userInfo: m_firebaseUser.getProviderData())
+        for (UserInfo userInfo: i_firebaseUser.getProviderData())
         {
             if(userInfo.getProviderId().equals("facebook.com"))
             {
-                m_userDetails.setUserEmail(userInfo.getEmail());
+                i_userDetails.setUserEmail(userInfo.getEmail());
             }
         }
     }
 
-    public void changeUserDetailsPictureUrlForFacebook()
+    public static void changeUserDetailsPictureUrlForFacebook(UserDetails i_userDetails)
     {
-        String newPicturePath = Profile.getCurrentProfile().getProfilePictureUri(500, 500).toString();
+        Profile facebookProfile = Profile.getCurrentProfile();
 
-        m_userDetails.setUserPictureUrl(newPicturePath);
+        if(facebookProfile != null)
+        {
+            String newPicturePath = facebookProfile.getProfilePictureUri(500, 500).toString();
+
+            i_userDetails.setUserPictureUrl(newPicturePath);
+        }
     }
 
     public void changeUserDetailsPictureUrlForGoogle(String i_originalPieceOfUrlToRemove, String i_newPieceOfUrlToAdd)
@@ -554,4 +550,70 @@ public class MainActivity extends Activity
                 .setPositiveButton("OK", null)
                 .show();
     }
+
+    public void onSignUpAnonymouslyClick(View v)
+    {
+        long cacheExpiration =0;
+        m_FirebaseRemoteConfig.fetch(cacheExpiration)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            m_FirebaseRemoteConfig.activateFetched();
+
+                            if(m_FirebaseRemoteConfig.getBoolean("allow_annoymous_user") == true)
+                            {
+                                signUpAnonymously();
+                            }
+                            else
+                            {
+                                Toast.makeText(MainActivity.this, "Not allow anonymous user",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this, "Fetch Failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void signUpAnonymously()
+    {
+        m_firebaseAuth.signInAnonymously()
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "signInAnonymously:success");
+                            FirebaseUser user = m_firebaseAuth.getCurrentUser();
+                            updateProfile();
+                        }
+                        else {
+                            Log.w(TAG, "signInAnonymously:failure", task.getException());
+                        }
+                    }
+                });
+
+
+    }
+    private void updateProfile()
+    {
+        UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
+                .setDisplayName("Anonymously")
+                .build();
+
+        m_firebaseAuth.getCurrentUser().updateProfile(updateProfile)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if(task.isSuccessful())
+                            handleAllSignInSuccess("Anonymously");
+                    }
+                });
+    }
+
+
 }
