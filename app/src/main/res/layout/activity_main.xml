@@ -120,8 +120,10 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="74dp"
         android:text="Sign up anonymously"
+        android:textColor="@android:color/holo_blue_bright"
         android:visibility="visible"
-        android:onClick="onSignUpAnonymouslyClick"/>
+        android:onClick="onSignUpAnonymouslyClick"
+        />
 
 
 </android.widget.RelativeLayout>

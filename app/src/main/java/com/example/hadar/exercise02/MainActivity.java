@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -40,7 +39,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 public class MainActivity extends Activity
 {
     public static final String TAG = "MainActivity";
-    //public static final int CLEAR_ANIMATION = 0;
     public static final String GOOGLE_URL_PATH_TO_REMOVE = "s96-c/photo.jpg";
     public static final String GOOGLE_URL_PATH_TO_ADD = "s400-c/photo.jpg";
     private static int GOOGLE_SIGN_IN = 100;
@@ -53,9 +51,7 @@ public class MainActivity extends Activity
     private GoogleSignInClient m_googleSignInClient;
     private SignInButton m_googleSignInButton;
     private UserDetails m_userDetails;
-    //private GifTextView m_LoadingBar;
     private GoogleSignInAccount m_googleSignInAccount;
-    //private boolean m_googleSignedIn = false, m_facebookSignedIn = false;
     private FirebaseUser m_firebaseUser = null;
     private FirebaseRemoteConfig m_FirebaseRemoteConfig;
 
@@ -66,9 +62,8 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
 
         m_firebaseAuth = FirebaseAuth.getInstance();
-        GifPlayer.m_LoadingBar=findViewById(R.id.load_bar);
         m_FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        m_LoadingBar=findViewById(R.id.load_bar);
+        GifPlayer.m_LoadingBar=findViewById(R.id.load_bar);
 
         findViews();
         facebookLoginInit();
@@ -553,7 +548,12 @@ public class MainActivity extends Activity
 
     public void onSignUpAnonymouslyClick(View v)
     {
+        GifPlayer.setanonymousSignIn(true);
+        GifPlayer.playGif();
+
+
         long cacheExpiration =0;
+
         m_FirebaseRemoteConfig.fetch(cacheExpiration)
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
@@ -571,8 +571,10 @@ public class MainActivity extends Activity
                                         Toast.LENGTH_SHORT).show();
                             }
                         } else {
+                            Log.e(TAG, "Fetch Failed", task.getException());
                             Toast.makeText(MainActivity.this, "Fetch Failed",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_SHORT).show();
+                            GifPlayer.stopGif();
                         }
                     }
                 });

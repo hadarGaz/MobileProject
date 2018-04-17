@@ -12,6 +12,7 @@ public class GifPlayer {
     private static final int CLEAR_ANIMATION = 0;
     private static boolean m_googleSignedIn = false;
     private static boolean m_facebookSignedIn = false;
+    private static boolean m_anonymousSignedIn = false;
     public static GifTextView m_LoadingBar;
 
 
@@ -25,10 +26,15 @@ public class GifPlayer {
         m_facebookSignedIn=i_result;
     }
 
+    public static void setanonymousSignIn(boolean i_result)
+    {
+        m_anonymousSignedIn=i_result;
+    }
+
     public static void stopGif()
     {
         m_LoadingBar.setBackgroundResource(CLEAR_ANIMATION);
-        m_facebookSignedIn=m_googleSignedIn=false;
+        m_facebookSignedIn=m_googleSignedIn=m_anonymousSignedIn=false;
     }
 
     public static void playGif() //plays loading animations
@@ -48,6 +54,11 @@ public class GifPlayer {
                 else if(m_facebookSignedIn == true)
                 {
                     m_LoadingBar.setBackgroundResource(R.drawable.facebook_load_anim);
+                }
+
+                else if(m_anonymousSignedIn == true)
+                {
+                    m_LoadingBar.setBackgroundResource(R.drawable.anonymous);
                 }
             }
 
