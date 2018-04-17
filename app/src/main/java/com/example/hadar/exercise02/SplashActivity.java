@@ -3,6 +3,8 @@ package com.example.hadar.exercise02;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
@@ -12,6 +14,7 @@ public class SplashActivity extends AppCompatActivity
 {
     private UserDetails m_userDetails;
     private GoogleSignInAccount m_googleSignInAccount;
+    private FirebaseUser m_firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,20 +47,20 @@ public class SplashActivity extends AppCompatActivity
     public void moveToNextActivity()
     {
         Intent nextActivityIntent;
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser;
 
-        //Add else if m_facebookAccount != null else if m_emailPasswordAccount != null ...
         if (m_googleSignInAccount != null)
         {
             nextActivityIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
             setUserDetailsFromGoogleAccount();
             nextActivityIntent.putExtra("User Details", m_userDetails);
         }
-        else if((currentUser = firebaseAuth.getCurrentUser()) != null)
+
+        else if(m_firebaseUser != null)
         {
             nextActivityIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
-            m_userDetails = new UserDetails(currentUser);
+            m_userDetails = new UserDetails(m_firebaseUser);
+            MainActivity.changeUserDetailsPictureUrlForFacebook(m_userDetails);
+            MainActivity.setUserEmailToFacebookUser(m_userDetails, m_firebaseUser);
             nextActivityIntent.putExtra("User Details", m_userDetails);
         }
         else
@@ -73,8 +76,6 @@ public class SplashActivity extends AppCompatActivity
     {
         super.onStart();
 
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
         m_googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
     }
 
