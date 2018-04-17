@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.support.v7.app.AlertDialog;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -22,6 +23,7 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -37,6 +39,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import org.json.JSONObject;
 
@@ -61,6 +65,7 @@ public class MainActivity extends Activity
     private GoogleSignInAccount m_googleSignInAccount;
     private boolean m_googleSignedIn = false, m_facebookSignedIn = false;
     private FirebaseUser m_firebaseUser = null;
+    private FirebaseRemoteConfig m_FirebaseRemoteConfig;
 
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
@@ -69,6 +74,7 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
 
         m_firebaseAuth = FirebaseAuth.getInstance();
+        m_FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         m_LoadingBar=findViewById(R.id.load_bar);
 
         findViews();
@@ -279,7 +285,8 @@ public class MainActivity extends Activity
                 //If it is, remove this case from switch ************************************************************
                 // ******************************************************************************************
                 break;
-
+            case "Anonymously":
+                break;
             default:
                 return;
         }
@@ -584,4 +591,70 @@ public class MainActivity extends Activity
                 .setPositiveButton("OK", null)
                 .show();
     }
+
+    public void onSignUpAnonymouslyClick(View v)
+    {
+        long cacheExpiration =0;
+        m_FirebaseRemoteConfig.fetch(cacheExpiration)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            m_FirebaseRemoteConfig.activateFetched();
+
+                            if(m_FirebaseRemoteConfig.getBoolean("allow_annoymous_user") == true)
+                            {
+                                signUpAnonymously();
+                            }
+                            else
+                            {
+                                Toast.makeText(MainActivity.this, "Not allow anonymous user",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this, "Fetch Failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void signUpAnonymously()
+    {
+        m_firebaseAuth.signInAnonymously()
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "signInAnonymously:success");
+                            FirebaseUser user = m_firebaseAuth.getCurrentUser();
+                            updateProfile();
+                        }
+                        else {
+                            Log.w(TAG, "signInAnonymously:failure", task.getException());
+                        }
+                    }
+                });
+
+
+    }
+    private void updateProfile()
+    {
+        UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
+                .setDisplayName("Anonymously")
+                .build();
+
+        m_firebaseAuth.getCurrentUser().updateProfile(updateProfile)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if(task.isSuccessful())
+                            handleAllSignInSuccess("Anonymously");
+                    }
+                });
+    }
+
+
 }
