@@ -2,6 +2,7 @@ package com.example.hadar.exercise02;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -95,7 +96,6 @@ public class UserDetailsActivity extends AppCompatActivity
     {
         m_userPictureUrl = m_userDetails.getUserPictureUrl();
 
-        //MUST TEST ON NON-PICTURE PROFILES!
         if (m_userPictureUrl != null)
         {
          m_userPictureImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
