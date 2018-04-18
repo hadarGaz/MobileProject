@@ -181,7 +181,6 @@ public class RegistrationActivity extends AppCompatActivity
         Intent backToMainIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(backToMainIntent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        finish();
     }
 
     private boolean detailsValidation()
