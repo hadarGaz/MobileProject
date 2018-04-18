@@ -22,13 +22,12 @@
         android:id="@+id/user_picture"
         android:layout_width="270dp"
         android:layout_height="240dp"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/user_name_banner"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="39dp"
+        android:layout_marginBottom="39dp"
         android:adjustViewBounds="true"
         android:contentDescription="@Profile Pic"
-        app:srcCompat="@android:drawable/sym_def_app_icon"
-        />
+        app:srcCompat="@android:drawable/sym_def_app_icon" />
 
     <TextView
         android:id="@+id/user_name"
@@ -45,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/sign_out_button"
         android:layout_below="@+id/user_name"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="29dp"
         android:layout_marginTop="22dp"
         android:text="@Email:" />
 

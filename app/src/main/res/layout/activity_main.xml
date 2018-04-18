@@ -84,9 +84,9 @@
         android:id="@+id/load_bar"
         android:layout_width="180dp"
         android:layout_height="140dp"
+        android:layout_alignEnd="@+id/buttonFacebook"
         android:layout_below="@+id/buttonSignIn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="18dp"
         android:scaleType="fitXY" />
 
     <TextView
