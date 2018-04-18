@@ -26,7 +26,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="39dp"
         android:adjustViewBounds="true"
-        android:contentDescription="@Profile Pic"
+        android:contentDescription="Profile Pic"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
     <TextView
@@ -38,6 +38,7 @@
         android:layout_marginStart="146dp"
         android:text="@User Name:"
         android:textSize="18sp" />
+
 
     <TextView
         android:id="@+id/user_email"

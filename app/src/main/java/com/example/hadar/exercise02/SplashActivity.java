@@ -20,6 +20,14 @@ public class SplashActivity extends AppCompatActivity
         super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        m_googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        m_firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        startRunThread();
+    }
+
+    private void startRunThread()
+    {
         Thread myThread = new Thread()
         {
             @Override
@@ -39,15 +47,6 @@ public class SplashActivity extends AppCompatActivity
         };
 
         myThread.start();
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        m_googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
-        m_firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     private void moveToNextActivity()

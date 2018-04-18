@@ -50,7 +50,6 @@ public class RegistrationActivity extends AppCompatActivity
         {
             m_userPictureUri = i_dataIntent.getData();
             m_uploadedPictureImageView.setImageURI(m_userPictureUri);
-
             m_isPictureUploaded = true;
         }
     }
@@ -93,14 +92,14 @@ public class RegistrationActivity extends AppCompatActivity
                 {
                     Log.e(TAG, "Email/Pass Auth: onComplete() >> " + i_completedTask.isSuccessful());
 
-                    if (!i_completedTask.isSuccessful())
+                    if (i_completedTask.isSuccessful())
                     {
-                        Toast.makeText(RegistrationActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        updateNameAndUriToUserAndSendVerification();
                     }
 
                     else
                     {
-                        updateNameAndUriToUserAndSendVerification();
+                        Toast.makeText(RegistrationActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                     Log.e(TAG, "Email/Pass Auth: onComplete() <<");
@@ -134,6 +133,7 @@ public class RegistrationActivity extends AppCompatActivity
             .setPhotoUri(m_userPictureUri).build();
 
         m_firebaseAuth.getCurrentUser().updateProfile(updateProfile)
+
             .addOnCompleteListener(this, new OnCompleteListener<Void>()
             {
                 @Override
@@ -187,6 +187,7 @@ public class RegistrationActivity extends AppCompatActivity
     private boolean detailsValidation()
     {
         DetailsValidation detailsValidation = new DetailsValidation();
+
         try
         {
             detailsValidation.verifyName(m_userNameEditText.getText().toString());

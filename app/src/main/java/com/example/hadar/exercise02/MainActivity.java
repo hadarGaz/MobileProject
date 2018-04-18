@@ -193,7 +193,6 @@ public class MainActivity extends Activity
                         if (m_firebaseAuth.getCurrentUser().isEmailVerified())
                         {
                             Log.e(TAG, "calling updateUI 5");
-                            updateUIAndMoveToUserDetailsActivity();
                             handleAllSignInSuccess("EmailPassword");
                         }
 
@@ -285,7 +284,8 @@ public class MainActivity extends Activity
 
                             else
                             {
-                                Toast.makeText(MainActivity.this, "Anonymous sign in is not allowed right now.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Anonymous sign in is not allowed right now.", Toast.LENGTH_LONG).show();
+                                GifPlayer.stopGif();
                             }
                         }
 
@@ -293,7 +293,7 @@ public class MainActivity extends Activity
                         {
                             Log.e(TAG, "Fetch Failed", task.getException());
                             Toast.makeText(MainActivity.this, "Fetch Failed",
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_LONG).show();
                             GifPlayer.stopGif();
                         }
                     }
