@@ -48,13 +48,6 @@ public class UserDetailsActivity extends AppCompatActivity
         });
     }
 
-    public void turnOffAllGifs()
-    {
-        GifPlayer.setAnonymousSignIn(false);
-        GifPlayer.setFacebookSignIn(false);
-        GifPlayer.setGoogleSignIn(false);
-    }
-
     @Override
     public void onBackPressed()
     {
@@ -76,14 +69,28 @@ public class UserDetailsActivity extends AppCompatActivity
                 .show();
     }
 
-    public void displayUserDetails()
+    @Override
+    public void finish()
+    {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    private void turnOffAllGifs()
+    {
+        GifPlayer.setAnonymousSignIn(false);
+        GifPlayer.setFacebookSignIn(false);
+        GifPlayer.setGoogleSignIn(false);
+    }
+
+    private void displayUserDetails()
     {
         showUserPicture();
         showUserName();
         showUserEmail();
     }
 
-    public void showUserPicture()
+    private void showUserPicture()
     {
         m_userPictureUrl = m_userDetails.getUserPictureUrl();
 
@@ -95,23 +102,23 @@ public class UserDetailsActivity extends AppCompatActivity
         }
     }
 
-    public void showUserName()
+    private void showUserName()
     {
         m_UserNameTextView.setText(m_userDetails.getUserName());
     }
 
-    public void showUserEmail()
+    private void showUserEmail()
     {
         m_UserEmailTextView.setText(m_userDetails.getUserEmail());
     }
 
-    public void getIntentInput()
+    private void getIntentInput()
     {
         m_inputIntent = getIntent();
         m_userDetails = (UserDetails) m_inputIntent.getSerializableExtra("User Details");
     }
 
-    public void findViews()
+    private void findViews()
     {
         m_UserNameTextView = findViewById(R.id.user_name);
         m_UserEmailTextView = findViewById(R.id.user_email);
@@ -119,20 +126,20 @@ public class UserDetailsActivity extends AppCompatActivity
         m_userPictureImageView = findViewById(R.id.user_picture);
     }
 
-    public void signOutAllAccounts()
+    private void signOutAllAccounts()
     {
         signOutEmailPassAndFacebookAccount();
         signOutGoogleAccount();
     }
 
-    public void signOutEmailPassAndFacebookAccount()
+    private void signOutEmailPassAndFacebookAccount()
     {
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
         goBackToMainActivity();
     }
 
-    public void signOutGoogleAccount()
+    private void signOutGoogleAccount()
     {
         GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
 
@@ -150,7 +157,7 @@ public class UserDetailsActivity extends AppCompatActivity
         }
     }
 
-    public void goBackToMainActivity()
+    private void goBackToMainActivity()
     {
         Intent backToMainIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(backToMainIntent);
@@ -158,10 +165,4 @@ public class UserDetailsActivity extends AppCompatActivity
         finish();
     }
 
-    @Override
-    public void finish()
-    {
-        super.finish();
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-    }
 }

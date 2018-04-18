@@ -20,8 +20,6 @@ public class SplashActivity extends AppCompatActivity
         super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        m_firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
         Thread myThread = new Thread()
         {
             @Override
@@ -43,21 +41,30 @@ public class SplashActivity extends AppCompatActivity
         myThread.start();
     }
 
-    public void moveToNextActivity()
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        m_googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        m_firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    private void moveToNextActivity()
     {
         Intent nextActivityIntent;
 
         if (m_googleSignInAccount != null)
         {
             nextActivityIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
-            setUserDetailsFromGoogleAccount();
+            createUserDetailsFromGoogleAccount();
             nextActivityIntent.putExtra("User Details", m_userDetails);
         }
 
         else if(m_firebaseUser != null)
         {
             nextActivityIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
-            setUserDetailsFromFirebaseAccount();
+            createUserDetailsFromFirebaseAccount();
             nextActivityIntent.putExtra("User Details", m_userDetails);
         }
         else
@@ -69,35 +76,16 @@ public class SplashActivity extends AppCompatActivity
         finish();
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-
-        m_googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
-    }
-
-    public void setUserDetailsFromGoogleAccount()
+    private void createUserDetailsFromGoogleAccount()
     {
         m_userDetails = new UserDetails(m_googleSignInAccount);
-        changeUserDetailsPictureUrl(MainActivity.GOOGLE_URL_PATH_TO_REMOVE, MainActivity.GOOGLE_URL_PATH_TO_ADD);
+        MainActivity.changeUserDetailsPictureUrlForGoogle(m_userDetails);
     }
 
-    public void setUserDetailsFromFirebaseAccount()
+    private void createUserDetailsFromFirebaseAccount()
     {
         m_userDetails = new UserDetails(m_firebaseUser);
         MainActivity.changeUserDetailsPictureUrlForFacebook(m_userDetails);
         MainActivity.setUserEmailToFacebookUser(m_userDetails, m_firebaseUser);
-    }
-
-    public void changeUserDetailsPictureUrl(String i_originalPieceOfUrlToRemove, String i_newPieceOfUrlToAdd)
-    {
-        String userDetailsPhotoUrl = m_userDetails.getUserPictureUrl();
-
-        if(userDetailsPhotoUrl != null)
-        {
-            String newPhotoPath = userDetailsPhotoUrl.replace(i_originalPieceOfUrlToRemove, i_newPieceOfUrlToAdd);
-            m_userDetails.setUserPictureUrl(newPhotoPath);
-        }
     }
 }
