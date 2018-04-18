@@ -18,8 +18,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity
 {
@@ -188,11 +186,12 @@ public class RegistrationActivity extends AppCompatActivity
 
     private boolean detailsValidation()
     {
+        DetailsValidation detailsValidation = new DetailsValidation();
         try
         {
-            verifyName(m_userNameEditText.getText().toString());
-            verifyEmail(m_emailEditText.getText().toString());
-            verifyPassword(m_passwordEditText.getText().toString());
+            detailsValidation.verifyName(m_userNameEditText.getText().toString());
+            detailsValidation.verifyEmail(m_emailEditText.getText().toString());
+            detailsValidation.verifyPassword(m_passwordEditText.getText().toString());
 
              if(m_isPictureUploaded == false)
              {
@@ -209,53 +208,5 @@ public class RegistrationActivity extends AppCompatActivity
         return true;
     }
 
-    private void verifyName(String i_fullName)throws Exception
-    {
-        String RegEx = "^[a-zA-Z\\s]*$";
 
-        if (i_fullName.matches(""))
-        {
-            throw new Exception("Name field is empty");
-        }
-
-        Pattern pattern = Pattern.compile(RegEx);
-        Matcher matcher = pattern.matcher(i_fullName);
-
-        if(matcher.matches() == false)
-        {
-            throw new Exception("Invalid Name, only character");
-        }
-
-    }
-
-    private void verifyEmail(String i_email)throws Exception
-    {
-        String RegEx = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-
-        if (i_email.matches(""))
-        {
-            throw new Exception("Email field is empty");
-        }
-
-        Pattern pattern = Pattern.compile(RegEx);
-        Matcher matcher = pattern.matcher(i_email);
-
-        if(matcher.matches() == false)
-        {
-            throw new Exception("Invalid Email, doesn't match to email format ");
-        }
-    }
-
-    private void verifyPassword(String i_password)throws Exception
-    {
-        if(i_password.length() < 6 )
-        {
-            throw new Exception("Password must contain at least 6 characters");
-        }
-
-        else if(i_password == null || i_password.isEmpty())
-        {
-            throw new Exception("Password field is empty");
-        }
-    }
 }

@@ -169,10 +169,11 @@ public class MainActivity extends Activity
     public void onSignInClick(View i_view)
     {
         Log.e(TAG, "onSignInClick() >>");
-
+        DetailsValidation detailsValidation = new DetailsValidation();
         try
         {
-            emailAndPasswordValidation();
+            detailsValidation.verifyEmail(m_userEmailEditText.getText().toString());
+            detailsValidation.verifyPassword(m_userPasswordEditText.getText().toString());
             String email = m_userEmailEditText.getText().toString();
             String pass = m_userPasswordEditText.getText().toString();
 
@@ -554,19 +555,6 @@ public class MainActivity extends Activity
         };
 
         Log.e(TAG, "firebaseAuthenticationInit() <<");
-    }
-
-    private void emailAndPasswordValidation ()throws Exception
-    {
-        if(m_userEmailEditText.getText().toString().matches(""))
-        {
-            throw new Exception("Email field is empty");
-        }
-
-        else if(m_userPasswordEditText.getText().toString().matches(""))
-        {
-            throw new Exception("Password field is empty");
-        }
     }
 
     private void showWaitingForEmailVerificationDialog()
