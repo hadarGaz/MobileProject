@@ -48,14 +48,13 @@ public class DetailsValidation
 
     public void verifyPassword(String i_password)throws Exception
     {
-        if(i_password.length() < 6 )
-        {
-            throw new Exception("Password must contain at least 6 characters");
-        }
-
-        else if(i_password == null || i_password.isEmpty())
+        if(i_password == null || i_password.isEmpty())
         {
             throw new Exception("Password field is empty");
+        }
+        else if(i_password.length() < 6 )
+        {
+            throw new Exception("Password must contain at least 6 characters");
         }
     }
 }
