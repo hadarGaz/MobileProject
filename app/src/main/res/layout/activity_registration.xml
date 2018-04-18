@@ -75,9 +75,9 @@
         android:id="@+id/imageViewSelectImage"
         android:layout_width="134dp"
         android:layout_height="114dp"
-        android:layout_alignEnd="@+id/editTextPersonName"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="107dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="109dp"
         android:contentDescription="SelectImage"
         app:srcCompat="@color/cardview_shadow_end_color" />
 
@@ -86,9 +86,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/editTextPersonName"
-        android:layout_marginBottom="147dp"
+        android:layout_alignStart="@+id/imageView3"
+        android:layout_marginBottom="152dp"
         android:text="Preview:"
         android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/editTextPersonName"
+        android:layout_marginStart="41dp"
+        app:srcCompat="@mipmap/account3_icon" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="30dp"
+        android:layout_height="35dp"
+        android:layout_alignEnd="@+id/imageView3"
+        android:layout_alignTop="@+id/editTextEmail"
+        app:srcCompat="@mipmap/email3_icon" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignStart="@+id/imageView3"
+        android:layout_alignTop="@+id/editTextPassword"
+        app:srcCompat="@mipmap/pass3_icon" />
 
 </android.widget.RelativeLayout>
