@@ -61,12 +61,13 @@
     <Button
         android:id="@+id/buttonSubmit"
         android:layout_width="150dp"
-        android:layout_height="68dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/buttonSelectImage"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
         android:layout_marginStart="0dp"
+        android:background="@drawable/button_bg"
         android:onClick="onSubmit"
         android:text="Sign Me Up!" />
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +22,7 @@ public class UserDetailsActivity extends AppCompatActivity
 {
     private ImageView m_userPictureImageView;
     private String m_userPictureUrl;
-    private ImageButton m_signOutButton;
+    private Button m_signOutButton;
     private TextView m_UserNameTextView;
     private TextView m_UserEmailTextView;
     private Intent m_inputIntent;

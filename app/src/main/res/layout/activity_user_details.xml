@@ -49,15 +49,15 @@
         android:layout_marginTop="22dp"
         android:text="@Email:" />
 
-    <ImageButton
+    <Button
         android:id="@+id/sign_out_button"
-        android:layout_width="130dp"
+        android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="33dp"
-        android:contentDescription="@Sign Out"
-        app:srcCompat="@mipmap/sign_out_button" />
+        android:text="Sign Out"
+        android:background="@drawable/button_bg" />
 
     <ImageView
         android:id="@+id/user_name_banner"
