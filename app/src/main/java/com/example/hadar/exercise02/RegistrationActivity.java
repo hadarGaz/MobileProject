@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity
 {
-    public static final String TAG = "RegistrationActivity";
+    private static final String TAG = "RegistrationActivity";
     private static final int RESULT_LOAD_IMAGE = 1;
     private FirebaseAuth m_firebaseAuth;
     private boolean m_isPictureUploaded = false;
@@ -44,6 +44,20 @@ public class RegistrationActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onActivityResult(int i_requestCode, int i_resultCode, Intent i_dataIntent)
+    {
+        super.onActivityResult(i_requestCode, i_resultCode, i_dataIntent);
+
+        if (i_requestCode == RESULT_LOAD_IMAGE && i_resultCode == RESULT_OK && i_dataIntent != null)
+        {
+            m_userPictureUri = i_dataIntent.getData();
+            m_uploadedPictureImageView.setImageURI(m_userPictureUri);
+
+            m_isPictureUploaded = true;
+        }
+    }
+
+    @Override
     public void onBackPressed()
     {
         new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
@@ -61,25 +75,13 @@ public class RegistrationActivity extends AppCompatActivity
                 .show();
     }
 
-    public void findViews()
+    public void onSelectImageClick(View i_view)
     {
-        m_firebaseAuth = FirebaseAuth.getInstance();
-        m_emailEditText = findViewById(R.id.editTextEmail);
-        m_passwordEditText = findViewById(R.id.editTextPassword);
-        m_userNameEditText = findViewById(R.id.editTextPersonName);
-        m_uploadedPictureImageView = findViewById(R.id.imageViewSelectImage);
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(Intent.createChooser(i, "Select Picture"), RESULT_LOAD_IMAGE);
     }
 
-    public void checkIfEmailHasAlreadyBeenWritten()
-    {
-        String emailStr;
-        if( (emailStr = (String) getIntent().getSerializableExtra("Email")) != null)
-        {
-            m_emailEditText.setText(emailStr);
-        }
-    }
-
-    public void onSubmit(View v)
+    public void onSubmit(View i_view)
     {
         //check validation
         if(detailsValidation())
@@ -109,7 +111,25 @@ public class RegistrationActivity extends AppCompatActivity
         }
     }
 
-    public void updateNameAndUriToUserAndSendVerification()
+    private void findViews()
+    {
+        m_firebaseAuth = FirebaseAuth.getInstance();
+        m_emailEditText = findViewById(R.id.editTextEmail);
+        m_passwordEditText = findViewById(R.id.editTextPassword);
+        m_userNameEditText = findViewById(R.id.editTextPersonName);
+        m_uploadedPictureImageView = findViewById(R.id.imageViewSelectImage);
+    }
+
+    private void checkIfEmailHasAlreadyBeenWritten()
+    {
+        String emailStr;
+        if( (emailStr = (String) getIntent().getSerializableExtra("Email")) != null)
+        {
+            m_emailEditText.setText(emailStr);
+        }
+    }
+
+    private void updateNameAndUriToUserAndSendVerification()
     {
         UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
             .setDisplayName(m_userNameEditText.getText().toString())
@@ -126,7 +146,7 @@ public class RegistrationActivity extends AppCompatActivity
             });
     }
 
-    public void sendVerificationAndGoBackToMainActivity()
+    private void sendVerificationAndGoBackToMainActivity()
     {
         m_firebaseAuth.getCurrentUser().sendEmailVerification()
             .addOnCompleteListener(new OnCompleteListener<Void>()
@@ -142,7 +162,7 @@ public class RegistrationActivity extends AppCompatActivity
             });
     }
 
-    public void showEmailSentDialogAndGoBackToMail()
+    private void showEmailSentDialogAndGoBackToMail()
     {
         new AlertDialog.Builder(this)
                 .setMessage("Verification email sent to:\n" + m_firebaseAuth.getCurrentUser().getEmail())
@@ -158,33 +178,15 @@ public class RegistrationActivity extends AppCompatActivity
                 .show();
     }
 
-    public void goBackToMainActivity()
+    private void goBackToMainActivity()
     {
         Intent backToMainIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(backToMainIntent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
     }
 
-    public void onSelectImageClick(View i_view)
-    {
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(Intent.createChooser(i, "Select Picture"), RESULT_LOAD_IMAGE);
-    }
-
-    @Override
-    protected void onActivityResult(int i_requestCode, int i_resultCode, Intent i_dataIntent)
-    {
-        super.onActivityResult(i_requestCode, i_resultCode, i_dataIntent);
-
-        if (i_requestCode == RESULT_LOAD_IMAGE && i_resultCode == RESULT_OK && i_dataIntent != null)
-        {
-            m_userPictureUri = i_dataIntent.getData();
-            m_uploadedPictureImageView.setImageURI(m_userPictureUri);
-
-            m_isPictureUploaded = true;
-        }
-    }
-
-    public boolean detailsValidation()
+    private boolean detailsValidation()
     {
         try
         {
@@ -207,7 +209,7 @@ public class RegistrationActivity extends AppCompatActivity
         return true;
     }
 
-    public void verifyName(String i_fullName)throws Exception
+    private void verifyName(String i_fullName)throws Exception
     {
         String RegEx = "^[a-zA-Z\\s]*$";
 
@@ -226,7 +228,7 @@ public class RegistrationActivity extends AppCompatActivity
 
     }
 
-    public void verifyEmail(String i_email)throws Exception
+    private void verifyEmail(String i_email)throws Exception
     {
         String RegEx = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
@@ -244,7 +246,7 @@ public class RegistrationActivity extends AppCompatActivity
         }
     }
 
-    public void verifyPassword(String i_password)throws Exception
+    private void verifyPassword(String i_password)throws Exception
     {
         if(i_password.length() < 6 )
         {

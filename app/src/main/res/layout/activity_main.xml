@@ -47,7 +47,7 @@
         android:autoLink="all"
         android:clickable="true"
         android:linksClickable="true"
-        android:onClick="OnClickForgotPassword"
+        android:onClick="OnForgotPasswordClick"
         android:text="Forgot password?" />
 
     <com.google.android.gms.common.SignInButton
@@ -108,7 +108,7 @@
         android:layout_alignBottom="@+id/pre_sign_up"
         android:layout_marginStart="11dp"
         android:layout_toEndOf="@+id/pre_sign_up"
-        android:onClick="onSignUp"
+        android:onClick="onSignUpClick"
         android:text="Sign Up!"
         android:textColor="@android:color/holo_blue_bright" />
 

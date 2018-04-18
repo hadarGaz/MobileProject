@@ -22,18 +22,17 @@ public class UserDetails implements Serializable
     {
         m_userName = i_firebaseUser.getDisplayName();
         m_userEmail = i_firebaseUser.getEmail();
-        Uri uri = i_firebaseUser.getPhotoUrl();
+        Uri userPictureUri = i_firebaseUser.getPhotoUrl();
 
-        if(uri != null)
+        if(userPictureUri != null)
         {
-            m_userPictureUrl = uri.toString();
+            m_userPictureUrl = userPictureUri.toString();
         }
 
         else
         {
             m_userPictureUrl = null;
         }
-
     }
 
     public UserDetails(GoogleSignInAccount i_googleSignInAccount)
