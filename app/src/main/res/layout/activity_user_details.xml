@@ -19,10 +19,10 @@
 
 
     <ImageView
-        android:id="@+id/user_picture"
+        android:id="@+id/ImageViewUserPic"
         android:layout_width="270dp"
         android:layout_height="240dp"
-        android:layout_above="@+id/user_name_banner"
+        android:layout_above="@+id/LabelUserName"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="39dp"
         android:adjustViewBounds="true"
@@ -30,72 +30,74 @@
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/TextViewUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/user_name_banner"
-        android:layout_marginStart="146dp"
+        android:layout_alignStart="@+id/buttonSignOut"
+        android:layout_alignTop="@+id/LabelUserName"
+        android:paddingLeft="3dp"
         android:text="@User Name:"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
 
     <TextView
-        android:id="@+id/user_email"
+        android:id="@+id/TextViewEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/email_banner"
-        android:layout_marginStart="146dp"
+        android:layout_alignStart="@+id/TextViewUserName"
+        android:layout_alignTop="@+id/LabelEmail"
         android:text="@Email:"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <Button
-        android:id="@+id/sign_out_button"
+        android:id="@+id/buttonSignOut"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="33dp"
-        android:text="Sign Out"
-        android:background="@drawable/button_bg" />
+        android:background="@drawable/button_bg"
+        android:text="Sign Out" />
 
     <TextView
-        android:id="@+id/user_name_banner"
+        android:id="@+id/LabelUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="179dp"
-        android:layout_marginEnd="-146dp"
-        android:layout_toStartOf="@+id/user_email"
+        android:layout_toStartOf="@+id/buttonSignOut"
         android:text="Name:"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/email_banner"
+        android:id="@+id/LabelEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/user_name_banner"
+        android:layout_alignStart="@+id/LabelUserName"
         android:layout_marginBottom="132dp"
         android:text="Email:"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/imageViewNameIcon"
         android:layout_width="30dp"
         android:layout_height="35dp"
-        android:layout_alignBottom="@+id/user_name"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="48dp"
+        android:layout_alignBottom="@+id/LabelUserName"
+        android:layout_alignTop="@+id/LabelUserName"
+        android:layout_toLeftOf="@+id/LabelUserName"
+        android:paddingRight="5dp"
         app:srcCompat="@mipmap/account3_icon" />
 
     <ImageView
         android:id="@+id/imageViewEmailIcon"
         android:layout_width="30dp"
         android:layout_height="35dp"
-        android:layout_alignBottom="@+id/user_email"
+        android:layout_alignBottom="@+id/LabelEmail"
         android:layout_alignStart="@+id/imageViewNameIcon"
+        android:layout_alignTop="@+id/LabelEmail"
+        android:layout_toLeftOf="@+id/LabelEmail"
+        android:paddingRight="5dp"
         app:srcCompat="@mipmap/email3_icon" />
 
 </RelativeLayout>
