@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Exercise_02.iml" filepath="$PROJECT_DIR$/Exercise_02.iml" />
-      <module fileurl="file://C:\Users\Liad Pasker\Desktop\Exercise_02\Mobile_Exercise_02.iml" filepath="C:\Users\Liad Pasker\Desktop\Exercise_02\Mobile_Exercise_02.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../Liad Pasker/Desktop/Exercise_02/Mobile_Exercise_02.iml" filepath="$PROJECT_DIR$/../../../Liad Pasker/Desktop/Exercise_02/Mobile_Exercise_02.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

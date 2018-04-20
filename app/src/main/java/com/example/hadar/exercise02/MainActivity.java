@@ -277,7 +277,7 @@ public class MainActivity extends Activity
                         {
                             m_FirebaseRemoteConfig.activateFetched();
 
-                            if (m_FirebaseRemoteConfig.getBoolean("allow_annoymous_user") == true)
+                            if (m_FirebaseRemoteConfig.getBoolean("allow_anonymous_user"))
                             {
                                 signInAnonymously();
                             }
@@ -586,13 +586,13 @@ public class MainActivity extends Activity
                     {
                         if (task.isSuccessful())
                         {
-                            Log.d(TAG, "signInAnonymously:success");
+                            Log.d(TAG, "signInAnonymously: success");
                             updateProfile();
                         }
 
                         else
                         {
-                            Log.w(TAG, "signInAnonymously:failure", task.getException());
+                            Log.w(TAG, "signInAnonymously: failure", task.getException());
                         }
                     }
                 });
