@@ -32,8 +32,8 @@ public class RegistrationActivity extends AppCompatActivity
     private Uri m_userPictureUri;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
@@ -60,6 +60,7 @@ public class RegistrationActivity extends AppCompatActivity
         new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Leaving Registration Area")
                 .setMessage("Are you sure you want to leave the registration?\nAll information will get lost.")
+
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
                 {
                     @Override
@@ -70,6 +71,7 @@ public class RegistrationActivity extends AppCompatActivity
                 })
                 .setNegativeButton("No", null)
                 .show();
+
     }
 
     public void onSelectImageClick(View i_view)
@@ -179,6 +181,7 @@ public class RegistrationActivity extends AppCompatActivity
     private void goBackToMainActivity()
     {
         Intent backToMainIntent = new Intent(getApplicationContext(), MainActivity.class);
+        backToMainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(backToMainIntent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }

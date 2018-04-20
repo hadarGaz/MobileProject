@@ -145,7 +145,7 @@ public class MainActivity extends Activity
                         exitIntent.addCategory(Intent.CATEGORY_HOME);
                         exitIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(exitIntent);
-                        finish();
+                        finishAffinity();
                     }
                 })
                 .setNegativeButton("No", null)
@@ -304,6 +304,7 @@ public class MainActivity extends Activity
     {
         Intent regIntent = new Intent(getApplicationContext(), RegistrationActivity.class);
         regIntent.putExtra("Email", m_userEmailEditText.getText().toString());
+        regIntent.putExtra("MAIN_CALL", true);
         startActivity(regIntent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
