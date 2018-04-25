@@ -3,15 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <?xml version="1.0" encoding="utf-8"?>
-    <menu xmlns:android="http://schemas.android.com/apk/res/android">
-        <item android:id="@+id/viewProfile"
-            android:icon="@drawable/ic_viewProfile"
-            android:title="@string/viewProfile"
-            android:showAsAction="ifRoom"/>
-        <item android:id="@+id/signOut"
-            android:icon="@drawable/ic_signOut"
-            android:title="@string/Sign Out" />
+    <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+        <item
+            android:id="@+id/one"
+            android:title="One"/>
+
+        <item
+            android:id="@+id/two"
+            android:title="Two"/>
+
+        <item
+            android:id="@+id/three"
+            android:title="Three"/>
+
     </menu>
 
 </LinearLayout>
