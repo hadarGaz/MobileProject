@@ -29,10 +29,10 @@ public class CinemaMainActivity extends AppCompatActivity
 }
 
 
-    private void onClickProfileButtom
+    private void onClickProfileButton(View view)
     {
         PopupMenu popup = new PopupMenu(this, m_profileMenuButton);
-        popup.getMenuInflater().inflate(R.menu.activity_cinema_main, popup.getMenu());
+        popup.getMenuInflater().inflate(R.menu.activity_user_menu, popup.getMenu());
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
         {
