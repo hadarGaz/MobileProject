@@ -55,14 +55,14 @@ public class SplashActivity extends AppCompatActivity
 
         if (m_googleSignInAccount != null)
         {
-            nextActivityIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
+            nextActivityIntent = new Intent(getApplicationContext(), CinemaMainActivity.class);
             createUserDetailsFromGoogleAccount();
             nextActivityIntent.putExtra("User Details", m_userDetails);
         }
 
         else if(m_firebaseUser != null)
         {
-            nextActivityIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
+            nextActivityIntent = new Intent(getApplicationContext(), CinemaMainActivity.class);
             createUserDetailsFromFirebaseAccount();
             nextActivityIntent.putExtra("User Details", m_userDetails);
         }
