@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegistrationActivity extends AppCompatActivity
 {
@@ -135,6 +137,8 @@ public class RegistrationActivity extends AppCompatActivity
             .setDisplayName(m_userNameEditText.getText().toString())
             .setPhotoUri(m_userPictureUri).build();
 
+
+
         m_firebaseAuth.getCurrentUser().updateProfile(updateProfile)
 
             .addOnCompleteListener(this, new OnCompleteListener<Void>()
@@ -142,9 +146,16 @@ public class RegistrationActivity extends AppCompatActivity
                 @Override
                 public void onComplete(@NonNull Task<Void> i_completedTask)
                 {
+                    addUserToDB();
                     sendVerificationAndGoBackToMainActivity();
                 }
             });
+    }
+
+    private void addUserToDB()
+    {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+        userRef.child(m_firebaseAuth.getCurrentUser().getUid()).setValue(new UserDetails(m_firebaseAuth.getCurrentUser()));
     }
 
     private void sendVerificationAndGoBackToMainActivity()
