@@ -90,6 +90,7 @@ public class UserDetailsActivity extends AppCompatActivity
         showUserEmail();
     }
 
+    // ************************** IMPORT IMAGE FROM DATABASE !!!! ************************
     private void showUserPicture()
     {
         m_userPictureUrl = m_userDetails.getUserPictureUrl();
