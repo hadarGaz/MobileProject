@@ -17,7 +17,7 @@ public class DetailsValidation
         Pattern pattern = Pattern.compile(RegEx);
         Matcher matcher = pattern.matcher(i_fullName);
 
-        if(matcher.matches() == false)
+        if(!matcher.matches())
         {
             throw new Exception("Invalid Name, only character");
         }
@@ -25,7 +25,6 @@ public class DetailsValidation
         {
             throw new Exception("Name must contain at least 3 characters");
         }
-
     }
 
     public void verifyEmail(String i_email)throws Exception
@@ -40,7 +39,7 @@ public class DetailsValidation
         Pattern pattern = Pattern.compile(RegEx);
         Matcher matcher = pattern.matcher(i_email);
 
-        if(matcher.matches() == false)
+        if(!matcher.matches())
         {
             throw new Exception("Invalid Email, doesn't match to email format ");
         }

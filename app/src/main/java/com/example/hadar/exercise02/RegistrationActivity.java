@@ -32,7 +32,8 @@ public class RegistrationActivity extends AppCompatActivity
     private Uri m_userPictureUri;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
@@ -156,13 +157,13 @@ public class RegistrationActivity extends AppCompatActivity
                 {
                     if (i_completedTask.isSuccessful())
                     {
-                        showEmailSentDialogAndGoBackToMail();
+                        showEmailSentDialogAndGoBackToMainActivity();
                     }
                 }
             });
     }
 
-    private void showEmailSentDialogAndGoBackToMail()
+    private void showEmailSentDialogAndGoBackToMainActivity()
     {
         new AlertDialog.Builder(this)
                 .setMessage("Verification email sent to:\n" + m_firebaseAuth.getCurrentUser().getEmail())
@@ -196,7 +197,7 @@ public class RegistrationActivity extends AppCompatActivity
             detailsValidation.verifyEmail(m_emailEditText.getText().toString());
             detailsValidation.verifyPassword(m_passwordEditText.getText().toString());
 
-             if(m_isPictureUploaded == false)
+             if(!m_isPictureUploaded)
              {
                  throw new Exception("Please choose an image");
              }
@@ -210,6 +211,4 @@ public class RegistrationActivity extends AppCompatActivity
 
         return true;
     }
-
-
 }
