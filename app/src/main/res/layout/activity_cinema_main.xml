@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.hadar.exercise02.CinemaMainActivity">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:scrollbars="vertical"
+        tools:layout_editor_absoluteX="119dp"
+        tools:layout_editor_absoluteY="228dp" />
+
+    <ImageButton
+        android:id="@+id/profileMenuButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/liad_icon"
+        tools:layout_editor_absoluteX="294dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+
+</android.support.constraint.ConstraintLayout>
