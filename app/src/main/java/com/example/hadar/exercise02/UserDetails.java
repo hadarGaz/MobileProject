@@ -4,12 +4,14 @@ import android.net.Uri;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseUser;
 import java.io.Serializable;
+import java.util.List;
 
 public class UserDetails implements Serializable
 {
     private String m_userName;
     private String m_userEmail;
     private String m_userPictureUrl;
+    private List<String> m_moviesStringList;
 
     public UserDetails(String i_userName, String i_userEmail, String i_userPictureUrl)
     {
@@ -79,5 +81,10 @@ public class UserDetails implements Serializable
     public String toString()
     {
         return "User Name: " + m_userName +", Email: " + m_userEmail;
+    }
+
+    public List<String> getMoviesStringList()
+    {
+        return m_moviesStringList;
     }
 }

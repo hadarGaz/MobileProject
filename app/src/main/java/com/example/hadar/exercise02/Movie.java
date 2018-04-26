@@ -14,6 +14,8 @@ public class Movie
     private URL m_pictureURL;
     private String m_cinema;
     private String m_thumbImage;
+    private int m_rating;
+    private int m_reviewsCount;
 
     public enum eGenre
     {
@@ -68,9 +70,19 @@ public class Movie
         m_cinema = i_cinema;
     }
 
-    private void setThumbImage(String i_thumbImage)
+    public void setThumbImage(String i_thumbImage)
     {
         m_thumbImage = i_thumbImage;
+    }
+
+    public void setRating(int i_rating)
+    {
+        m_rating = i_rating;
+    }
+
+    public int getRating()
+    {
+        return m_rating;
     }
 
     public String getName()
@@ -111,5 +123,10 @@ public class Movie
     public String getThumbImage()
     {
         return m_thumbImage;
+    }
+
+    public int getReviewsCount()
+    {
+        return m_reviewsCount;
     }
 }

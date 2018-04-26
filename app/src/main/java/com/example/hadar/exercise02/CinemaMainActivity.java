@@ -3,6 +3,8 @@ package com.example.hadar.exercise02;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
@@ -12,6 +14,8 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 import com.example.hadar.exercise02.adapter.MoviesAdapter;
 import com.example.hadar.exercise02.adapter.MovieWithKey;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,46 +24,47 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 import com.bumptech.glide.Glide;
-
+import com.google.firebase.database.ValueEventListener;
 
 public class CinemaMainActivity extends AppCompatActivity
 {
     private RecyclerView m_recyclerView;
     private UserDetails m_userDetails;
-    private ImageButton m_profileMenuButton;
-    private List<MovieWithKey> m_moviesWithKeysList;
-    private MoviesAdapter m_movieAdapter;
-    private DatabaseReference m_allMoviesReference;
-    private static final String TAG = "MainActivity";
-    private RecyclerView m_recyclerView;
-    private UserDetails m_userDetails;
     private ImageView m_profileMenuButton;
-
+    private List<MovieWithKey> m_moviesWithKeysList;
+    private FirebaseUser m_firebaseUser;
+    private static final String TAG = "MainActivity";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate(Bundle i_savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
+        super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_cinema_main);
 
         findViews();
+        displayUserImage();
+        setRecyclerViewOptions();
         getIntentInput();
-        getAllMovies();
+
+        if(m_firebaseUser != null)
+            handleSignedInFirebaseUser();
+        else
+            getAllMovies();
 }
 
     private void getAllMovies()
     {
         m_moviesWithKeysList.clear();
-        m_movieAdapter = new MoviesAdapter(m_moviesWithKeysList, m_userDetails);
-        //m_recyclerView.setAdapter(m_movieAdapter); //*************************
+        MoviesAdapter moviesAdapter = new MoviesAdapter(m_moviesWithKeysList, m_userDetails);
+        m_recyclerView.setAdapter(moviesAdapter);
 
         getAllMoviesUsingChildListeners();
     }
 
     private void getAllMoviesUsingChildListeners()
     {
-        m_allMoviesReference = FirebaseDatabase.getInstance().getReference("Movies");
-                m_allMoviesReference.addChildEventListener(new ChildEventListener()
+        DatabaseReference allMoviesReference = FirebaseDatabase.getInstance().getReference("Movies");
+                allMoviesReference.addChildEventListener(new ChildEventListener()
                 {
                     @Override
                     public void onChildAdded(DataSnapshot i_dataSnapshot, String i_previousChildName)
@@ -125,7 +130,6 @@ public class CinemaMainActivity extends AppCompatActivity
     {
         MovieWithKey movieWithKey;
 
-        Movie snapshotMovie = i_dataSnapshot.getValue(Movie.class);
         String snapshotKey = i_dataSnapshot.getKey();
 
         for(int i = 0; i < m_moviesWithKeysList.size(); i++)
@@ -143,7 +147,7 @@ public class CinemaMainActivity extends AppCompatActivity
 
     private void handleChildCancelled(DatabaseError i_databaseError)
     {
-        //Log.e(TAG, "onCancelled(Songs) >> " + i_databaseError.getMessage());
+        Log.e(TAG, "onCancelled(Songs) >> " + i_databaseError.getMessage());
     }
 
     private void findViews()
@@ -151,13 +155,7 @@ public class CinemaMainActivity extends AppCompatActivity
         m_profileMenuButton = findViewById(R.id.profileMenuButton);
         m_recyclerView = findViewById(R.id.my_recycler_view);
         m_moviesWithKeysList = new ArrayList<>();
-    }
-        Log.w(TAG,"onCreate>>");
-
-        m_userDetails=(UserDetails) getIntent().getSerializableExtra("User Details");
-        m_profileMenuButton=findViewById(R.id.test);
-        displayUserImage();
-        Log.w(TAG,"onCreate<<");
+        m_firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     private void displayUserImage()
@@ -166,13 +164,12 @@ public class CinemaMainActivity extends AppCompatActivity
         Glide.with(this).load(m_userDetails.getUserPictureUrl()).into(m_profileMenuButton);
     }
 
-    protected void onClickProfileButton(View i_view)
     private void getIntentInput()
     {
         m_userDetails = (UserDetails) getIntent().getSerializableExtra("User Details");
     }
 
-    private void onClickProfileButton(View view)
+    public void onClickProfileButton(View view)
     {
         PopupMenu popup = new PopupMenu(this, m_profileMenuButton);
         popup.getMenuInflater().inflate(R.menu.activity_user_menu, popup.getMenu());
@@ -208,5 +205,30 @@ public class CinemaMainActivity extends AppCompatActivity
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
+    private void setRecyclerViewOptions()
+    {
+        m_recyclerView.setHasFixedSize(true);
+        m_recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        m_recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
 
+    private void handleSignedInFirebaseUser()
+    {
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users/" + m_firebaseUser.getUid());
+                userReference.addValueEventListener(new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(DataSnapshot i_dataSnapshot)
+                    {
+                        m_userDetails = i_dataSnapshot.getValue(UserDetails.class);
+                        getAllMovies();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError i_databaseError)
+                    {
+                        Log.e(TAG, "onCancelled(Users) >>" + i_databaseError.getMessage());
+                    }
+                });
+    }
 }

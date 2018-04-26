@@ -9,7 +9,7 @@
 
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view"
+        android:id="@+id/movies_list"
         android:layout_width="100dp"
         android:layout_height="0dp"
         android:layout_marginBottom="189dp"
@@ -17,21 +17,19 @@
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test"
+        app:layout_constraintTop_toBottomOf="@+id/profileMenuButton"
         tools:ignore="MissingConstraints" />
 
     <ImageView
-        android:id="@+id/test"
+        android:id="@+id/profileMenuButton"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:maxWidth="42dp"
         android:maxHeight="42dp"
+        android:maxWidth="42dp"
         android:onClick="onClickProfileButton"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/liad_icon" />
+        app:srcCompat="@mipmap/liad_icon"
+        tools:layout_editor_absoluteX="298dp"
+        tools:layout_editor_absoluteY="16dp" />
 
 
 </android.support.constraint.ConstraintLayout>
