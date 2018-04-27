@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02;
+package com.example.hadar.exercise02.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.example.hadar.exercise02.R;
+import com.example.hadar.exercise02.model.Review;
 
 import java.util.List;
 

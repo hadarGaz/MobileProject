@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02;
+package com.example.hadar.exercise02.model;
 
 import java.net.URL;
 import java.util.Calendar;
