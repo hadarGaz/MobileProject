@@ -11,6 +11,11 @@ public class Movie
     private double m_price;
     private URL m_trailerURL;
     private eGenre m_genre;
+    private URL m_pictureURL;
+    private String m_cinema;
+    private String m_thumbImage;
+    private int m_rating;
+    private int m_reviewsCount;
 
     public enum eGenre
     {
@@ -22,15 +27,6 @@ public class Movie
     public Movie(String i_name)
     {
         m_name = i_name;
-    }
-
-    public void setName(String i_name) throws Exception
-    {
-        if(i_name == null)
-            throw new Exception("Movie name cannot be null");
-
-        else
-            m_name = i_name;
     }
 
     public void setDate(Date i_date) throws Exception
@@ -54,7 +50,7 @@ public class Movie
 
     }
 
-    public void setTrailerUrl(URL i_trailerURL)
+    public void setTrailerURL(URL i_trailerURL)
     {
         m_trailerURL = i_trailerURL;
     }
@@ -62,6 +58,31 @@ public class Movie
     public void setGenre(eGenre i_genre)
     {
         m_genre = i_genre;
+    }
+
+    public void setPictureURL(URL i_pictureURL)
+    {
+        m_pictureURL = i_pictureURL;
+    }
+
+    public void setCinema(String i_cinema)
+    {
+        m_cinema = i_cinema;
+    }
+
+    public void setThumbImage(String i_thumbImage)
+    {
+        m_thumbImage = i_thumbImage;
+    }
+
+    public void setRating(int i_rating)
+    {
+        m_rating = i_rating;
+    }
+
+    public int getRating()
+    {
+        return m_rating;
     }
 
     public String getName()
@@ -87,5 +108,25 @@ public class Movie
     public eGenre getGenre()
     {
         return m_genre;
+    }
+
+    public URL getPictureURL()
+    {
+        return m_pictureURL;
+    }
+
+    public String getCinema()
+    {
+        return m_cinema;
+    }
+
+    public String getThumbImage()
+    {
+        return m_thumbImage;
+    }
+
+    public int getReviewsCount()
+    {
+        return m_reviewsCount;
     }
 }

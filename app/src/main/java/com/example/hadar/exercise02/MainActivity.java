@@ -404,9 +404,9 @@ public class MainActivity extends Activity
     {
         if(m_firebaseUser != null)
         {
-            Intent userDetailsIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
-            userDetailsIntent.putExtra("User Details", m_userDetails);
-            startActivity(userDetailsIntent);
+            Intent CinemaMainIntent = new Intent(getApplicationContext(), CinemaMainActivity.class);
+            CinemaMainIntent.putExtra("User Details", m_userDetails);
+            startActivity(CinemaMainIntent);
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             finish();
         }
