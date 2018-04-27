@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02;
+package com.example.hadar.exercise02.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.hadar.exercise02.model.GifPlayer;
+import com.example.hadar.exercise02.R;
+import com.example.hadar.exercise02.model.UserDetails;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;

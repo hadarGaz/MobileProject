@@ -11,14 +11,14 @@
         android:roundIcon="@mipmap/liad_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity">
+        <activity android:name=".Activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Activity.MainActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -40,10 +40,10 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".UserDetailsActivity" />
-        <activity android:name=".RegistrationActivity" />
-        <activity android:name=".CinemaMainActivity" />
-        <activity android:name=".ReservationSummaryActivity"></activity>
+        <activity android:name=".Activity.UserDetailsActivity" />
+        <activity android:name=".Activity.RegistrationActivity" />
+        <activity android:name=".Activity.CinemaMainActivity" />
+        <activity android:name=".Activity.ReservationSummaryActivity"></activity>
     </application>
 
 </manifest>

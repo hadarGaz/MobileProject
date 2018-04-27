@@ -1,7 +1,10 @@
-package com.example.hadar.exercise02;
+package com.example.hadar.exercise02.model;
 
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+
+import com.example.hadar.exercise02.R;
+
 import pl.droidsonroids.gif.GifTextView;
 
 /**

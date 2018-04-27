@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02;
+package com.example.hadar.exercise02.Activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -12,9 +12,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+
+import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.adapter.MoviesAdapter;
-import com.example.hadar.exercise02.model.MovieWithKey;
+import com.example.hadar.exercise02.adapter.MovieWithKey;
 import com.example.hadar.exercise02.model.Movie;
+import com.example.hadar.exercise02.model.UserDetails;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;

@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02;
+package com.example.hadar.exercise02.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +13,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.hadar.exercise02.R;
+import com.example.hadar.exercise02.model.DetailsValidation;
+import com.example.hadar.exercise02.model.UserDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

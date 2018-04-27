@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02.model;
+package com.example.hadar.exercise02.adapter;
 
 import com.example.hadar.exercise02.model.Movie;
 
