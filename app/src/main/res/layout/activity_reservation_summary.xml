@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="344dp"
+        android:layout_height="225dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="251dp">
+
+                <ImageView
+                    android:id="@+id/imageViewMoviePic"
+                    android:layout_width="114dp"
+                    android:layout_height="84dp"
+                    app:srcCompat="@android:color/black"
+                    tools:layout_editor_absoluteX="219dp"
+                    tools:layout_editor_absoluteY="49dp" />
+
+
+
+                <TextView
+                    android:id="@+id/textViewMovieName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    tools:layout_editor_absoluteX="116dp"
+                    tools:layout_editor_absoluteY="16dp" />
+
+                <View
+                    android:layout_width="300dp"
+                    android:layout_height="1dp"
+                    android:background="@android:color/black"
+                    tools:layout_editor_absoluteX="22dp"
+                    tools:layout_editor_absoluteY="16dp" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="300dp"
+                    android:layout_height="1dp"
+                    android:background="@android:color/black"
+                    tools:layout_editor_absoluteX="22dp"
+                    tools:layout_editor_absoluteY="34dp" />
+
+                <TextView
+                    android:id="@+id/textViewDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    tools:layout_editor_absoluteX="143dp"
+                    tools:layout_editor_absoluteY="49dp" />
+
+                <TextView
+                    android:id="@+id/textViewCinemaLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    tools:layout_editor_absoluteX="143dp"
+                    tools:layout_editor_absoluteY="84dp" />
+
+                <TextView
+                    android:id="@+id/textViewJanner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    tools:layout_editor_absoluteX="143dp"
+                    tools:layout_editor_absoluteY="118dp" />
+
+                <TextView
+                    android:id="@+id/textViewMovieDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    tools:layout_editor_absoluteX="269dp"
+                    tools:layout_editor_absoluteY="160dp" />
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.CardView>
+    </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/MovieReview"
+        android:layout_width="344dp"
+        android:layout_height="318dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="241dp" />
+
+
+</android.support.constraint.ConstraintLayout>

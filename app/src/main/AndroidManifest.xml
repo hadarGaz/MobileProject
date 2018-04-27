@@ -42,7 +42,8 @@
         </activity>
         <activity android:name=".UserDetailsActivity" />
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".CinemaMainActivity"></activity>
+        <activity android:name=".CinemaMainActivity" />
+        <activity android:name=".ReservationSummaryActivity"></activity>
     </application>
 
 </manifest>

@@ -2,9 +2,9 @@ package com.example.hadar.exercise02;
 
 
 public class Review {
-    private String textReview;
-    private byte rating;
-    private String userName;
+    private String m_textReview;
+    private byte m_rating;
+    private String m_userEmail;
 
 
     public Review() {}
@@ -12,39 +12,39 @@ public class Review {
 
     public Review(String i_textReview, byte i_rating, String i_userName)
     {
-        this.textReview = i_textReview;
-        this.rating = i_rating;
-        this.userName = i_userName;
+        this.m_textReview = i_textReview;
+        this.m_rating = i_rating;
+        this.m_userEmail = i_userName;
     }
 
 
     public String getTextReview()
     {
-        return textReview;
+        return m_textReview;
     }
 
     public byte getRating()
     {
-        return rating;
+        return m_rating;
     }
 
-    public String getUserName()
+    public String getUserEmail()
     {
-        return userName;
+        return m_userEmail;
     }
 
     public void setTextReview(String i_textReview)
     {
-        this.textReview = i_textReview;
+        this.m_textReview = i_textReview;
     }
 
     public void setRating(byte i_rating)
     {
-        this.rating = i_rating;
+        this.m_rating = i_rating;
     }
 
-    public void setUserName(String i_userName)
+    public void setUserEmail(String i_userEmail)
     {
-        this.userName = i_userName;
+        this.m_userEmail = i_userEmail;
     }
 }
