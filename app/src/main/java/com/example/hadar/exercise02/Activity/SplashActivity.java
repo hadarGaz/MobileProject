@@ -70,7 +70,7 @@ public class SplashActivity extends AppCompatActivity
             nextActivityIntent.putExtra("User Details", m_userDetails);
         }
         else
-            nextActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+            nextActivityIntent = new Intent(getApplicationContext(), SignInActivity.class);
 
 
         startActivity(nextActivityIntent);
@@ -81,13 +81,13 @@ public class SplashActivity extends AppCompatActivity
     private void createUserDetailsFromGoogleAccount()
     {
         m_userDetails = new UserDetails(m_googleSignInAccount);
-        MainActivity.changeUserDetailsPictureUrlForGoogle(m_userDetails);
+        SignInActivity.changeUserDetailsPictureUrlForGoogle(m_userDetails);
     }
 
     private void createUserDetailsFromFirebaseAccount()
     {
         m_userDetails = new UserDetails(m_firebaseUser);
-        MainActivity.changeUserDetailsPictureUrlForFacebook(m_userDetails);
-        MainActivity.setUserEmailToFacebookUser(m_userDetails, m_firebaseUser);
+        SignInActivity.changeUserDetailsPictureUrlForFacebook(m_userDetails);
+        SignInActivity.setUserEmailToFacebookUser(m_userDetails, m_firebaseUser);
     }
 }

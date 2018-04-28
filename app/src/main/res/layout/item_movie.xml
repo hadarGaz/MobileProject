@@ -79,6 +79,7 @@
                 android:numStars="5"
                 android:rating="0"
                 android:stepSize="0.1"
+                android:progressTint="@color/yellow"
                 card_view:layout_constraintStart_toEndOf="@+id/movie_thumb_image"
                 card_view:layout_constraintTop_toBottomOf="@+id/movie_date" />
 

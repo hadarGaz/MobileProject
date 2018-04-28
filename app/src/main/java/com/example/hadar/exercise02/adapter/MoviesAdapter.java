@@ -1,6 +1,7 @@
 package com.example.hadar.exercise02.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,14 +14,19 @@ import com.bumptech.glide.Glide;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.UserDetails;
+import com.facebook.internal.WebDialog;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
+
 import java.util.Iterator;
 import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>
 {
+
+    private final String TAG = "MoviesAdapter";
     private List<MovieWithKey> m_moviesWithKeysList;
     private UserDetails m_userDetails;
 
@@ -52,7 +58,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         String movieKey = m_moviesWithKeysList.get(i_position).getKey();
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference()
-                .child("thumbs/" + movie.getThumbImage());
+                .child("movie Pictures/" + movie.getM_thumbImage() );
+
 
         Glide.with(i_movieViewHolder.getContext())
                 .using(new FirebaseImageLoader())
@@ -61,25 +68,28 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
         i_movieViewHolder.setSelectedMovie(movie);
         i_movieViewHolder.setSelectedMovieKey(movieKey);
-        i_movieViewHolder.getNameTextView().setText(movie.getName());
-        i_movieViewHolder.getDateTextView().setText(movie.getDate().toString());
-        i_movieViewHolder.getGenreTextView().setText(movie.getGenre().toString());
+        i_movieViewHolder.getNameTextView().setText(movie.getM_name());
+        i_movieViewHolder.getDateTextView().setText(movie.getM_date());
+        i_movieViewHolder.getGenreTextView().setText(movie.getM_genre());
+        i_movieViewHolder.getCinemaTextView().setText(movie.getM_cinemaLocation());
+        i_movieViewHolder.getRating().setRating(movie.getM_rating());
 
-        if(movie.getReviewsCount() > 0)
+        int reviewsCount = movie.getM_reviewsCount();
+        if( reviewsCount > 0)
         {
-            i_movieViewHolder.getReviewsCountTextView().setText("("+movie.getReviewsCount()+")");
-            i_movieViewHolder.getRating().setRating((float)(movie.getRating() / movie.getReviewsCount()));
+            i_movieViewHolder.getReviewsCountTextView().setText("("+reviewsCount+")");
+            i_movieViewHolder.getRating().setRating((float)(movie.getM_rating() / reviewsCount));
         }
 
-        i_movieViewHolder.getMoviePriceTextView().setText(movie.getPrice() + "$");
+        i_movieViewHolder.getMoviePriceTextView().setText(movie.getM_price() + "$");
 
-        Iterator iterator = m_userDetails.getMoviesStringList().iterator();
-        while (iterator.hasNext())
-        {
-            if (iterator.next().equals(movieKey))
-            {
-                //i_movieViewHolder.getMoviePriceTextView().setTextColor(R.color.colorPrimary);
-                break;
+        if(m_userDetails.getMoviesStringList() != null) {
+            Iterator iterator = m_userDetails.getMoviesStringList().iterator();
+            while (iterator.hasNext()) {
+                if (iterator.next().equals(movieKey)) {
+                    //i_movieViewHolder.getMoviePriceTextView().setTextColor(R.color.colorPrimary);
+                    break;
+                }
             }
         }
     }
@@ -139,7 +149,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             return m_genreTextView;
         }
 
-        public TextView getM_cinemaTextView()
+        public TextView getCinemaTextView()
         {
             return m_cinemaTextView;
         }

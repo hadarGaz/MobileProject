@@ -105,11 +105,11 @@ public class ReservationSummaryActivity extends AppCompatActivity
     }
     private void setMovieDetails()
     {
-        m_movieNameTextView.setText(m_movie.getName());
-        m_dateTextView.setText(m_movie.getDate().toString());
-        //m_CinemaLocationTextView.setText(m_movie.get
-        m_jannerTextView.setText(m_movie.getGenre().toString());
-        //m_movieDescriptionTextView.setText(m_movie.get
+        m_movieNameTextView.setText(m_movie.getM_name());
+        m_dateTextView.setText(m_movie.getM_date().toString());
+        m_CinemaLocationTextView.setText(m_movie.getM_cinemaLocation());
+        m_jannerTextView.setText(m_movie.getM_genre().toString());
+        m_movieDescriptionTextView.setText(m_movie.getM_movieDescription());
     }
 
 }

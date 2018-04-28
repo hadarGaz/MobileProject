@@ -39,11 +39,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
-public class MainActivity extends Activity
+public class SignInActivity extends Activity
 {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "SignInActivity";
     private static final String GOOGLE_URL_PATH_TO_REMOVE = "s96-c/photo.jpg";
     private static final String GOOGLE_URL_PATH_TO_ADD = "s400-c/photo.jpg";
     private static int GOOGLE_SIGN_IN = 100;
@@ -210,7 +212,7 @@ public class MainActivity extends Activity
 
                     else
                     {
-                        Toast.makeText(MainActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(SignInActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                     Log.e(TAG, "Email/Pass Auth: onComplete() <<");
@@ -236,7 +238,7 @@ public class MainActivity extends Activity
 
         if(emailStr.isEmpty())
         {
-            Toast.makeText(MainActivity.this, "Please type an email address in order to reset your password.", Toast.LENGTH_LONG).show();
+            Toast.makeText(SignInActivity.this, "Please type an email address in order to reset your password.", Toast.LENGTH_LONG).show();
         }
 
         else
@@ -254,7 +256,7 @@ public class MainActivity extends Activity
                                 showPasswordResetWasSentDialog();
                             } else
                             {
-                                Toast.makeText(MainActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(SignInActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
 
                             Log.e(TAG, "OnForgotPasswordClick: onComplete() << " + i_completedTask.isSuccessful());
@@ -289,7 +291,7 @@ public class MainActivity extends Activity
 
                             else
                             {
-                                Toast.makeText(MainActivity.this, "Anonymous sign in is not allowed right now.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(SignInActivity.this, "Anonymous sign in is not allowed right now.", Toast.LENGTH_LONG).show();
                                 GifPlayer.stopGif();
                             }
                         }
@@ -297,7 +299,7 @@ public class MainActivity extends Activity
                         else
                         {
                             Log.e(TAG, "Fetch Failed", task.getException());
-                            Toast.makeText(MainActivity.this, "Fetch Failed",
+                            Toast.makeText(SignInActivity.this, "Fetch Failed",
                                     Toast.LENGTH_LONG).show();
                             GifPlayer.stopGif();
                         }
@@ -391,13 +393,13 @@ public class MainActivity extends Activity
                 {
                     Log.e(TAG, "calling updateUI 2 " + m_firebaseAuth.getCurrentUser().getEmail());
 
-                    Toast.makeText(MainActivity.this, "Google sign in success!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, "Google sign in success!", Toast.LENGTH_SHORT).show();
                     handleAllSignInSuccess("Google");
                 }
 
                 else
                 {
-                    Toast.makeText(MainActivity.this, "Google sign in error :(", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, "Google sign in error :(", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -409,6 +411,9 @@ public class MainActivity extends Activity
     {
         if(m_firebaseUser != null)
         {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+            userRef.child(m_firebaseUser.getUid()).setValue(new UserDetails(m_firebaseUser));
+
             Intent CinemaMainIntent = new Intent(getApplicationContext(), CinemaMainActivity.class);
             CinemaMainIntent.putExtra("User Details", m_userDetails);
             startActivity(CinemaMainIntent);
@@ -474,7 +479,7 @@ public class MainActivity extends Activity
             @Override
             public void onSuccess(LoginResult i_loginResult)
             {
-                Toast.makeText(MainActivity.this, "Facebook sign in success!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignInActivity.this, "Facebook sign in success!", Toast.LENGTH_SHORT).show();
                 handleFacebookAccessToken(i_loginResult.getAccessToken());
             }
 
@@ -482,13 +487,13 @@ public class MainActivity extends Activity
             public void onCancel()
             {
                 GifPlayer.stopGif();
-                Toast.makeText(MainActivity.this, "Facebook sign in canceled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignInActivity.this, "Facebook sign in canceled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException i_facebookException)
             {
-                Toast.makeText(MainActivity.this, "Facebook sign in error :(", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignInActivity.this, "Facebook sign in error :(", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -535,7 +540,7 @@ public class MainActivity extends Activity
                 {
                     GifPlayer.stopGif();
                     Log.e(TAG, "unsuccessful sign in to google");
-                    Toast.makeText(MainActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, i_completedTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 Log.e(TAG, "Facebook: onComplete() <<");

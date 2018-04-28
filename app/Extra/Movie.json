@@ -1,0 +1,59 @@
+{
+  "Movie": {
+    "-LBBhdd_ZkBZi7_zOvrz": {
+      "m_name": "pulvinar",
+      "m_date": "6/15/2018",
+      "m_price": 39.06,
+      "m_trailerURL": "2.mp4",
+      "m_genre": "SciFi",
+      "m_pictureURL": "1.jpeg",
+      "m_cinemaLocation": "tel-aviv",
+      "m_rating": 0.64,
+      "m_movieDescription": "elementum nullam varius nulla facilisi cras"
+    },
+    "-LBBhddcpjqvAa23A0u-": {
+      "m_name": "dolor morbi",
+      "m_date": "7/30/2018",
+      "m_price": 32.34,
+      "m_trailerURL": "1.mp4",
+      "m_genre": "Romance",
+      "m_pictureURL": "1.jpeg",
+      "m_cinemaLocation": "kfar-saba",
+      "m_rating": 5.07,
+      "m_movieDescription": "elementum in hac habitasse"
+    },
+    "-LBBhddfouvJKWxwDt6g": {
+      "m_name": "quis orci",
+      "m_date": "7/16/2018",
+      "m_price": -40.44,
+      "m_trailerURL": "1.mp4",
+      "m_genre": "Adventure",
+      "m_pictureURL": "1.jpeg",
+      "m_cinemaLocation": "tel-aviv",
+      "m_rating": 10.37,
+      "m_movieDescription": "nulla sed accumsan"
+    },
+    "-LBBhddivfwR2nuhG02m": {
+      "m_name": "duis aliquam",
+      "m_date": "7/1/2018",
+      "m_price": 3.27,
+      "m_trailerURL": "3.mp4",
+      "m_genre": "Mystery",
+      "m_pictureURL": "2.jpeg",
+      "m_cinemaLocation": "kfar-saba",
+      "m_rating": 5.7,
+      "m_movieDescription": "donec odio justo sollicitudin ut suscipit"
+    },
+    "-LBBhddk8bVozPCR6x91": {
+      "m_name": "dui",
+      "m_date": "6/9/2018",
+      "m_price": -20.77,
+      "m_trailerURL": "1.mp4",
+      "m_genre": "Thriller",
+      "m_pictureURL": "1.jpeg",
+      "m_cinemaLocation": "tel-aviv",
+      "m_rating": 12.47,
+      "m_movieDescription": "tincidunt ante vel"
+    }
+  }
+}

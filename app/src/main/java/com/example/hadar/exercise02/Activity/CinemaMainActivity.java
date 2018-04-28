@@ -18,6 +18,11 @@ import com.example.hadar.exercise02.adapter.MoviesAdapter;
 import com.example.hadar.exercise02.adapter.MovieWithKey;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.UserDetails;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -37,37 +42,49 @@ public class CinemaMainActivity extends AppCompatActivity
     private ImageView m_profileMenuButton;
     private List<MovieWithKey> m_moviesWithKeysList;
     private FirebaseUser m_firebaseUser;
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "CinemaMainActivity";
 
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
     {
+        Log.e(TAG, "onCreate() >> ");
         super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_cinema_main);
 
         findViews();
+        getIntentInput();
         displayUserImage();
         setRecyclerViewOptions();
-        getIntentInput();
 
+        getAllMovies();
+        /*
         if(m_firebaseUser != null)
             handleSignedInFirebaseUser();
         else
             getAllMovies();
+            */
+
+        Log.e(TAG, "onCreate() << ");
 }
 
     private void getAllMovies()
     {
+        Log.e(TAG, "getAllMovies() >>");
+
         m_moviesWithKeysList.clear();
         MoviesAdapter moviesAdapter = new MoviesAdapter(m_moviesWithKeysList, m_userDetails);
         m_recyclerView.setAdapter(moviesAdapter);
 
         getAllMoviesUsingChildListeners();
+
+        Log.e(TAG, "getAllMovies() <<");
     }
 
     private void getAllMoviesUsingChildListeners()
     {
-        DatabaseReference allMoviesReference = FirebaseDatabase.getInstance().getReference("Movies");
+        Log.e(TAG, "getAllMoviesUsingChildListeners() >>");
+
+        DatabaseReference allMoviesReference = FirebaseDatabase.getInstance().getReference("Movie");
                 allMoviesReference.addChildEventListener(new ChildEventListener()
                 {
                     @Override
@@ -100,18 +117,26 @@ public class CinemaMainActivity extends AppCompatActivity
                         handleChildCancelled(i_databaseError);
                     }
                 });
+        Log.e(TAG, "getAllMoviesUsingChildListeners() <<");
 
     }
 
     private void handleChildAdded(DataSnapshot i_dataSnapshot)
     {
+        Log.e(TAG, "onChildAdded(Movie) >> " + i_dataSnapshot.getKey());
+
+        Movie movie = i_dataSnapshot.getValue(Movie.class);
         MovieWithKey movieWithKey = new MovieWithKey(i_dataSnapshot.getValue(Movie.class), i_dataSnapshot.getKey());
         m_moviesWithKeysList.add(movieWithKey);
         m_recyclerView.getAdapter().notifyDataSetChanged();
+
+        Log.e(TAG, "onChildAdded(Movie) <<");
     }
 
     private void handleChildChanged(DataSnapshot i_dataSnapshot)
     {
+        Log.e(TAG, "onChildChanged(Movie) >> " + i_dataSnapshot.getKey());
+
         MovieWithKey movieWithKey;
 
         Movie snapshotMovie = i_dataSnapshot.getValue(Movie.class);
@@ -128,10 +153,14 @@ public class CinemaMainActivity extends AppCompatActivity
                 break;
             }
         }
+        Log.e(TAG, "onChildChanged(Movie) <<");
+
     }
 
     private void handleChildRemoved(DataSnapshot i_dataSnapshot)
     {
+        Log.e(TAG, "onChildRemoved(Movie) >> " + i_dataSnapshot.getKey());
+
         MovieWithKey movieWithKey;
 
         String snapshotKey = i_dataSnapshot.getKey();
@@ -147,6 +176,8 @@ public class CinemaMainActivity extends AppCompatActivity
                 break;
             }
         }
+
+        Log.e(TAG, "onChildRemoved(Movie) <<");
     }
 
     private void handleChildCancelled(DatabaseError i_databaseError)
@@ -156,25 +187,39 @@ public class CinemaMainActivity extends AppCompatActivity
 
     private void findViews()
     {
+        Log.e(TAG, "findViews() >> ");
+
         m_profileMenuButton = findViewById(R.id.profileMenuButton);
-        m_recyclerView = findViewById(R.id.my_recycler_view);
+        m_recyclerView = findViewById(R.id.movies_list);
         m_moviesWithKeysList = new ArrayList<>();
         m_firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        Log.e(TAG, "findViews() << ");
     }
 
     private void displayUserImage()
     {
+        Log.e(TAG, "displayUserImage() >> ");
+
         m_profileMenuButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Glide.with(this).load(m_userDetails.getUserPictureUrl()).into(m_profileMenuButton);
+
+        Log.e(TAG, "displayUserImage() << ");
     }
 
     private void getIntentInput()
     {
+        Log.e(TAG, "getIntentInput() >> ");
+
         m_userDetails = (UserDetails) getIntent().getSerializableExtra("User Details");
+
+        Log.e(TAG, "getIntentInput() << ");
     }
 
     public void onClickProfileButton(View view)
     {
+        Log.e(TAG, "onClickProfileButton() >>");
+
         PopupMenu popup = new PopupMenu(this, m_profileMenuButton);
         popup.getMenuInflater().inflate(R.menu.activity_user_menu, popup.getMenu());
 
@@ -188,7 +233,7 @@ public class CinemaMainActivity extends AppCompatActivity
                         break;
 
                     case R.id.signOut:
-
+                        signOutAllAccounts();
                         break;
                     default:
                         break;
@@ -199,27 +244,40 @@ public class CinemaMainActivity extends AppCompatActivity
         });
 
         popup.show();
+
+        Log.e(TAG, "onClickProfileButton() <<");
     }
 
     private void updateUIAndMoveToUserDetailsActivity()
     {
-            Intent userDetailsIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
+        Log.e(TAG, "updateUIAndMoveToUserDetailsActivity() >>");
+
+        Intent userDetailsIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
             userDetailsIntent.putExtra("User Details", m_userDetails);
             startActivity(userDetailsIntent);
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+        Log.e(TAG, "updateUIAndMoveToUserDetailsActivity() <<");
+
     }
 
     private void setRecyclerViewOptions()
     {
+        Log.e(TAG, "setRecyclerViewOptions() >>");
+
         m_recyclerView.setHasFixedSize(true);
         m_recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         m_recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        Log.e(TAG, "setRecyclerViewOptions() <<");
     }
 
     private void handleSignedInFirebaseUser()
     {
-        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users/" + m_firebaseUser.getUid());
-                userReference.addValueEventListener(new ValueEventListener()
+        Log.e(TAG, "handleSignedInFirebaseUser() >>");
+
+        DatabaseReference userRefernce = FirebaseDatabase.getInstance().getReference("Users/" + m_firebaseUser.getUid());
+        userRefernce.addValueEventListener(new ValueEventListener()
                 {
                     @Override
                     public void onDataChange(DataSnapshot i_dataSnapshot)
@@ -234,5 +292,46 @@ public class CinemaMainActivity extends AppCompatActivity
                         Log.e(TAG, "onCancelled(Users) >>" + i_databaseError.getMessage());
                     }
                 });
+        Log.e(TAG, "handleSignedInFirebaseUser() <<");
+
+    }
+
+    private void signOutAllAccounts()
+    {
+        signOutEmailPassAndFacebookAccount();
+        signOutGoogleAccount();
+    }
+
+    private void signOutEmailPassAndFacebookAccount()
+    {
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+        goBackToMainActivity();
+    }
+
+    private void signOutGoogleAccount()
+    {
+        GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
+
+        if(googleSignInAccount != null)
+        {
+            GoogleSignInOptions gso = new GoogleSignInOptions
+                    .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestProfile()
+                    .requestEmail()
+                    .build();
+            GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, gso);
+            googleSignInClient.signOut();
+            goBackToMainActivity();
+        }
+    }
+
+    private void goBackToMainActivity()
+    {
+        Intent backToMainIntent = new Intent(getApplicationContext(), SignInActivity.class);
+        startActivity(backToMainIntent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
     }
 }

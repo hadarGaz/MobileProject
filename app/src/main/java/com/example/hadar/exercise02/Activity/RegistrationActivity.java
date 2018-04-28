@@ -196,7 +196,7 @@ public class RegistrationActivity extends AppCompatActivity
 
     private void goBackToMainActivity()
     {
-        Intent backToMainIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent backToMainIntent = new Intent(getApplicationContext(), SignInActivity.class);
         backToMainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(backToMainIntent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

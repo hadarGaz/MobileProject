@@ -13,6 +13,11 @@ public class UserDetails implements Serializable
     private String m_userPictureUrl;
     private List<String> m_moviesStringList;
 
+    public UserDetails()
+    {
+    }
+
+
     public UserDetails(String i_userName, String i_userEmail, String i_userPictureUrl)
     {
         m_userName = i_userName;

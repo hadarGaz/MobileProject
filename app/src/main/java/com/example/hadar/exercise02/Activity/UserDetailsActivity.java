@@ -162,7 +162,7 @@ public class UserDetailsActivity extends AppCompatActivity
 
     private void goBackToMainActivity()
     {
-        Intent backToMainIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent backToMainIntent = new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(backToMainIntent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
