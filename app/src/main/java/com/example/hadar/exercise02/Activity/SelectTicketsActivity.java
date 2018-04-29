@@ -1,14 +1,17 @@
 package com.example.hadar.exercise02.Activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.Movie;
@@ -17,6 +20,13 @@ import com.example.hadar.exercise02.model.UserDetails;
 public class SelectTicketsActivity extends AppCompatActivity {
 
     private static final String TAG = "SelectTicketsActivity";
+    private static final int MAX_CHAR = 5;
+
+    private ImageView m_imageViewMoviePic;
+    private TextView m_textViewMovieName;
+    private TextView m_textViewMovieDate;
+    private VideoView m_videoViewMovieTrailer;
+
     private TextView m_textViewStandardPrice;
     private TextView m_textViewStudentPrice;
     private TextView m_textViewSoldierPrice;
@@ -34,17 +44,29 @@ public class SelectTicketsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e(TAG, "onCreate() >> ");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_tickets);
 
         findViews();
         getIntentInput();
+        setMovieDetails();
         setPrices();
         setSpinnersWithAdapter();
+
+        Log.e(TAG, "onCreate() << ");
     }
 
     private void findViews()
     {
+        Log.e(TAG, "findViews() >> ");
+
+        m_imageViewMoviePic= (ImageView) findViewById(R.id.imageViewMoviePic);
+        m_textViewMovieName= (TextView) findViewById(R.id.textViewMovieName);
+        m_textViewMovieDate= (TextView) findViewById(R.id.textViewMovieDate);
+        m_videoViewMovieTrailer= (VideoView) findViewById(R.id.videoViewMovieTrailer);
+
         m_spinnerstandard = (Spinner)findViewById(R.id.SpinnerStandard);
         m_spinnerStudent= (Spinner)findViewById(R.id.SpinnerStudent);
         m_spinnerSoldieer= (Spinner)findViewById(R.id.SpinnerSoldieer);
@@ -58,6 +80,8 @@ public class SelectTicketsActivity extends AppCompatActivity {
         m_textViewTotalPriceStandard= (TextView) findViewById(R.id.textViewTotalPriceStandard);
         m_textViewTotalPriceStudent= (TextView) findViewById(R.id.textViewTotalPriceStudent);
         m_textViewTotalPriceSoldier= (TextView) findViewById(R.id.textViewTotalPriceSoldier);
+
+        Log.e(TAG, "findViews() << ");
     }
     private void getIntentInput()
     {
@@ -68,16 +92,33 @@ public class SelectTicketsActivity extends AppCompatActivity {
         Log.e(TAG, "getIntentInput() << ");
     }
 
+    private void setMovieDetails()
+    {
+        Log.e(TAG, "setMovieDetails() >> ");
+
+        m_textViewMovieName.setText(m_movie.getM_name());
+        m_textViewMovieDate.setText(m_movie.getM_date());
+        //need to add pic and video
+
+        Log.e(TAG, "setMovieDetails() << ");
+    }
+
     private void setPrices()
     {
-        m_textViewStandardPrice.setText(String.valueOf(m_movie.getM_price()));
-        m_textViewStudentPrice.setText(String.valueOf(m_movie.getM_price()-5));
-        m_textViewSoldierPrice.setText(String.valueOf(m_movie.getM_price()-10));
-        m_textViewTotalPriceForMovie.setText("0.0");
+        Log.e(TAG, "setPrices() >> ");
+
+        m_textViewStandardPrice.setText(limitStrToMaxChar(String.valueOf(m_movie.getM_price())));
+        m_textViewStudentPrice.setText(limitStrToMaxChar(String.valueOf(m_movie.getM_price()-5)));
+        m_textViewSoldierPrice.setText(limitStrToMaxChar(String.valueOf(m_movie.getM_price()-10)));
+
+        Log.e(TAG, "setPrices() << ");
+
     }
 
     private void setSpinnersWithAdapter()
     {
+        Log.e(TAG, "setSpinnersWithAdapter() >> ");
+
         m_adapter = ArrayAdapter.createFromResource(this,R.array.ArrayNumber,android.R.layout.simple_spinner_item );
         m_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         m_spinnerstandard.setAdapter(m_adapter);
@@ -127,10 +168,15 @@ public class SelectTicketsActivity extends AppCompatActivity {
 
             }
         });
+
+        Log.e(TAG, "setSpinnersWithAdapter() << ");
+
     }
 
     private void spinnerItemSelected(String i_TicketType,double i_Quantity)
     {
+        Log.e(TAG, "spinnerItemSelected() >> " +i_TicketType);
+
         TextView textView = null;
         double pricePerTicketType = 0;
         switch (i_TicketType)
@@ -151,7 +197,9 @@ public class SelectTicketsActivity extends AppCompatActivity {
 
         double priceTotalTicketType = pricePerTicketType * i_Quantity;
         if(textView != null)
-            textView.setText(String.valueOf(priceTotalTicketType));
+        {
+            textView.setText(limitStrToMaxChar(String.valueOf(priceTotalTicketType)));
+        }
 
         double totalPrice = Double.valueOf(m_spinnerstandard.getSelectedItemPosition()) *
                 Double.valueOf(m_textViewStandardPrice.getText().toString());
@@ -160,7 +208,29 @@ public class SelectTicketsActivity extends AppCompatActivity {
         totalPrice = totalPrice + (Double.valueOf(m_spinnerSoldieer.getSelectedItemPosition()) *
                 Double.valueOf(m_textViewSoldierPrice.getText().toString()));
 
-        m_textViewTotalPriceForMovie.setText(String.valueOf(totalPrice));
 
+        m_textViewTotalPriceForMovie.setText(limitStrToMaxChar(String.valueOf(totalPrice)));
+
+        Log.e(TAG, "spinnerItemSelected() >> " +i_TicketType);
+
+    }
+
+    public void onBuyTicketClick(View v)
+    {
+        Log.e(TAG, "onBuyTicketClick() >> " );
+
+        Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
+        startActivity(reservationSummaryIntent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
+
+        Log.e(TAG, "onBuyTicketClick() << " );
+    }
+
+    private String limitStrToMaxChar(String i_Str)
+    {
+        String resStr = String.valueOf(i_Str);
+        int maxLength = (resStr.length() < MAX_CHAR)?resStr.length():MAX_CHAR;
+        return (resStr.substring(0,maxLength));
     }
 }
