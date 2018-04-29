@@ -8,30 +8,117 @@
     tools:layout_editor_absoluteY="25dp">
 
 
+    <FrameLayout
+        android:id="@+id/filter_bar_container"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="104dp"
+        android:background="@android:color/darker_gray"
+        android:paddingBottom="12dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/filter_bar"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="12dp"
+            android:clickable="true">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
+
+                <EditText
+                    android:id="@+id/edit_text_search_movie"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:hint="Movie Name"
+                    android:inputType="text|textPersonName"
+                    app:layout_constraintEnd_toStartOf="@+id/button_search"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/button_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:onClick="onClickSearchButton"
+                    android:text="Search"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonByPrice"
+                    android:layout_width="120dp"
+                    android:layout_height="32dp"
+                    android:layout_marginBottom="8dp"
+                    android:checked="true"
+                    android:onClick="onClickRadioButton"
+                    android:text="Order by price"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonByRating"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:onClick="onClickRadioButton"
+                    android:text="Order by rating"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </FrameLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/movies_list"
         android:layout_width="0dp"
-        android:layout_height="463dp"
+        android:layout_height="334dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileMenuButton"
+        app:layout_constraintVertical_bias="0.767"
         tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/profileMenuButton"
         android:layout_width="70dp"
         android:layout_height="70dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:maxHeight="42dp"
         android:maxWidth="42dp"
         android:onClick="onClickProfileButton"
-        app:srcCompat="@mipmap/liad_icon"
-        tools:layout_editor_absoluteX="298dp"
-        tools:layout_editor_absoluteY="16dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/liad_icon" />
 
 
 </android.support.constraint.ConstraintLayout>
