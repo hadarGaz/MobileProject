@@ -32,7 +32,7 @@ public class ReviewActivity extends Activity {
 
     private TextView userReview;
     private RatingBar userRating;
-    private DatabaseReference songRef;
+    private DatabaseReference m_movieRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +50,9 @@ public class ReviewActivity extends Activity {
         userRating = findViewById(R.id.new_user_rating);
 
 
-        songRef = FirebaseDatabase.getInstance().getReference("Songs/" + m_key);
+        m_movieRef = FirebaseDatabase.getInstance().getReference("Movie/" + m_key);
 
-        songRef.child("/reviews/" +  FirebaseAuth.getInstance().getCurrentUser().getUid()).
+        m_movieRef.child("/reviews/" +  FirebaseAuth.getInstance().getCurrentUser().getUid()).
                 addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
@@ -86,7 +86,7 @@ public class ReviewActivity extends Activity {
         Log.e(TAG, "onSubmitClick() >>");
 
 
-        songRef.runTransaction(new Transaction.Handler() {
+        m_movieRef.runTransaction(new Transaction.Handler() {
 
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -97,7 +97,7 @@ public class ReviewActivity extends Activity {
                 Movie movie = mutableData.getValue(Movie.class);
 
                 if (movie == null ) {
-                    Log.e(TAG, "doTransaction() << song is null" );
+                    Log.e(TAG, "doTransaction() << movie is null" );
                     return Transaction.success(mutableData);
                 }
 
@@ -111,7 +111,7 @@ public class ReviewActivity extends Activity {
                 }
 */
                 mutableData.setValue(movie);
-                Log.e(TAG, "doTransaction() << song was set");
+                Log.e(TAG, "doTransaction() << movie was set");
                 return Transaction.success(mutableData);
 
             }
@@ -132,7 +132,7 @@ public class ReviewActivity extends Activity {
                             (int)userRating.getRating(),
                             m_user.getUserEmail());
 
-                    songRef.child("/reviews/" + FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(review);
+                    m_movieRef.child("/reviews/" + FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(review);
                 }
 
 

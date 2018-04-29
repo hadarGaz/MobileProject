@@ -77,6 +77,8 @@ public class Movie implements Serializable
         return m_reviewsCount;
     }
 
+    public void incrementReviewCount() { m_reviewsCount++;}
+
     /*
         public void setDate(Date i_date) throws Exception
         {
