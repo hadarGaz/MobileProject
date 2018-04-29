@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,19 +55,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     }
 
     @Override
-    public void onBindViewHolder(MovieViewHolder i_movieViewHolder, int i_position)
+    public void onBindViewHolder(final MovieViewHolder i_movieViewHolder, int i_position)
     {
         Movie movie = m_moviesWithKeysList.get(i_position).getMovie();
         String movieKey = m_moviesWithKeysList.get(i_position).getKey();
 
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference()
-                .child("movie Pictures/" + movie.getM_thumbImage() );
-
-
-        Glide.with(i_movieViewHolder.getContext())
-                .using(new FirebaseImageLoader())
-                .load(storageReference)
-                .into(i_movieViewHolder.getThumbImage());
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        storageReference.child("Movie Pictures/" + movie.getM_thumbImage()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.e(TAG,"pic src= "+ uri.toString());
+                Glide.with(i_movieViewHolder.getContext()).load(uri.toString()).into(i_movieViewHolder.getThumbImage());
+            }
+        });
 
         i_movieViewHolder.setSelectedMovie(movie);
         i_movieViewHolder.setSelectedMovieKey(movieKey);

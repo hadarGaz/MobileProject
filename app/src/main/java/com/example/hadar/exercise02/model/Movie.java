@@ -2,6 +2,7 @@ package com.example.hadar.exercise02.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -21,6 +22,7 @@ public class Movie implements Serializable
     private int m_rating;
     private int m_reviewsCount;
     private String m_movieDescription;
+    private ImageView m_movieImage;
 
     public enum eGenre
     {
@@ -65,11 +67,13 @@ public class Movie implements Serializable
 
     public String getM_thumbImage()
     {
+
         return m_thumbImage;
     }
 
     public int getM_reviewsCount()
     {
+
         return m_reviewsCount;
     }
 

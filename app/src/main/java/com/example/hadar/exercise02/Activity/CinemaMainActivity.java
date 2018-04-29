@@ -1,6 +1,7 @@
 package com.example.hadar.exercise02.Activity;
 
 import android.content.Intent;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -37,6 +38,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class CinemaMainActivity extends AppCompatActivity
 {
+
+    // searchMovie,2 filter, 2 sort, pictures to movie
+
     private RecyclerView m_recyclerView;
     private UserDetails m_userDetails;
     private ImageView m_profileMenuButton;
@@ -53,7 +57,7 @@ public class CinemaMainActivity extends AppCompatActivity
 
         findViews();
         getIntentInput();
-        displayUserImage();
+        displayUserImage(); //menu button
         setRecyclerViewOptions();
 
         getAllMovies();
