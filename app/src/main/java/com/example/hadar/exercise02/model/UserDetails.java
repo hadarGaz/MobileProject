@@ -4,6 +4,7 @@ import android.net.Uri;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseUser;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDetails implements Serializable
@@ -11,7 +12,7 @@ public class UserDetails implements Serializable
     private String m_userName;
     private String m_userEmail;
     private String m_userPictureUrl;
-    private List<String> m_moviesStringList;
+    private List<String> m_moviesStringList = new ArrayList<>();
 
     public UserDetails()
     {

@@ -46,9 +46,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
 
         Review review = reviewsList.get(position);
 
-        holder.getUserMail().setText(review.getUserEmail());
-        holder.getUserReview().setText(review.getTextReview());
-        holder.getUserRating().setRating(review.getRating());
+        holder.getUserMail().setText(review.getM_userEmail());
+        holder.getUserReview().setText(review.getM_textReview());
+        holder.getUserRating().setRating(review.getM_rating());
 
         Log.e(TAG,"onBindViewHolder() << "+ position);
     }

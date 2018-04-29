@@ -5,12 +5,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/profileMenuButton"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:maxHeight="42dp"
+        android:maxWidth="42dp"
+        android:onClick="onClickProfileButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/liad_icon" />
 
     <FrameLayout
-        android:layout_width="344dp"
+        android:id="@+id/frameLayout"
+        android:layout_width="0dp"
         android:layout_height="225dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileMenuButton">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -22,68 +34,82 @@
 
                 <ImageView
                     android:id="@+id/imageViewMoviePic"
-                    android:layout_width="114dp"
-                    android:layout_height="84dp"
-                    app:srcCompat="@android:color/black"
-                    tools:layout_editor_absoluteX="219dp"
-                    tools:layout_editor_absoluteY="49dp" />
-
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="13dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view"
+                    app:srcCompat="@android:color/black" />
 
 
                 <TextView
                     android:id="@+id/textViewMovieName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="132dp"
+                    android:layout_marginTop="16dp"
                     android:text="TextView"
-                    tools:layout_editor_absoluteX="116dp"
-                    tools:layout_editor_absoluteY="16dp" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <View
                     android:layout_width="300dp"
                     android:layout_height="1dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="16dp"
                     android:background="@android:color/black"
-                    tools:layout_editor_absoluteX="22dp"
-                    tools:layout_editor_absoluteY="16dp" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <View
                     android:id="@+id/view"
                     android:layout_width="300dp"
                     android:layout_height="1dp"
+                    android:layout_marginStart="22dp"
                     android:background="@android:color/black"
-                    tools:layout_editor_absoluteX="22dp"
-                    tools:layout_editor_absoluteY="34dp" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewMovieName" />
 
                 <TextView
                     android:id="@+id/textViewDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="13dp"
                     android:text="TextView"
-                    tools:layout_editor_absoluteX="143dp"
-                    tools:layout_editor_absoluteY="49dp" />
+                    app:layout_constraintStart_toEndOf="@+id/imageViewMoviePic"
+                    app:layout_constraintTop_toBottomOf="@+id/view" />
 
                 <TextView
                     android:id="@+id/textViewCinemaLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="16dp"
                     android:text="TextView"
-                    tools:layout_editor_absoluteX="143dp"
-                    tools:layout_editor_absoluteY="84dp" />
+                    app:layout_constraintStart_toEndOf="@+id/imageViewMoviePic"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
 
                 <TextView
-                    android:id="@+id/textViewJanner"
+                    android:id="@+id/textViewGenre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="16dp"
                     android:text="TextView"
-                    tools:layout_editor_absoluteX="143dp"
-                    tools:layout_editor_absoluteY="118dp" />
+                    app:layout_constraintStart_toEndOf="@+id/imageViewMoviePic"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewCinemaLocation" />
 
                 <TextView
                     android:id="@+id/textViewMovieDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="11dp"
                     android:text="TextView"
-                    tools:layout_editor_absoluteX="269dp"
-                    tools:layout_editor_absoluteY="160dp" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageViewMoviePic" />
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
     </FrameLayout>
@@ -91,9 +117,35 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/MovieReview"
         android:layout_width="344dp"
-        android:layout_height="318dp"
+        android:layout_height="262dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="241dp" />
+        tools:layout_editor_absoluteY="297dp" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Movie details"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/buttonNewReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:onClick="onAddReviewClick"
+        android:src="@android:drawable/ic_menu_add"
+        app:elevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -3,27 +3,38 @@ package com.example.hadar.exercise02.model;
 
 public class Review {
     private String m_textReview;
-    private byte m_rating;
+    private int m_rating;
     private String m_userEmail;
 
 
     public Review() {}
 
 
-    public Review(String i_textReview, byte i_rating, String i_userName)
+    public Review(String i_textReview, int i_rating, String i_userName)
     {
         this.m_textReview = i_textReview;
         this.m_rating = i_rating;
         this.m_userEmail = i_userName;
     }
 
+    public String getM_textReview() {
+        return m_textReview;
+    }
 
+    public int getM_rating() {
+        return m_rating;
+    }
+
+    public String getM_userEmail() {
+        return m_userEmail;
+    }
+/*
     public String getTextReview()
     {
         return m_textReview;
     }
 
-    public byte getRating()
+    public int getRating()
     {
         return m_rating;
     }
@@ -47,4 +58,5 @@ public class Review {
     {
         this.m_userEmail = i_userEmail;
     }
+    */
 }

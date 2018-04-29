@@ -16,6 +16,9 @@ import android.widget.VideoView;
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.UserDetails;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SelectTicketsActivity extends AppCompatActivity {
 
@@ -41,6 +44,8 @@ public class SelectTicketsActivity extends AppCompatActivity {
     private Spinner m_spinnerSoldieer;
     private ArrayAdapter<CharSequence> m_adapter;
     private Movie m_movie;
+    private UserDetails m_userDetails;
+    private String m_key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +93,8 @@ public class SelectTicketsActivity extends AppCompatActivity {
         Log.e(TAG, "getIntentInput() >> ");
 
         m_movie = (Movie) getIntent().getSerializableExtra("Movie");
+        m_userDetails = (UserDetails)  getIntent().getSerializableExtra("UserDetails");
+        m_key = getIntent().getStringExtra("Key");
 
         Log.e(TAG, "getIntentInput() << ");
     }
@@ -219,7 +226,16 @@ public class SelectTicketsActivity extends AppCompatActivity {
     {
         Log.e(TAG, "onBuyTicketClick() >> " );
 
+        m_userDetails.getMoviesStringList().add(m_key);
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+        userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
+
+
         Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
+       // reservationSummaryIntent.putExtra("Key", );
+        reservationSummaryIntent.putExtra("Movie", m_movie);
+        reservationSummaryIntent.putExtra("Key", m_key );
+        reservationSummaryIntent.putExtra("UserDetails", m_userDetails);
         startActivity(reservationSummaryIntent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
