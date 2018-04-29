@@ -37,12 +37,18 @@ import com.google.firebase.database.ValueEventListener;
 
 public class CinemaMainActivity extends AppCompatActivity
 {
+    private static final String TAG = "CinemaMainActivity";
+
+    // searchMovie,2 filter, 2 sort, pictures to movie
+
     private RecyclerView m_recyclerView;
     private UserDetails m_userDetails;
     private ImageView m_profileMenuButton;
     private List<MovieWithKey> m_moviesWithKeysList;
     private FirebaseUser m_firebaseUser;
-    private static final String TAG = "CinemaMainActivity";
+    DatabaseReference m_allMoviesReference;
+    RadioButton m_orderByPriceRadioButton;
+    RadioButton m_orderByRatingRadioButton;
 
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
@@ -51,9 +57,10 @@ public class CinemaMainActivity extends AppCompatActivity
         super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_cinema_main);
 
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         findViews();
         getIntentInput();
-        displayUserImage();
+        displayUserImage(); //menu button
         setRecyclerViewOptions();
 
         getAllMovies();
@@ -84,8 +91,9 @@ public class CinemaMainActivity extends AppCompatActivity
     {
         Log.e(TAG, "getAllMoviesUsingChildListeners() >>");
 
-        DatabaseReference allMoviesReference = FirebaseDatabase.getInstance().getReference("Movie");
-                allMoviesReference.addChildEventListener(new ChildEventListener()
+        m_allMoviesReference = FirebaseDatabase.getInstance().getReference("Movie");
+
+                m_allMoviesReference.addChildEventListener(new ChildEventListener()
                 {
                     @Override
                     public void onChildAdded(DataSnapshot i_dataSnapshot, String i_previousChildName)
@@ -117,8 +125,8 @@ public class CinemaMainActivity extends AppCompatActivity
                         handleChildCancelled(i_databaseError);
                     }
                 });
-        Log.e(TAG, "getAllMoviesUsingChildListeners() <<");
 
+        Log.e(TAG, "getAllMoviesUsingChildListeners() <<");
     }
 
     private void handleChildAdded(DataSnapshot i_dataSnapshot)
@@ -193,6 +201,8 @@ public class CinemaMainActivity extends AppCompatActivity
         m_recyclerView = findViewById(R.id.movies_list);
         m_moviesWithKeysList = new ArrayList<>();
         m_firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        m_orderByPriceRadioButton = findViewById(R.id.radioButtonByPrice);
+        m_orderByRatingRadioButton = findViewById(R.id.radioButtonByRating);
 
         Log.e(TAG, "findViews() << ");
     }
@@ -216,7 +226,7 @@ public class CinemaMainActivity extends AppCompatActivity
         Log.e(TAG, "getIntentInput() << ");
     }
 
-    public void onClickProfileButton(View view)
+    public void onClickProfileButton(View i_view)
     {
         Log.e(TAG, "onClickProfileButton() >>");
 
@@ -246,6 +256,76 @@ public class CinemaMainActivity extends AppCompatActivity
         popup.show();
 
         Log.e(TAG, "onClickProfileButton() <<");
+    }
+
+    private void updateMoviesWithKeysList(DataSnapshot i_dataSnapshot)
+    {
+        for (DataSnapshot dataSnapshot : i_dataSnapshot.getChildren())
+        {
+            Movie movie = dataSnapshot.getValue(Movie.class);
+
+            Log.e(TAG, "updateSongList() >> adding song: " + movie.getM_name());
+            String dataSnapshotKey = dataSnapshot.getKey();
+            m_moviesWithKeysList.add(new MovieWithKey(movie, dataSnapshotKey));
+        }
+
+        m_recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    public void onClickSearchButton(View i_view)
+    {
+        String searchString = ((EditText)findViewById(R.id.edit_text_search_movie)).getText().toString();
+        String orderByMethod = ((RadioButton)findViewById(R.id.radioButtonByRating)).isChecked() ? "m_rating" : "m_price";
+        Query searchMovieQuery;
+
+        Log.e(TAG, "onSearchButtonClick() >> searchString= " + searchString + ", orderBy = " + orderByMethod);
+
+        m_moviesWithKeysList.clear();
+
+        if(!searchString.isEmpty())
+        {
+            searchMovieQuery = m_allMoviesReference.orderByChild("m_name").startAt(searchString).endAt(searchString + "\uf8ff");
+        }
+
+        else
+        {
+            searchMovieQuery = m_allMoviesReference.orderByChild(orderByMethod);
+        }
+
+        searchMovieQuery.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot i_snapshot)
+            {
+                Log.e(TAG, "onDataChange(Query) >> " + i_snapshot.getKey());
+
+                updateMoviesWithKeysList(i_snapshot);
+
+                Log.e(TAG, "onDataChange(Query) <<");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+                Log.e(TAG, "onCancelled() >>" + databaseError.getMessage());
+            }
+
+        });
+
+        Log.e(TAG, "onSearchButtonClick() <<");
+    }
+
+    public void onClickRadioButton(View i_view)
+    {
+        if(i_view.getId() == R.id.radioButtonByRating)
+        {
+            m_orderByPriceRadioButton.setChecked(false);
+        }
+
+        else
+        {
+            m_orderByRatingRadioButton.setChecked(false);
+        }
     }
 
     private void updateUIAndMoveToUserDetailsActivity()
