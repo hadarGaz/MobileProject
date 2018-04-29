@@ -9,8 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.hadar.exercise02.R;
@@ -33,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class CinemaMainActivity extends AppCompatActivity
