@@ -208,9 +208,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                 {
                     Context context = i_view.getContext();
                     Intent intent = new Intent(context, SelectTicketsActivity.class);
-                    //intent.putExtra("song", selectedSong);
-                    //intent.putExtra("key", selectedSongKey);
-                    //intent.putExtra("user",user);
+                    intent.putExtra("Movie",m_selectedMovie);
                     context.startActivity(intent);
 
                     //IMPLEMENT MISSING GO TO RIGHT ACTIVITY ON CHOOSING MOVIE *********************

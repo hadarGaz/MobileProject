@@ -258,7 +258,6 @@ public class CinemaMainActivity extends AppCompatActivity
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
         Log.e(TAG, "updateUIAndMoveToUserDetailsActivity() <<");
-
     }
 
     private void setRecyclerViewOptions()

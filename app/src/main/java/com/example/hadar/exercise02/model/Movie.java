@@ -3,12 +3,13 @@ package com.example.hadar.exercise02.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Movie
+public class Movie implements Serializable
 {
     private String m_name;
     private String m_date;

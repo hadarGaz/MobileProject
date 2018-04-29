@@ -110,9 +110,11 @@
                 android:id="@+id/movie_cinema"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
                 android:text="[CINEMA]"
-                tools:layout_editor_absoluteX="163dp"
-                tools:layout_editor_absoluteY="45dp" />
+                card_view:layout_constraintStart_toEndOf="@+id/movie_genre"
+                card_view:layout_constraintTop_toBottomOf="@+id/movie_name" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

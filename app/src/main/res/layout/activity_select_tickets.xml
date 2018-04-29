@@ -17,16 +17,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/profileMenuButton"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:maxHeight="42dp"
+        android:maxWidth="42dp"
+        android:onClick="onClickProfileButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/liad_icon" />
+
     <FrameLayout
         android:id="@+id/frameLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="173dp"
-        android:layout_marginTop="22dp"
+        android:layout_width="0dp"
+        android:layout_height="251dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSelectTickets">
+        app:layout_constraintTop_toBottomOf="@+id/profileMenuButton">
 
         <android.support.constraint.ConstraintLayout
-            android:layout_width="344dp"
+            android:layout_width="394dp"
             android:layout_height="251dp"
             android:background="@android:color/black">
 
@@ -50,25 +62,25 @@
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toBottomOf="@+id/textViewMovieName" />
 
-            <TextView
-                android:id="@+id/textViewMovieLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
-                android:text="[Movie Location]"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/textViewMovieDate" />
-
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@android:color/holo_red_light" />
+
+            <VideoView
+                android:id="@+id/videoView"
+                android:layout_width="200dp"
+                android:layout_height="130dp"
+                android:layout_marginStart="80dp"
+                android:layout_marginTop="9dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
         </android.support.constraint.ConstraintLayout>
     </FrameLayout>
@@ -88,7 +100,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="10dp"
         android:text="Ticket"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
@@ -98,7 +110,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="10dp"
         android:text="Price"
         app:layout_constraintStart_toEndOf="@+id/textViewTicketLabel"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
@@ -108,7 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="10dp"
         android:text="Amount"
         app:layout_constraintStart_toEndOf="@+id/textViewPriceLabel"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
@@ -118,7 +130,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="33dp"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="10dp"
         android:text="Total Price"
         app:layout_constraintStart_toEndOf="@+id/textViewAmountLabel"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
@@ -209,5 +221,65 @@
         android:layout_marginTop="22dp"
         app:layout_constraintStart_toEndOf="@+id/textViewSoldierPrice"
         app:layout_constraintTop_toBottomOf="@+id/SpinnerStudent" />
+
+    <TextView
+        android:id="@+id/textViewTotalPriceStandard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="17dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/SpinnerStandard"
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <TextView
+        android:id="@+id/textViewTotalPriceStudent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="20dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/SpinnerStudent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTotalPriceStandard" />
+
+    <TextView
+        android:id="@+id/textViewTotalPriceSoldier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="27dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/SpinnerSoldieer"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTotalPriceStudent" />
+
+    <View
+        android:id="@+id/viewr"
+        android:layout_width="320dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="14dp"
+        android:background="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSoldierLabel" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="121dp"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewTotalPriceForMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="20dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/SpinnerSoldieer"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTotalPriceSoldier" />
 
 </android.support.constraint.ConstraintLayout>
