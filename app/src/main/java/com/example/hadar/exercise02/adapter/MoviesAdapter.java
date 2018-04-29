@@ -1,6 +1,7 @@
 package com.example.hadar.exercise02.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.hadar.exercise02.Activity.SelectTicketsActivity;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.UserDetails;
@@ -204,12 +206,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                 @Override
                 public void onClick(View i_view)
                 {
-                    //Context context = i_view.getContext();
-                    //Intent intent = new Intent(context, SongDetailsActivity.class);
+                    Context context = i_view.getContext();
+                    Intent intent = new Intent(context, SelectTicketsActivity.class);
                     //intent.putExtra("song", selectedSong);
                     //intent.putExtra("key", selectedSongKey);
                     //intent.putExtra("user",user);
-                    //context.startActivity(intent);
+                    context.startActivity(intent);
 
                     //IMPLEMENT MISSING GO TO RIGHT ACTIVITY ON CHOOSING MOVIE *********************
                 }
