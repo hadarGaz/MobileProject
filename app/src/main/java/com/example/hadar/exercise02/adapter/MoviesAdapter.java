@@ -60,13 +60,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         String movieKey = m_moviesWithKeysList.get(i_position).getKey();
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference()
-                .child("movie Pictures/" + movie.getM_thumbImage() );
-
-
+                .child("movie Pictures/" + movie.getM_thumbImage());
+        
         Glide.with(i_movieViewHolder.getContext())
-                .using(new FirebaseImageLoader())
-                .load(storageReference)
-                .into(i_movieViewHolder.getThumbImage());
+            .using(new FirebaseImageLoader())
+            .load(storageReference)
+            .into(i_movieViewHolder.getThumbImage());
 
         i_movieViewHolder.setSelectedMovie(movie);
         i_movieViewHolder.setSelectedMovieKey(movieKey);
