@@ -32,11 +32,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class SelectTicketsActivity extends AppCompatActivity {
+public class SelectTicketsActivity extends YouTubeBaseActivity{
 
     private static final String TAG = "SelectTicketsActivity";
     private static final int MAX_CHAR = 5;
     private ImageView m_imageViewMoviePic;
+    private ImageButton m_profileWidgetImageButton;
     private TextView m_textViewMovieName;
     private TextView m_textViewMovieDate;
     private YouTubePlayerView m_youTubePlayerView;
@@ -48,9 +49,9 @@ public class SelectTicketsActivity extends AppCompatActivity {
     private TextView m_textViewTotalPriceStudent;
     private TextView m_textViewTotalPriceSoldier;
     private TextView m_textViewTotalPriceForMovie;
-    private Spinner m_spinnerstandard;
+    private Spinner m_spinnerStandard;
     private Spinner m_spinnerStudent;
-    private Spinner m_spinnerSoldieer;
+    private Spinner m_spinnerSoldier;
     private ArrayAdapter<CharSequence> m_adapter;
     private Movie m_movie;
     private UserDetails m_userDetails;
@@ -131,9 +132,7 @@ public class SelectTicketsActivity extends AppCompatActivity {
         m_textViewMovieName= (TextView) findViewById(R.id.textViewMovieName);
         m_textViewMovieDate= (TextView) findViewById(R.id.textViewMovieDate);
 
-        m_spinnerstandard = (Spinner)findViewById(R.id.SpinnerStandard);
         m_spinnerStudent= (Spinner)findViewById(R.id.SpinnerStudent);
-        m_spinnerSoldieer= (Spinner)findViewById(R.id.SpinnerSoldieer);
 
         m_textViewStandardPrice= (TextView) findViewById(R.id.textViewStandardPrice);
         m_textViewStudentPrice= (TextView) findViewById(R.id.textViewStudentPrice);
@@ -148,7 +147,6 @@ public class SelectTicketsActivity extends AppCompatActivity {
         m_imageViewMoviePic = findViewById(R.id.imageViewMoviePic);
         m_textViewMovieName = findViewById(R.id.textViewMovieName);
         m_textViewMovieDate = findViewById(R.id.textViewMovieDate);
-        m_videoViewMovieTrailer = findViewById(R.id.videoViewMovieTrailer);
         m_profileWidgetImageButton = findViewById(R.id.profile_widget);
         m_spinnerStandard = findViewById(R.id.SpinnerStandard);
         m_spinnerStudent = findViewById(R.id.SpinnerStudent);
