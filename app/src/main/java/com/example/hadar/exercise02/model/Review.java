@@ -1,7 +1,9 @@
 package com.example.hadar.exercise02.model;
 
 
-public class Review {
+import java.io.Serializable;
+
+public class Review implements Serializable {
     private String m_textReview;
     private int m_rating;
     private String m_userEmail;
