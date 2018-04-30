@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -77,7 +78,6 @@ public class SelectTicketsActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri i_uri)
             {
-                Log.e(TAG,"pic src= "+ i_uri.toString());
                 Glide.with(getApplicationContext()).load(i_uri.toString()).into(m_imageViewMoviePic);
             }
         });
@@ -240,25 +240,42 @@ public class SelectTicketsActivity extends AppCompatActivity {
 
     }
 
-    public void onBuyTicketClick(View v)
+    private boolean didUserPickAnyTicket()
     {
-        Log.e(TAG, "onBuyTicketClick() >> " );
+       int totalSelectedTickets = m_spinnerStandard.getSelectedItemPosition()
+                                + m_spinnerSoldier.getSelectedItemPosition()
+                                + m_spinnerStudent.getSelectedItemPosition();
 
-        m_userDetails.getMoviesStringList().add(m_key);
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
-        userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
+       return totalSelectedTickets != 0;
+    }
+
+    public void onClickBuyTickets(View v)
+    {
+        if(didUserPickAnyTicket())
+        {
+            Log.e(TAG, "onClickBuyTickets() >> ");
+
+            m_userDetails.getMoviesStringList().add(m_key);
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+            userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
 
 
-        Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
-       // reservationSummaryIntent.putExtra("Key", );
-        reservationSummaryIntent.putExtra("Movie", m_movie);
-        reservationSummaryIntent.putExtra("Key", m_key );
-        reservationSummaryIntent.putExtra("UserDetails", m_userDetails);
-        startActivity(reservationSummaryIntent);
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        finish();
+            Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
+            // reservationSummaryIntent.putExtra("Key", );
+            reservationSummaryIntent.putExtra("Movie", m_movie);
+            reservationSummaryIntent.putExtra("Key", m_key);
+            reservationSummaryIntent.putExtra("UserDetails", m_userDetails);
+            startActivity(reservationSummaryIntent);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            finish();
 
-        Log.e(TAG, "onBuyTicketClick() << " );
+            Log.e(TAG, "onClickBuyTickets() << ");
+        }
+
+        else
+        {
+            Toast.makeText(this, "Please select number of tickets.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private String limitStrToMaxChar(String i_Str)
