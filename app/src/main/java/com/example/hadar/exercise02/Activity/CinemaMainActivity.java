@@ -8,24 +8,20 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.RadioButton;
-import android.widget.Toast;
+import android.widget.Spinner;
 
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
+
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.adapter.MoviesAdapter;
 import com.example.hadar.exercise02.adapter.MovieWithKey;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.ProfileWidget;
 import com.example.hadar.exercise02.model.UserDetails;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,38 +36,100 @@ import com.google.firebase.database.ValueEventListener;
 public class CinemaMainActivity extends AppCompatActivity
 {
     private static final String TAG = "CinemaMainActivity";
+    private final String[] sortingMethods = {"", "Rating", "Genre"};
     private RecyclerView m_recyclerView;
     private UserDetails m_userDetails;
     private ImageButton m_profileWidgetImageButton;
     private List<MovieWithKey> m_moviesWithKeysList;
-    private FirebaseUser m_firebaseUser;
     private DatabaseReference m_allMoviesReference;
     private RadioButton m_orderByPriceRadioButton;
     private RadioButton m_orderByRatingRadioButton;
+    private Spinner m_sortBySpinner;
 
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
     {
         Log.e(TAG, "onCreate() >> ");
+
         super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_cinema_main);
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         findViews();
+        setSortBySpinnerValues();
         getIntentInput();
-        displayUserImage(); //menu button
+        displayUserImage();
         setRecyclerViewOptions();
-
         getAllMovies();
-        /*
-        if(m_firebaseUser != null)
-            handleSignedInFirebaseUser();
-        else
-            getAllMovies();
-            */
+        onSortBySpinnerItemSelection();
 
         Log.e(TAG, "onCreate() << ");
 }
+
+    private void setSortBySpinnerValues()
+    {
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.sort_spinner_item, sortingMethods);
+        spinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        m_sortBySpinner.setAdapter(spinnerAdapter);
+    }
+
+    private void onSortBySpinnerItemSelection()
+    {
+        m_sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> i_parent, View i_view, int i_position, long i_id)
+            {
+                sortBySpinnerItemSelected(i_parent.getItemAtPosition(i_position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+                //No implementation needed
+            }
+        });
+    }
+
+    private void sortBySpinnerItemSelected(String i_sortingMethod)
+    {
+        if(i_sortingMethod == "Rating")
+        {
+            sortMoviesByValue("m_rating");
+        }
+
+        else if (i_sortingMethod == "Genre")
+        {
+            sortMoviesByValue("m_genre");
+        }
+    }
+
+    private void sortMoviesByValue(String i_valueForQuery)
+    {
+        m_moviesWithKeysList.clear();
+
+        Query sortMoviesQuery = m_allMoviesReference.orderByChild(i_valueForQuery);
+
+        sortMoviesQuery.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot i_snapshot)
+            {
+                Log.e(TAG, "onDataChange(Query) >> " + i_snapshot.getKey());
+
+                updateMoviesWithKeysList(i_snapshot);
+
+                Log.e(TAG, "onDataChange(Query) <<");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+                Log.e(TAG, "onCancelled() >>" + databaseError.getMessage());
+            }
+
+        });
+    }
 
     private void getAllMovies()
     {
@@ -199,9 +257,9 @@ public class CinemaMainActivity extends AppCompatActivity
         m_profileWidgetImageButton = findViewById(R.id.profile_widget);
         m_recyclerView = findViewById(R.id.movies_list);
         m_moviesWithKeysList = new ArrayList<>();
-        m_firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         m_orderByPriceRadioButton = findViewById(R.id.radioButtonByPrice);
         m_orderByRatingRadioButton = findViewById(R.id.radioButtonByRating);
+        m_sortBySpinner = findViewById(R.id.sort_by_spinner);
 
         Log.e(TAG, "findViews() << ");
     }
@@ -305,112 +363,4 @@ public class CinemaMainActivity extends AppCompatActivity
     {
         ProfileWidget.onClickProfileWidget(this, m_profileWidgetImageButton, m_userDetails);
     }
-
-
-    /*    private void updateUIAndMoveToUserDetailsActivity()
-    {
-        Log.e(TAG, "updateUIAndMoveToUserDetailsActivity() >>");
-
-        Intent userDetailsIntent = new Intent(getApplicationContext(), UserDetailsActivity.class);
-            userDetailsIntent.putExtra("User Details", m_userDetails);
-            startActivity(userDetailsIntent);
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-
-        Log.e(TAG, "updateUIAndMoveToUserDetailsActivity() <<");
-    }*/
-
-/*    private void handleSignedInFirebaseUser()
-    {
-        Log.e(TAG, "handleSignedInFirebaseUser() >>");
-
-        DatabaseReference userRefernce = FirebaseDatabase.getInstance().getReference("Users/" + m_firebaseUser.getUid());
-        userRefernce.addValueEventListener(new ValueEventListener()
-                {
-                    @Override
-                    public void onDataChange(DataSnapshot i_dataSnapshot)
-                    {
-                        m_userDetails = i_dataSnapshot.getValue(UserDetails.class);
-                        getAllMovies();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError i_databaseError)
-                    {
-                        Log.e(TAG, "onCancelled(Users) >>" + i_databaseError.getMessage());
-                    }
-                });
-        Log.e(TAG, "handleSignedInFirebaseUser() <<");
-
-    }*/
-
-/*    private void signOutAllAccounts()
-    {
-        signOutEmailPassAndFacebookAccount();
-        signOutGoogleAccount();
-    }*/
-
-/*    private void signOutEmailPassAndFacebookAccount()
-    {
-        FirebaseAuth.getInstance().signOut();
-        LoginManager.getInstance().logOut();
-        goBackToMainActivity();
-    }*/
-
-/*    private void signOutGoogleAccount()
-    {
-        GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
-
-        if(googleSignInAccount != null)
-        {
-            GoogleSignInOptions gso = new GoogleSignInOptions
-                    .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(getString(R.string.default_web_client_id))
-                    .requestProfile()
-                    .requestEmail()
-                    .build();
-            GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, gso);
-            googleSignInClient.signOut();
-            goBackToMainActivity();
-        }
-    }*/
-
-/*    private void goBackToMainActivity()
-    {
-        Intent backToMainIntent = new Intent(getApplicationContext(), SignInActivity.class);
-        startActivity(backToMainIntent);
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        finish();
-    }*/
-
-/*   public void onClickProfileButton(View i_view)
-    {
-        Log.e(TAG, "onClickProfileButton() >>");
-
-        PopupMenu popup = new PopupMenu(this, m_profileWidgetImageButton);
-        popup.getMenuInflater().inflate(R.menu.activity_user_menu, popup.getMenu());
-
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
-        {
-            public boolean onMenuItemClick(MenuItem i_item)
-            {
-                switch (i_item.getItemId()){
-                    case R.id.viewProfile:
-                        updateUIAndMoveToUserDetailsActivity();
-                        break;
-
-                    case R.id.signOut:
-                        signOutAllAccounts();
-                        break;
-                    default:
-                        break;
-                }
-                Toast.makeText(CinemaMainActivity.this, "You Clicked : " + i_item.getTitle(), Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-
-        popup.show();
-
-        Log.e(TAG, "onClickProfileButton() <<");
-    }*/
 }

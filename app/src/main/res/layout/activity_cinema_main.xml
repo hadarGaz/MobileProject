@@ -11,7 +11,7 @@
     <FrameLayout
         android:id="@+id/filter_bar_container"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="177dp"
         android:background="@android:color/darker_gray"
         android:paddingBottom="12dp"
         android:paddingLeft="12dp"
@@ -19,13 +19,13 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileMenuButton">
+        app:layout_constraintTop_toBottomOf="@+id/profile_widget">
 
 
         <android.support.v7.widget.CardView
             android:id="@+id/filter_bar"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="145dp"
             android:layout_marginTop="12dp"
             android:clickable="true">
 
@@ -66,7 +66,7 @@
                     android:id="@+id/radioButtonByPrice"
                     android:layout_width="120dp"
                     android:layout_height="32dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="40dp"
                     android:checked="true"
                     android:onClick="onClickRadioButton"
                     android:text="Order by price"
@@ -77,12 +77,31 @@
                     android:id="@+id/radioButtonByRating"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="40dp"
                     android:layout_marginEnd="16dp"
                     android:onClick="onClickRadioButton"
                     android:text="Order by rating"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
+
+                <TextView
+                    android:id="@+id/sort_by"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="16dp"
+                    android:text="Sort by:"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <Spinner
+                    android:id="@+id/sort_by_spinner"
+                    android:layout_width="124dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="72dp"
+                    android:layout_marginTop="104dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -93,13 +112,14 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/movies_list"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="321dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filter_bar_container"
+        app:layout_constraintVertical_bias="1.0"
         tools:ignore="MissingConstraints" />
 
     <ImageButton
