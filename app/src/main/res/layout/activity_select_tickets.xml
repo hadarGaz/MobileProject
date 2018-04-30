@@ -23,9 +23,9 @@
         android:layout_height="65dp"
         android:layout_marginTop="4dp"
         android:onClick="onClickProfileWidgetImageButton"
+        app:srcCompat="@mipmap/liad_icon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/liad_icon" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -69,7 +69,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:onClick="playYouTubeTrailer"
-                app:layout_constraintBottom_toTopOf="@+id/player"
+                app:layout_constraintBottom_toTopOf="@+id/youtubePlayer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@android:color/holo_red_light" />
