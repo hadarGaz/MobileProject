@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -17,19 +18,21 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.Movie;
+import com.example.hadar.exercise02.model.ProfileWidget;
 import com.example.hadar.exercise02.model.UserDetails;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class SelectTicketsActivity extends YouTubeBaseActivity {
+public class SelectTicketsActivity extends AppCompatActivity {
 
     private static final String TAG = "SelectTicketsActivity";
     private static final int MAX_CHAR = 5;
@@ -62,6 +65,8 @@ public class SelectTicketsActivity extends YouTubeBaseActivity {
 
         findViews();
         getIntentInput();
+        displayUserImage();
+        displayMovieImage();
         setMovieDetails();
         setPrices();
         setSpinnersWithAdapter();
@@ -105,6 +110,19 @@ public class SelectTicketsActivity extends YouTubeBaseActivity {
         m_youTubePlayerView.initialize("AIzaSyBKg_t7VvM-LQTahdiPzn12QwYDBAnWM8Q", m_YouTubeInitListener);
     }
 
+    private void displayMovieImage()
+    {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        storageReference.child("Movie Pictures/" + m_movie.getM_thumbImage()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+        {
+            @Override
+            public void onSuccess(Uri i_uri)
+            {
+                Glide.with(getApplicationContext()).load(i_uri.toString()).into(m_imageViewMoviePic);
+            }
+        });
+    }
+
     private void findViews()
     {
         Log.e(TAG, "findViews() >> ");
@@ -127,9 +145,26 @@ public class SelectTicketsActivity extends YouTubeBaseActivity {
         m_textViewTotalPriceStudent= (TextView) findViewById(R.id.textViewTotalPriceStudent);
         m_textViewTotalPriceSoldier= (TextView) findViewById(R.id.textViewTotalPriceSoldier);
         m_youTubePlayerView=findViewById(R.id.youtubePlayer);
+        m_imageViewMoviePic = findViewById(R.id.imageViewMoviePic);
+        m_textViewMovieName = findViewById(R.id.textViewMovieName);
+        m_textViewMovieDate = findViewById(R.id.textViewMovieDate);
+        m_videoViewMovieTrailer = findViewById(R.id.videoViewMovieTrailer);
+        m_profileWidgetImageButton = findViewById(R.id.profile_widget);
+        m_spinnerStandard = findViewById(R.id.SpinnerStandard);
+        m_spinnerStudent = findViewById(R.id.SpinnerStudent);
+        m_spinnerSoldier = findViewById(R.id.SpinnerSoldieer);
+        m_textViewStandardPrice = findViewById(R.id.textViewStandardPrice);
+        m_textViewStudentPrice = findViewById(R.id.textViewStudentPrice);
+        m_textViewSoldierPrice = findViewById(R.id.textViewSoldierPrice);
+        m_textViewTotalPriceForMovie = findViewById(R.id.textViewTotalPriceForMovie);
+        m_textViewTotalPriceStandard = findViewById(R.id.textViewTotalPriceStandard);
+        m_textViewTotalPriceStudent = findViewById(R.id.textViewTotalPriceStudent);
+        m_textViewTotalPriceSoldier = findViewById(R.id.textViewTotalPriceSoldier);
+
         Log.e(TAG, "findViews() << ");
     }
-    
+
+
     private void getIntentInput()
     {
         Log.e(TAG, "getIntentInput() >> ");
@@ -170,11 +205,11 @@ public class SelectTicketsActivity extends YouTubeBaseActivity {
 
         m_adapter = ArrayAdapter.createFromResource(this,R.array.ArrayNumber,android.R.layout.simple_spinner_item );
         m_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        m_spinnerstandard.setAdapter(m_adapter);
+        m_spinnerStandard.setAdapter(m_adapter);
         m_spinnerStudent.setAdapter(m_adapter);
-        m_spinnerSoldieer.setAdapter(m_adapter);
+        m_spinnerSoldier.setAdapter(m_adapter);
 
-        m_spinnerstandard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        m_spinnerStandard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -203,7 +238,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity {
             }
         });
 
-        m_spinnerSoldieer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        m_spinnerSoldier.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -250,11 +285,11 @@ public class SelectTicketsActivity extends YouTubeBaseActivity {
             textView.setText(limitStrToMaxChar(String.valueOf(priceTotalTicketType)));
         }
 
-        double totalPrice = Double.valueOf(m_spinnerstandard.getSelectedItemPosition()) *
+        double totalPrice = Double.valueOf(m_spinnerStandard.getSelectedItemPosition()) *
                 Double.valueOf(m_textViewStandardPrice.getText().toString());
         totalPrice = totalPrice + (Double.valueOf(m_spinnerStudent.getSelectedItemPosition()) *
                 Double.valueOf(m_textViewStudentPrice.getText().toString()));
-        totalPrice = totalPrice + (Double.valueOf(m_spinnerSoldieer.getSelectedItemPosition()) *
+        totalPrice = totalPrice + (Double.valueOf(m_spinnerSoldier.getSelectedItemPosition()) *
                 Double.valueOf(m_textViewSoldierPrice.getText().toString()));
 
 
@@ -264,25 +299,42 @@ public class SelectTicketsActivity extends YouTubeBaseActivity {
 
     }
 
-    public void onBuyTicketClick(View v)
+    private boolean didUserPickAnyTicket()
     {
-        Log.e(TAG, "onBuyTicketClick() >> " );
+       int totalSelectedTickets = m_spinnerStandard.getSelectedItemPosition()
+                                + m_spinnerSoldier.getSelectedItemPosition()
+                                + m_spinnerStudent.getSelectedItemPosition();
 
-        m_userDetails.getMoviesStringList().add(m_key);
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
-        userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
+       return totalSelectedTickets != 0;
+    }
+
+    public void onClickBuyTickets(View v)
+    {
+        if(didUserPickAnyTicket())
+        {
+            Log.e(TAG, "onClickBuyTickets() >> ");
+
+            m_userDetails.getMoviesStringList().add(m_key);
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+            userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
 
 
-        Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
-       // reservationSummaryIntent.putExtra("Key", );
-        reservationSummaryIntent.putExtra("Movie", m_movie);
-        reservationSummaryIntent.putExtra("Key", m_key );
-        reservationSummaryIntent.putExtra("UserDetails", m_userDetails);
-        startActivity(reservationSummaryIntent);
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        finish();
+            Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
+            // reservationSummaryIntent.putExtra("Key", );
+            reservationSummaryIntent.putExtra("Movie", m_movie);
+            reservationSummaryIntent.putExtra("Key", m_key);
+            reservationSummaryIntent.putExtra("UserDetails", m_userDetails);
+            startActivity(reservationSummaryIntent);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            finish();
 
-        Log.e(TAG, "onBuyTicketClick() << " );
+            Log.e(TAG, "onClickBuyTickets() << ");
+        }
+
+        else
+        {
+            Toast.makeText(this, "Please select number of tickets.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private String limitStrToMaxChar(String i_Str)
@@ -290,5 +342,15 @@ public class SelectTicketsActivity extends YouTubeBaseActivity {
         String resStr = String.valueOf(i_Str);
         int maxLength = (resStr.length() < MAX_CHAR)?resStr.length():MAX_CHAR;
         return (resStr.substring(0,maxLength));
+    }
+
+    public void onClickProfileWidgetImageButton(View i_view)
+    {
+        ProfileWidget.onClickProfileWidget(this, m_profileWidgetImageButton, m_userDetails);
+    }
+
+    private void displayUserImage()
+    {
+        ProfileWidget.displayUserImage(this, m_profileWidgetImageButton, m_userDetails);
     }
 }

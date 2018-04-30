@@ -102,13 +102,12 @@
         app:layout_constraintTop_toBottomOf="@+id/filter_bar_container"
         tools:ignore="MissingConstraints" />
 
-    <ImageView
-        android:id="@+id/profileMenuButton"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:maxHeight="42dp"
-        android:maxWidth="42dp"
-        android:onClick="onClickProfileButton"
+    <ImageButton
+        android:id="@+id/profile_widget"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="4dp"
+        android:onClick="onClickProfileWidgetImageButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/liad_icon" />
