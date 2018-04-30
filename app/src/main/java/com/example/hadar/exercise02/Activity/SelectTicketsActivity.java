@@ -7,14 +7,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.Movie;
+import com.example.hadar.exercise02.model.ProfileWidget;
 import com.example.hadar.exercise02.model.UserDetails;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -24,12 +25,10 @@ public class SelectTicketsActivity extends AppCompatActivity {
 
     private static final String TAG = "SelectTicketsActivity";
     private static final int MAX_CHAR = 5;
-
     private ImageView m_imageViewMoviePic;
     private TextView m_textViewMovieName;
     private TextView m_textViewMovieDate;
     private VideoView m_videoViewMovieTrailer;
-
     private TextView m_textViewStandardPrice;
     private TextView m_textViewStudentPrice;
     private TextView m_textViewSoldierPrice;
@@ -37,18 +36,18 @@ public class SelectTicketsActivity extends AppCompatActivity {
     private TextView m_textViewTotalPriceStudent;
     private TextView m_textViewTotalPriceSoldier;
     private TextView m_textViewTotalPriceForMovie;
-
-
-    private Spinner m_spinnerstandard;
+    private ImageButton m_profileWidgetImageButton;
+    private Spinner m_spinnerStandard;
     private Spinner m_spinnerStudent;
-    private Spinner m_spinnerSoldieer;
+    private Spinner m_spinnerSoldier;
     private ArrayAdapter<CharSequence> m_adapter;
     private Movie m_movie;
     private UserDetails m_userDetails;
     private String m_key;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         Log.e(TAG, "onCreate() >> ");
 
         super.onCreate(savedInstanceState);
@@ -56,6 +55,7 @@ public class SelectTicketsActivity extends AppCompatActivity {
 
         findViews();
         getIntentInput();
+        displayUserImage();
         setMovieDetails();
         setPrices();
         setSpinnersWithAdapter();
@@ -67,27 +67,25 @@ public class SelectTicketsActivity extends AppCompatActivity {
     {
         Log.e(TAG, "findViews() >> ");
 
-        m_imageViewMoviePic= (ImageView) findViewById(R.id.imageViewMoviePic);
-        m_textViewMovieName= (TextView) findViewById(R.id.textViewMovieName);
-        m_textViewMovieDate= (TextView) findViewById(R.id.textViewMovieDate);
-        m_videoViewMovieTrailer= (VideoView) findViewById(R.id.videoViewMovieTrailer);
-
-        m_spinnerstandard = (Spinner)findViewById(R.id.SpinnerStandard);
-        m_spinnerStudent= (Spinner)findViewById(R.id.SpinnerStudent);
-        m_spinnerSoldieer= (Spinner)findViewById(R.id.SpinnerSoldieer);
-
-        m_textViewStandardPrice= (TextView) findViewById(R.id.textViewStandardPrice);
-        m_textViewStudentPrice= (TextView) findViewById(R.id.textViewStudentPrice);
-        m_textViewSoldierPrice= (TextView) findViewById(R.id.textViewSoldierPrice);
-
-        m_textViewTotalPriceForMovie = (TextView) findViewById(R.id.textViewTotalPriceForMovie);
-
-        m_textViewTotalPriceStandard= (TextView) findViewById(R.id.textViewTotalPriceStandard);
-        m_textViewTotalPriceStudent= (TextView) findViewById(R.id.textViewTotalPriceStudent);
-        m_textViewTotalPriceSoldier= (TextView) findViewById(R.id.textViewTotalPriceSoldier);
+        m_imageViewMoviePic = findViewById(R.id.imageViewMoviePic);
+        m_textViewMovieName = findViewById(R.id.textViewMovieName);
+        m_textViewMovieDate = findViewById(R.id.textViewMovieDate);
+        m_videoViewMovieTrailer = findViewById(R.id.videoViewMovieTrailer);
+        m_profileWidgetImageButton = findViewById(R.id.profile_widget);
+        m_spinnerStandard = findViewById(R.id.SpinnerStandard);
+        m_spinnerStudent = findViewById(R.id.SpinnerStudent);
+        m_spinnerSoldier = findViewById(R.id.SpinnerSoldieer);
+        m_textViewStandardPrice = findViewById(R.id.textViewStandardPrice);
+        m_textViewStudentPrice = findViewById(R.id.textViewStudentPrice);
+        m_textViewSoldierPrice = findViewById(R.id.textViewSoldierPrice);
+        m_textViewTotalPriceForMovie = findViewById(R.id.textViewTotalPriceForMovie);
+        m_textViewTotalPriceStandard = findViewById(R.id.textViewTotalPriceStandard);
+        m_textViewTotalPriceStudent = findViewById(R.id.textViewTotalPriceStudent);
+        m_textViewTotalPriceSoldier = findViewById(R.id.textViewTotalPriceSoldier);
 
         Log.e(TAG, "findViews() << ");
     }
+
     private void getIntentInput()
     {
         Log.e(TAG, "getIntentInput() >> ");
@@ -128,11 +126,11 @@ public class SelectTicketsActivity extends AppCompatActivity {
 
         m_adapter = ArrayAdapter.createFromResource(this,R.array.ArrayNumber,android.R.layout.simple_spinner_item );
         m_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        m_spinnerstandard.setAdapter(m_adapter);
+        m_spinnerStandard.setAdapter(m_adapter);
         m_spinnerStudent.setAdapter(m_adapter);
-        m_spinnerSoldieer.setAdapter(m_adapter);
+        m_spinnerSoldier.setAdapter(m_adapter);
 
-        m_spinnerstandard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        m_spinnerStandard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -161,7 +159,7 @@ public class SelectTicketsActivity extends AppCompatActivity {
             }
         });
 
-        m_spinnerSoldieer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        m_spinnerSoldier.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -208,11 +206,11 @@ public class SelectTicketsActivity extends AppCompatActivity {
             textView.setText(limitStrToMaxChar(String.valueOf(priceTotalTicketType)));
         }
 
-        double totalPrice = Double.valueOf(m_spinnerstandard.getSelectedItemPosition()) *
+        double totalPrice = Double.valueOf(m_spinnerStandard.getSelectedItemPosition()) *
                 Double.valueOf(m_textViewStandardPrice.getText().toString());
         totalPrice = totalPrice + (Double.valueOf(m_spinnerStudent.getSelectedItemPosition()) *
                 Double.valueOf(m_textViewStudentPrice.getText().toString()));
-        totalPrice = totalPrice + (Double.valueOf(m_spinnerSoldieer.getSelectedItemPosition()) *
+        totalPrice = totalPrice + (Double.valueOf(m_spinnerSoldier.getSelectedItemPosition()) *
                 Double.valueOf(m_textViewSoldierPrice.getText().toString()));
 
 
@@ -248,5 +246,15 @@ public class SelectTicketsActivity extends AppCompatActivity {
         String resStr = String.valueOf(i_Str);
         int maxLength = (resStr.length() < MAX_CHAR)?resStr.length():MAX_CHAR;
         return (resStr.substring(0,maxLength));
+    }
+
+    public void onClickProfileWidgetImageButton(View i_view)
+    {
+        ProfileWidget.onClickProfileWidget(this, m_profileWidgetImageButton, m_userDetails);
+    }
+
+    private void displayUserImage()
+    {
+        ProfileWidget.displayUserImage(this, m_profileWidgetImageButton, m_userDetails);
     }
 }

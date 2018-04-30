@@ -17,13 +17,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/profileMenuButton"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:maxHeight="42dp"
-        android:maxWidth="42dp"
-        android:onClick="onClickProfileButton"
+    <ImageButton
+        android:id="@+id/profile_widget"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="4dp"
+        android:onClick="onClickProfileWidgetImageButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/liad_icon" />
@@ -35,7 +34,7 @@
         android:layout_marginTop="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileMenuButton">
+        app:layout_constraintTop_toBottomOf="@+id/profile_widget">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="394dp"

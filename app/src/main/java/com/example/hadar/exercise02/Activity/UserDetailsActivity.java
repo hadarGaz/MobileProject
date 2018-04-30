@@ -51,7 +51,7 @@ public class UserDetailsActivity extends AppCompatActivity
         });
     }
 
-    @Override
+  /*  @Override
     public void onBackPressed()
     {
         new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
@@ -70,7 +70,7 @@ public class UserDetailsActivity extends AppCompatActivity
                 })
                 .setNegativeButton("No", null)
                 .show();
-    }
+    }*/
 
     @Override
     public void finish()
