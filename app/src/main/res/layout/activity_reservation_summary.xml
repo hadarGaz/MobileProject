@@ -13,7 +13,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="69dp"
+        app:layout_constraintTop_toBottomOf="@+id/profile_widget"
         tools:ignore="MissingConstraints">
 
         <android.support.v7.widget.CardView
