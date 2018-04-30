@@ -61,11 +61,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         String movieKey = m_moviesWithKeysList.get(i_position).getKey();
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        storageReference.child("Movie Pictures/" + movie.getM_thumbImage()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageReference.child("Movie Pictures/" + movie.getM_thumbImage())
+                .getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Log.e(TAG,"pic src= "+ uri.toString());
-                Glide.with(i_movieViewHolder.getContext()).load(uri.toString()).into(i_movieViewHolder.getThumbImage());
+                Glide.with(i_movieViewHolder.getContext())
+                        .load(uri.toString())
+                        .into(i_movieViewHolder.getThumbImage());
             }
         });
 

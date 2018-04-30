@@ -21,6 +21,11 @@ import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.ProfileWidget;
 import com.example.hadar.exercise02.model.UserDetails;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -34,7 +39,8 @@ public class SelectTicketsActivity extends AppCompatActivity {
     private ImageView m_imageViewMoviePic;
     private TextView m_textViewMovieName;
     private TextView m_textViewMovieDate;
-    private VideoView m_videoViewMovieTrailer;
+    private YouTubePlayerView m_youTubePlayerView;
+    private YouTubePlayer.OnInitializedListener m_YouTubeInitListener;
     private TextView m_textViewStandardPrice;
     private TextView m_textViewStudentPrice;
     private TextView m_textViewSoldierPrice;
@@ -42,18 +48,16 @@ public class SelectTicketsActivity extends AppCompatActivity {
     private TextView m_textViewTotalPriceStudent;
     private TextView m_textViewTotalPriceSoldier;
     private TextView m_textViewTotalPriceForMovie;
-    private ImageButton m_profileWidgetImageButton;
-    private Spinner m_spinnerStandard;
+    private Spinner m_spinnerstandard;
     private Spinner m_spinnerStudent;
-    private Spinner m_spinnerSoldier;
+    private Spinner m_spinnerSoldieer;
     private ArrayAdapter<CharSequence> m_adapter;
     private Movie m_movie;
     private UserDetails m_userDetails;
     private String m_key;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         Log.e(TAG, "onCreate() >> ");
 
         super.onCreate(savedInstanceState);
@@ -66,8 +70,44 @@ public class SelectTicketsActivity extends AppCompatActivity {
         setMovieDetails();
         setPrices();
         setSpinnersWithAdapter();
-
+        initYouTubeListener();
+        setMovieImage();
         Log.e(TAG, "onCreate() << ");
+    }
+    private void setMovieImage()
+    {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        storageReference.child("Movie Pictures/" + m_movie.getM_thumbImage())
+                .getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.e(TAG,"pic src= "+ uri.toString());
+                        Glide.with(SelectTicketsActivity.this)
+                                .load(uri.toString())
+                                .into(m_imageViewMoviePic);
+                    }
+                });
+    }
+
+    private void initYouTubeListener()
+    {
+        m_YouTubeInitListener=new YouTubePlayer.OnInitializedListener() {
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+                youTubePlayer.loadVideo(m_movie.getM_trailerURL());
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+            }
+        };
+    }
+
+    public void playYouTubeTrailer(View view)
+    {
+        m_youTubePlayerView.initialize("AIzaSyBKg_t7VvM-LQTahdiPzn12QwYDBAnWM8Q", m_YouTubeInitListener);
     }
 
     private void displayMovieImage()
@@ -87,6 +127,24 @@ public class SelectTicketsActivity extends AppCompatActivity {
     {
         Log.e(TAG, "findViews() >> ");
 
+        m_imageViewMoviePic= (ImageView) findViewById(R.id.imageViewMoviePic);
+        m_textViewMovieName= (TextView) findViewById(R.id.textViewMovieName);
+        m_textViewMovieDate= (TextView) findViewById(R.id.textViewMovieDate);
+
+        m_spinnerstandard = (Spinner)findViewById(R.id.SpinnerStandard);
+        m_spinnerStudent= (Spinner)findViewById(R.id.SpinnerStudent);
+        m_spinnerSoldieer= (Spinner)findViewById(R.id.SpinnerSoldieer);
+
+        m_textViewStandardPrice= (TextView) findViewById(R.id.textViewStandardPrice);
+        m_textViewStudentPrice= (TextView) findViewById(R.id.textViewStudentPrice);
+        m_textViewSoldierPrice= (TextView) findViewById(R.id.textViewSoldierPrice);
+
+        m_textViewTotalPriceForMovie = (TextView) findViewById(R.id.textViewTotalPriceForMovie);
+
+        m_textViewTotalPriceStandard= (TextView) findViewById(R.id.textViewTotalPriceStandard);
+        m_textViewTotalPriceStudent= (TextView) findViewById(R.id.textViewTotalPriceStudent);
+        m_textViewTotalPriceSoldier= (TextView) findViewById(R.id.textViewTotalPriceSoldier);
+        m_youTubePlayerView=findViewById(R.id.youtubePlayer);
         m_imageViewMoviePic = findViewById(R.id.imageViewMoviePic);
         m_textViewMovieName = findViewById(R.id.textViewMovieName);
         m_textViewMovieDate = findViewById(R.id.textViewMovieDate);
@@ -105,6 +163,7 @@ public class SelectTicketsActivity extends AppCompatActivity {
 
         Log.e(TAG, "findViews() << ");
     }
+
 
     private void getIntentInput()
     {
