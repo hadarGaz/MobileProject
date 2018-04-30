@@ -1,6 +1,7 @@
 package com.example.hadar.exercise02.Activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,13 +14,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.bumptech.glide.Glide;
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.ProfileWidget;
 import com.example.hadar.exercise02.model.UserDetails;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class SelectTicketsActivity extends AppCompatActivity {
 
@@ -56,11 +61,26 @@ public class SelectTicketsActivity extends AppCompatActivity {
         findViews();
         getIntentInput();
         displayUserImage();
+        displayMovieImage();
         setMovieDetails();
         setPrices();
         setSpinnersWithAdapter();
 
         Log.e(TAG, "onCreate() << ");
+    }
+
+    private void displayMovieImage()
+    {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        storageReference.child("Movie Pictures/" + m_movie.getM_thumbImage()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+        {
+            @Override
+            public void onSuccess(Uri i_uri)
+            {
+                Log.e(TAG,"pic src= "+ i_uri.toString());
+                Glide.with(getApplicationContext()).load(i_uri.toString()).into(m_imageViewMoviePic);
+            }
+        });
     }
 
     private void findViews()
