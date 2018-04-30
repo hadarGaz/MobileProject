@@ -28,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -95,39 +97,40 @@ public class CinemaMainActivity extends AppCompatActivity
     {
         if(i_sortingMethod == "Rating")
         {
-            sortMoviesByValue("m_rating");
+            sortMoviesByRating();
         }
 
         else if (i_sortingMethod == "Genre")
         {
-            sortMoviesByValue("m_genre");
+            sortMoviesByGenre();
         }
+
+        m_recyclerView.getAdapter().notifyDataSetChanged();
     }
 
-    private void sortMoviesByValue(String i_valueForQuery)
+    private void sortMoviesByRating()
     {
-        m_moviesWithKeysList.clear();
-
-        Query sortMoviesQuery = m_allMoviesReference.orderByChild(i_valueForQuery);
-
-        sortMoviesQuery.addValueEventListener(new ValueEventListener()
+        //Ascending sort of rating
+        m_moviesWithKeysList.sort(new Comparator<MovieWithKey>()
         {
             @Override
-            public void onDataChange(DataSnapshot i_snapshot)
+            public int compare(MovieWithKey i_movieWithKey1, MovieWithKey i_movieWithKey2)
             {
-                Log.e(TAG, "onDataChange(Query) >> " + i_snapshot.getKey());
-
-                updateMoviesWithKeysList(i_snapshot);
-
-                Log.e(TAG, "onDataChange(Query) <<");
+                //replace 1 and 2 if we wish to have descending sort
+                return i_movieWithKey2.getMovie().compareRating(i_movieWithKey1.getMovie());
             }
+        });
+    }
 
+    private void sortMoviesByGenre()
+    {
+        m_moviesWithKeysList.sort(new Comparator<MovieWithKey>()
+        {
             @Override
-            public void onCancelled(DatabaseError databaseError)
+            public int compare(MovieWithKey i_movieWithKey1, MovieWithKey i_MovieWithKey2)
             {
-                Log.e(TAG, "onCancelled() >>" + databaseError.getMessage());
+                return i_movieWithKey1.getMovie().getM_genre().compareTo(i_MovieWithKey2.getMovie().getM_genre());
             }
-
         });
     }
 
@@ -299,6 +302,15 @@ public class CinemaMainActivity extends AppCompatActivity
             String dataSnapshotKey = dataSnapshot.getKey();
             m_moviesWithKeysList.add(new MovieWithKey(movie, dataSnapshotKey));
         }
+
+        m_moviesWithKeysList.sort(new Comparator<MovieWithKey>()
+        {
+            @Override
+            public int compare(MovieWithKey i_movieWithKey1, MovieWithKey i_MovieWithKey2)
+            {
+                return 0;
+            }
+        });
 
         m_recyclerView.getAdapter().notifyDataSetChanged();
     }

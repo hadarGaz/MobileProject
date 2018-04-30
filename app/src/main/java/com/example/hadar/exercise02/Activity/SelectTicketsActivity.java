@@ -2,7 +2,6 @@ package com.example.hadar.exercise02.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
-
 import com.bumptech.glide.Glide;
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.Movie;
@@ -25,7 +22,6 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -52,13 +48,13 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     private Spinner m_spinnerStandard;
     private Spinner m_spinnerStudent;
     private Spinner m_spinnerSoldier;
-    private ArrayAdapter<CharSequence> m_adapter;
     private Movie m_movie;
     private UserDetails m_userDetails;
     private String m_key;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         Log.e(TAG, "onCreate() >> ");
 
         super.onCreate(savedInstanceState);
@@ -75,6 +71,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         setMovieImage();
         Log.e(TAG, "onCreate() << ");
     }
+
     private void setMovieImage()
     {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -128,21 +125,6 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     {
         Log.e(TAG, "findViews() >> ");
 
-        m_imageViewMoviePic= (ImageView) findViewById(R.id.imageViewMoviePic);
-        m_textViewMovieName= (TextView) findViewById(R.id.textViewMovieName);
-        m_textViewMovieDate= (TextView) findViewById(R.id.textViewMovieDate);
-
-        m_spinnerStudent= (Spinner)findViewById(R.id.SpinnerStudent);
-
-        m_textViewStandardPrice= (TextView) findViewById(R.id.textViewStandardPrice);
-        m_textViewStudentPrice= (TextView) findViewById(R.id.textViewStudentPrice);
-        m_textViewSoldierPrice= (TextView) findViewById(R.id.textViewSoldierPrice);
-
-        m_textViewTotalPriceForMovie = (TextView) findViewById(R.id.textViewTotalPriceForMovie);
-
-        m_textViewTotalPriceStandard= (TextView) findViewById(R.id.textViewTotalPriceStandard);
-        m_textViewTotalPriceStudent= (TextView) findViewById(R.id.textViewTotalPriceStudent);
-        m_textViewTotalPriceSoldier= (TextView) findViewById(R.id.textViewTotalPriceSoldier);
         m_youTubePlayerView=findViewById(R.id.youtubePlayer);
         m_imageViewMoviePic = findViewById(R.id.imageViewMoviePic);
         m_textViewMovieName = findViewById(R.id.textViewMovieName);
@@ -161,7 +143,6 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
 
         Log.e(TAG, "findViews() << ");
     }
-
 
     private void getIntentInput()
     {
@@ -201,11 +182,11 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     {
         Log.e(TAG, "setSpinnersWithAdapter() >> ");
 
-        m_adapter = ArrayAdapter.createFromResource(this,R.array.ArrayNumber,android.R.layout.simple_spinner_item );
-        m_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        m_spinnerStandard.setAdapter(m_adapter);
-        m_spinnerStudent.setAdapter(m_adapter);
-        m_spinnerSoldier.setAdapter(m_adapter);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this,R.array.ArrayNumber,android.R.layout.simple_spinner_item );
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        m_spinnerStandard.setAdapter(spinnerAdapter);
+        m_spinnerStudent.setAdapter(spinnerAdapter);
+        m_spinnerSoldier.setAdapter(spinnerAdapter);
 
         m_spinnerStandard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
@@ -283,12 +264,12 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
             textView.setText(limitStrToMaxChar(String.valueOf(priceTotalTicketType)));
         }
 
-        double totalPrice = Double.valueOf(m_spinnerStandard.getSelectedItemPosition()) *
+        double totalPrice = m_spinnerStandard.getSelectedItemPosition() *
                 Double.valueOf(m_textViewStandardPrice.getText().toString());
-        totalPrice = totalPrice + (Double.valueOf(m_spinnerStudent.getSelectedItemPosition()) *
-                Double.valueOf(m_textViewStudentPrice.getText().toString()));
-        totalPrice = totalPrice + (Double.valueOf(m_spinnerSoldier.getSelectedItemPosition()) *
-                Double.valueOf(m_textViewSoldierPrice.getText().toString()));
+        totalPrice = totalPrice + m_spinnerStudent.getSelectedItemPosition() *
+                Double.valueOf(m_textViewStudentPrice.getText().toString());
+        totalPrice = totalPrice + m_spinnerSoldier.getSelectedItemPosition() *
+                Double.valueOf(m_textViewSoldierPrice.getText().toString());
 
 
         m_textViewTotalPriceForMovie.setText(limitStrToMaxChar(String.valueOf(totalPrice)));

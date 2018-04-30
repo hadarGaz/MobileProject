@@ -65,6 +65,28 @@ public class Movie implements Serializable
         return m_rating;
     }
 
+    public int compareRating(Movie i_movie)
+    {
+        int result;
+
+        if(m_rating - i_movie.m_rating < 0)
+        {
+            result = -1;
+        }
+
+        else if (m_rating - i_movie.m_rating > 0)
+        {
+            result = 1;
+        }
+
+        else
+        {
+            result = 0;
+        }
+
+        return result;
+    }
+
     public String getM_thumbImage()
     {
 
