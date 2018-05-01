@@ -41,6 +41,8 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     private TextView m_textViewMovieDate;
     private YouTubePlayerView m_youTubePlayerView;
     private YouTubePlayer.OnInitializedListener m_YouTubeInitListener;
+    private YouTubePlayer m_YouTubePlayer = null;
+    private boolean m_isYouTubeOnFullScreen = false;
     private TextView m_textViewStandardPrice;
     private TextView m_textViewStudentPrice;
     private TextView m_textViewSoldierPrice;
@@ -99,6 +101,15 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
                 youTubePlayer.loadVideo(m_movie.getM_trailerURL());
+                m_YouTubePlayer = youTubePlayer;
+                youTubePlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener()
+                {
+                    @Override
+                    public void onFullscreen(boolean i_isFullScreen)
+                    {
+                        m_isYouTubeOnFullScreen = i_isFullScreen;
+                    }
+                });
             }
 
             @Override
@@ -128,7 +139,20 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         });
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        if(m_YouTubePlayer != null && m_isYouTubeOnFullScreen)
+        {
+            m_YouTubePlayer.setFullscreen(false);
+            m_isYouTubeOnFullScreen = false;
+        }
 
+        else
+        {
+            super.onBackPressed();
+        }
+    }
 
     private void findViews()
     {
