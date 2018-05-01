@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+
 public class SelectTicketsActivity extends YouTubeBaseActivity{
 
     private static final String TAG = "SelectTicketsActivity";
@@ -51,6 +52,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     private Movie m_movie;
     private UserDetails m_userDetails;
     private String m_key;
+    //int i=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -280,11 +282,11 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
 
     private boolean didUserPickAnyTicket()
     {
-       int totalSelectedTickets = m_spinnerStandard.getSelectedItemPosition()
-                                + m_spinnerSoldier.getSelectedItemPosition()
-                                + m_spinnerStudent.getSelectedItemPosition();
+        int totalSelectedTickets = m_spinnerStandard.getSelectedItemPosition()
+                + m_spinnerSoldier.getSelectedItemPosition()
+                + m_spinnerStudent.getSelectedItemPosition();
 
-       return totalSelectedTickets != 0;
+        return totalSelectedTickets != 0;
     }
 
     public void onClickBuyTickets(View v)
