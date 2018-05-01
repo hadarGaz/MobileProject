@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.hadar.exercise02.R;
+import com.example.hadar.exercise02.model.GifPlayer;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.ProfileWidget;
 import com.example.hadar.exercise02.model.UserDetails;
@@ -34,6 +35,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     private static final String TAG = "SelectTicketsActivity";
     private static final int MAX_CHAR = 5;
     private ImageView m_imageViewMoviePic;
+    private ImageView m_youtubePlayButton;
     private ImageButton m_profileWidgetImageButton;
     private TextView m_textViewMovieName;
     private TextView m_textViewMovieDate;
@@ -71,6 +73,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         setSpinnersWithAdapter();
         initYouTubeListener();
         setMovieImage();
+
         Log.e(TAG, "onCreate() << ");
     }
 
@@ -105,7 +108,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         };
     }
 
-    public void playYouTubeTrailer(View view)
+    public void playYouTubeTrailer()
     {
         m_youTubePlayerView.initialize("AIzaSyBKg_t7VvM-LQTahdiPzn12QwYDBAnWM8Q", m_YouTubeInitListener);
     }
@@ -118,15 +121,18 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
             @Override
             public void onSuccess(Uri i_uri)
             {
-                Glide.with(getApplicationContext()).load(i_uri.toString()).into(m_imageViewMoviePic);
+        Glide.with(getApplicationContext())
+                .load(i_uri.toString())
+                .into(m_imageViewMoviePic);
             }
         });
     }
 
+
+
     private void findViews()
     {
         Log.e(TAG, "findViews() >> ");
-
         m_youTubePlayerView=findViewById(R.id.youtubePlayer);
         m_imageViewMoviePic = findViewById(R.id.imageViewMoviePic);
         m_textViewMovieName = findViewById(R.id.textViewMovieName);
@@ -142,8 +148,16 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         m_textViewTotalPriceStandard = findViewById(R.id.textViewTotalPriceStandard);
         m_textViewTotalPriceStudent = findViewById(R.id.textViewTotalPriceStudent);
         m_textViewTotalPriceSoldier = findViewById(R.id.textViewTotalPriceSoldier);
+        m_youtubePlayButton=findViewById(R.id.youtube_play_button);
+
 
         Log.e(TAG, "findViews() << ");
+    }
+
+    public void onClickYouTubeButton(View view)
+    {
+        m_youtubePlayButton.setVisibility(View.GONE);
+        playYouTubeTrailer();
     }
 
     private void getIntentInput()

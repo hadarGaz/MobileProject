@@ -39,15 +39,19 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="394dp"
             android:layout_height="251dp"
-            android:background="@android:color/black">
+            android:background="@drawable/theare">
 
             <TextView
                 android:id="@+id/textViewMovieName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="29dp"
+                android:layout_marginBottom="102dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:text="[Movie name]"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/youtube_play_button"
                 app:layout_constraintStart_toEndOf="@+id/imageViewMoviePic"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="23dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="8dp"
                 android:text="[Movie date]"
                 app:layout_constraintStart_toEndOf="@+id/imageViewMoviePic"
                 app:layout_constraintTop_toBottomOf="@+id/textViewMovieName" />
@@ -79,11 +83,22 @@
                 android:layout_width="246dp"
                 android:layout_height="133dp"
                 android:layout_marginBottom="11dp"
-                android:onClick="playYouTubeTrailer"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageViewMoviePic" />
+
+            <ImageView
+                android:id="@+id/youtube_play_button"
+                android:layout_width="156dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="41dp"
+                android:onClick="onClickYouTubeButton"
+                android:src="@drawable/youtube_play_button"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewMovieName" />
 
         </android.support.constraint.ConstraintLayout>
     </FrameLayout>

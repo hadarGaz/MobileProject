@@ -18,6 +18,8 @@ public class GifPlayer
     private static boolean m_isGoogleSignedIn = false;
     private static boolean m_isFacebookSignedIn = false;
     private static boolean m_isAnonymousSignedIn = false;
+    private static boolean m_CinemaAnim = false;
+
 
     public static void setGoogleSignIn(boolean i_result)
     {
@@ -32,6 +34,10 @@ public class GifPlayer
     public static void setAnonymousSignIn(boolean i_result)
     {
         m_isAnonymousSignedIn = i_result;
+    }
+    public static void setCinemaAnim(boolean i_result)
+    {
+        m_CinemaAnim = i_result;
     }
 
     public static void stopGif()
@@ -63,6 +69,10 @@ public class GifPlayer
                 else if(m_isAnonymousSignedIn == true)
                 {
                     s_LoadingBar.setBackgroundResource(R.drawable.anonymous);
+                }
+                else if(m_CinemaAnim == true)
+                {
+                    s_LoadingBar.setBackgroundResource(R.drawable.cinema);
                 }
             }
 

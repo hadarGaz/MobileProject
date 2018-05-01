@@ -66,6 +66,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0" />
 
+
                 <RadioButton
                     android:id="@+id/radioButtonByPrice"
                     android:layout_width="120dp"
@@ -115,8 +116,8 @@
 
     <ImageButton
         android:id="@+id/profile_widget"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:onClick="onClickProfileWidgetImageButton"
@@ -126,15 +127,27 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@mipmap/liad_icon" />
 
+    <pl.droidsonroids.gif.GifTextView
+        android:id="@+id/CinemaBar"
+        android:layout_width="350dp"
+        android:layout_height="68dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitXY" />
+
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/movies_list"
-        android:layout_width="381dp"
-        android:layout_height="355dp"
+        android:layout_width="match_parent"
+        android:layout_height="455dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filter_bar_container"
         app:layout_constraintVertical_bias="1.0"
         tools:ignore="MissingConstraints" />

@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.adapter.MoviesAdapter;
 import com.example.hadar.exercise02.adapter.MovieWithKey;
+import com.example.hadar.exercise02.model.GifPlayer;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.ProfileWidget;
 import com.example.hadar.exercise02.model.UserDetails;
@@ -64,6 +65,10 @@ public class CinemaMainActivity extends AppCompatActivity
         setRecyclerViewOptions();
         getAllMovies();
         onSortBySpinnerItemSelection();
+
+        GifPlayer.setCinemaAnim(true);
+        Log.e(TAG, "gif source= "+ GifPlayer.s_LoadingBar.getId());
+        GifPlayer.playGif();
 
         Log.e(TAG, "onCreate() << ");
 }
@@ -263,6 +268,8 @@ public class CinemaMainActivity extends AppCompatActivity
         m_orderByPriceRadioButton = findViewById(R.id.radioButtonByPrice);
         m_orderByRatingRadioButton = findViewById(R.id.radioButtonByRating);
         m_sortBySpinner = findViewById(R.id.sort_by_spinner);
+        GifPlayer.s_LoadingBar =findViewById(R.id.CinemaBar);
+
 
         Log.e(TAG, "findViews() << ");
     }
