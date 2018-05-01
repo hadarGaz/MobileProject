@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.example.hadar.exercise02.Activity.SelectTicketsActivity;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.R;
@@ -57,6 +58,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     @Override
     public void onBindViewHolder(final MovieViewHolder i_movieViewHolder, int i_position)
     {
+        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(i_movieViewHolder.getThumbImage());
+        Glide.with(i_movieViewHolder.getContext()).load(R.mipmap.loading_movie_thumb).into(imageViewTarget);
+
         Movie movie = m_moviesWithKeysList.get(i_position).getMovie();
         String movieKey = m_moviesWithKeysList.get(i_position).getKey();
 

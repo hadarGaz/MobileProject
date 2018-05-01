@@ -41,6 +41,8 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     private TextView m_textViewMovieDate;
     private YouTubePlayerView m_youTubePlayerView;
     private YouTubePlayer.OnInitializedListener m_YouTubeInitListener;
+    private YouTubePlayer m_YouTubePlayer = null;
+    private boolean m_isYouTubeOnFullScreen = false;
     private TextView m_textViewStandardPrice;
     private TextView m_textViewStudentPrice;
     private TextView m_textViewSoldierPrice;
@@ -99,6 +101,15 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
                 youTubePlayer.loadVideo(m_movie.getM_trailerURL());
+                m_YouTubePlayer = youTubePlayer;
+                youTubePlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener()
+                {
+                    @Override
+                    public void onFullscreen(boolean i_isFullScreen)
+                    {
+                        m_isYouTubeOnFullScreen = i_isFullScreen;
+                    }
+                });
             }
 
             @Override
@@ -128,7 +139,20 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         });
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        if(m_YouTubePlayer != null && m_isYouTubeOnFullScreen)
+        {
+            m_YouTubePlayer.setFullscreen(false);
+            m_isYouTubeOnFullScreen = false;
+        }
 
+        else
+        {
+            super.onBackPressed();
+        }
+    }
 
     private void findViews()
     {
@@ -309,27 +333,41 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         {
             Log.e(TAG, "onClickBuyTickets() >> ");
 
-            m_userDetails.getMoviesStringList().add(m_key);
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
-            userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
+            if(m_userDetails.getUserName().equals("Anonymous"))
+            {
+                handleAnonymousOnClickBuyTickets();
+            }
+
+            else
+            {
+                m_userDetails.getMoviesStringList().add(m_key);
+                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+                userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
 
 
-            Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
-            // reservationSummaryIntent.putExtra("Key", );
-            reservationSummaryIntent.putExtra("Movie", m_movie);
-            reservationSummaryIntent.putExtra("Key", m_key);
-            reservationSummaryIntent.putExtra("UserDetails", m_userDetails);
-            startActivity(reservationSummaryIntent);
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-            finish();
+                Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
+                // reservationSummaryIntent.putExtra("Key", );
+                reservationSummaryIntent.putExtra("Movie", m_movie);
+                reservationSummaryIntent.putExtra("Key", m_key);
+                reservationSummaryIntent.putExtra("UserDetails", m_userDetails);
+                startActivity(reservationSummaryIntent);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                finish();
 
-            Log.e(TAG, "onClickBuyTickets() << ");
+                Log.e(TAG, "onClickBuyTickets() << ");
+            }
         }
 
         else
         {
             Toast.makeText(this, "Please select number of tickets.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void handleAnonymousOnClickBuyTickets()
+    {
+        Intent askForSignInActivityIntent = new Intent(getApplicationContext(), AskForSignInActivity.class);
+        startActivity(askForSignInActivityIntent);
     }
 
     private String limitStrToMaxChar(String i_Str)

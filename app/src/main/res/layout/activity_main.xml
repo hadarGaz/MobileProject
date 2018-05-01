@@ -60,7 +60,7 @@
 
 
     <Button
-        android:id="@+id/buttonSignIn"
+        android:id="@+id/SignInButton"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_below="@+id/textViewForgotPassword"

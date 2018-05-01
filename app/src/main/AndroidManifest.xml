@@ -42,10 +42,16 @@
         </activity>
         <activity android:name=".Activity.UserDetailsActivity" />
         <activity android:name=".Activity.RegistrationActivity" />
-        <activity android:name=".Activity.CinemaMainActivity" />
+        <activity
+            android:name=".Activity.CinemaMainActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".Activity.ReservationSummaryActivity" />
-        <activity android:name=".Activity.SelectTicketsActivity" />
-        <activity android:name=".Activity.ReviewActivity"></activity>
+        <activity
+            android:name=".Activity.SelectTicketsActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activity.ReviewActivity" />
+        <activity android:name=".Activity.AskForSignInActivity"></activity>
     </application>
 
 </manifest>
