@@ -333,27 +333,41 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         {
             Log.e(TAG, "onClickBuyTickets() >> ");
 
-            m_userDetails.getMoviesStringList().add(m_key);
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
-            userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
+            if(m_userDetails.getUserName().equals("Anonymous"))
+            {
+                handleAnonymousOnClickBuyTickets();
+            }
+
+            else
+            {
+                m_userDetails.getMoviesStringList().add(m_key);
+                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+                userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
 
 
-            Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
-            // reservationSummaryIntent.putExtra("Key", );
-            reservationSummaryIntent.putExtra("Movie", m_movie);
-            reservationSummaryIntent.putExtra("Key", m_key);
-            reservationSummaryIntent.putExtra("UserDetails", m_userDetails);
-            startActivity(reservationSummaryIntent);
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-            finish();
+                Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
+                // reservationSummaryIntent.putExtra("Key", );
+                reservationSummaryIntent.putExtra("Movie", m_movie);
+                reservationSummaryIntent.putExtra("Key", m_key);
+                reservationSummaryIntent.putExtra("UserDetails", m_userDetails);
+                startActivity(reservationSummaryIntent);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                finish();
 
-            Log.e(TAG, "onClickBuyTickets() << ");
+                Log.e(TAG, "onClickBuyTickets() << ");
+            }
         }
 
         else
         {
             Toast.makeText(this, "Please select number of tickets.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void handleAnonymousOnClickBuyTickets()
+    {
+        Intent askForSignInActivityIntent = new Intent(getApplicationContext(), AskForSignInActivity.class);
+        startActivity(askForSignInActivityIntent);
     }
 
     private String limitStrToMaxChar(String i_Str)
