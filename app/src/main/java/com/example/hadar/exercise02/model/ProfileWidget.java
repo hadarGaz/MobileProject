@@ -73,6 +73,7 @@ public class ProfileWidget
 
     private static void moveToSignInActivity(Context i_activityContext)
     {
+        GifPlayer.stopGif();
         Intent moveToSignInActivityIntent = new Intent(i_activityContext.getApplicationContext(), SignInActivity.class);
         i_activityContext.startActivity(moveToSignInActivityIntent);
         //overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -114,8 +115,7 @@ public class ProfileWidget
         Log.e(TAG, "displayUserImage() >> ");
 
         i_activityImageButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        Glide.with(i_activityContext).load(i_userDetails.getUserPictureUrl()).into(i_activityImageButton);
-
+        //Glide.with(i_activityContext).load(i_userDetails.getUserPictureUrl()).into(i_activityImageButton);
         Log.e(TAG, "displayUserImage() << ");
     }
 }

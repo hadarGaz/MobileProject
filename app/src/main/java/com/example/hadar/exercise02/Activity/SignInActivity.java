@@ -3,6 +3,7 @@ package com.example.hadar.exercise02.Activity;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -30,6 +31,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -42,6 +45,10 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class SignInActivity extends Activity
 {
@@ -75,6 +82,7 @@ public class SignInActivity extends Activity
         facebookLoginInit();
         googleSignInInit();
         firebaseAuthenticationInit();
+
     }
 
     @Override
@@ -199,6 +207,8 @@ public class SignInActivity extends Activity
                     {
                         if (m_firebaseAuth.getCurrentUser().isEmailVerified())
                         {
+
+                            uploadMethod(m_firebaseAuth.getCurrentUser().getPhotoUrl(), m_firebaseAuth.getCurrentUser().getEmail());
                             Log.e(TAG, "calling updateUI 5");
                             handleAllSignInSuccess("EmailPassword");
                         }
@@ -416,11 +426,36 @@ public class SignInActivity extends Activity
 
             Intent CinemaMainIntent = new Intent(getApplicationContext(), CinemaMainActivity.class);
             CinemaMainIntent.putExtra("User Details", m_userDetails);
+            GifPlayer.stopGif();
             startActivity(CinemaMainIntent);
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             finish();
         }
     }
+
+    private void uploadMethod(final Uri i_photoUri, String i_email) {
+        Log.e(TAG,"uploading image...");
+
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReferenceProfilePic = firebaseStorage.getReference();
+        final StorageReference imageRef = storageReferenceProfilePic.child("Users Profile Picture" + "/" + i_email + ".jpg");
+
+        imageRef.getDownloadUrl().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                imageRef.putFile(i_photoUri)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                            {
+                                Toast.makeText(SignInActivity.this, "Upload User Image Succsses",Toast.LENGTH_LONG).show();
+                            }
+                        });
+            }
+        });
+
+    }
+
 
     private void handleAllSignInSuccess(String i_loginMethod)
     {
