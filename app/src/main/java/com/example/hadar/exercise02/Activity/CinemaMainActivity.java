@@ -196,14 +196,14 @@ public class CinemaMainActivity extends AppCompatActivity
 
     private void handleChildAdded(DataSnapshot i_dataSnapshot)
     {
-        Log.e(TAG, "onChildAdded(Movie) >> " + i_dataSnapshot.getKey());
+        //Log.e(TAG, "onChildAdded(Movie) >> " + i_dataSnapshot.getKey());
 
         Movie movie = i_dataSnapshot.getValue(Movie.class);
         MovieWithKey movieWithKey = new MovieWithKey(i_dataSnapshot.getValue(Movie.class), i_dataSnapshot.getKey());
         m_moviesWithKeysList.add(movieWithKey);
         m_recyclerView.getAdapter().notifyDataSetChanged();
 
-        Log.e(TAG, "onChildAdded(Movie) <<");
+        //Log.e(TAG, "onChildAdded(Movie) <<");
     }
 
     private void handleChildChanged(DataSnapshot i_dataSnapshot)

@@ -68,6 +68,7 @@ public class SignInActivity extends Activity
     private FirebaseUser m_firebaseUser = null;
     private FirebaseRemoteConfig m_FirebaseRemoteConfig;
     private LoginButton m_facebookLoginButton;
+    private Uri m_imageUrl=null;
 
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
@@ -207,8 +208,7 @@ public class SignInActivity extends Activity
                     {
                         if (m_firebaseAuth.getCurrentUser().isEmailVerified())
                         {
-
-                            uploadMethod(m_firebaseAuth.getCurrentUser().getPhotoUrl(), m_firebaseAuth.getCurrentUser().getEmail());
+                            checkAndUploadUserImageToStorage(m_firebaseAuth.getCurrentUser().getPhotoUrl(), m_firebaseAuth.getCurrentUser().getEmail());
                             Log.e(TAG, "calling updateUI 5");
                             handleAllSignInSuccess("EmailPassword");
                         }
@@ -425,6 +425,7 @@ public class SignInActivity extends Activity
             userRef.child(m_firebaseUser.getUid()).setValue(new UserDetails(m_firebaseUser));
 
             Intent CinemaMainIntent = new Intent(getApplicationContext(), CinemaMainActivity.class);
+            Log.e(TAG,"signinActivity, img url= "+ m_userDetails.getUserPictureUrl());
             CinemaMainIntent.putExtra("User Details", m_userDetails);
             GifPlayer.stopGif();
             startActivity(CinemaMainIntent);
@@ -433,28 +434,54 @@ public class SignInActivity extends Activity
         }
     }
 
-    private void uploadMethod(final Uri i_photoUri, String i_email) {
-        Log.e(TAG,"uploading image...");
+    private void checkAndUploadUserImageToStorage(final Uri i_photoUri, String i_email)
+    {
+        Log.e(TAG,"uploadMethod >>");
 
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageReferenceProfilePic = firebaseStorage.getReference();
-        final StorageReference imageRef = storageReferenceProfilePic.child("Users Profile Picture" + "/" + i_email + ".jpg");
+        final StorageReference imageRef = storageReferenceProfilePic.child("Users Profile Picture/"+ i_email + ".jpg");
 
-        imageRef.getDownloadUrl().addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                imageRef.putFile(i_photoUri)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-                            {
-                                Toast.makeText(SignInActivity.this, "Upload User Image Succsses",Toast.LENGTH_LONG).show();
-                            }
-                        });
-            }
-        });
+        imageRef.getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>()
+                {
+                    @Override
+                    public void onSuccess(Uri uri)
+                    {
+                        Log.e(TAG,"==> Image found in storage"+ uri.toString());
+                        m_userDetails.setUserPictureUrl(uri.toString());
+                        m_imageUrl=uri;
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener()
+                {
+                    @Override
+                    public void onFailure(@NonNull Exception e)
+                    {
+                        uploadImageToStorage(imageRef, i_photoUri);
+                        Log.e(TAG,"==> Image search failed, uploaded a new image");
+                    }
+                });
 
+        Log.e(TAG,"upload method <<");
     }
+
+
+    private void uploadImageToStorage(StorageReference i_storageRef, Uri i_ImageUri)
+    {
+
+        i_storageRef.putFile(i_ImageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
+                {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                    {
+                        Log.e(TAG,"Upload image success");
+                        Toast.makeText(SignInActivity.this, "Upload User Image Succsses",Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
 
 
     private void handleAllSignInSuccess(String i_loginMethod)
@@ -479,6 +506,9 @@ public class SignInActivity extends Activity
                 setUserEmailToFacebookUser(m_userDetails, m_firebaseUser);
                 break;
 
+            case "EmailPassword":
+                break;
+
             default:
                 return;
         }
@@ -489,6 +519,11 @@ public class SignInActivity extends Activity
         if(m_firebaseUser != null)
         {
             m_userDetails = new UserDetails(m_firebaseUser);
+        }
+
+        if(m_imageUrl!=null)
+        {
+            m_userDetails.setUserPictureUrl(m_imageUrl.toString());
         }
     }
 

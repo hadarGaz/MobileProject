@@ -29,7 +29,6 @@ public class ReviewActivity extends Activity {
     private String m_key;
     private UserDetails m_user;
     private int prevRating = -1;
-
     private TextView userReview;
     private RatingBar userRating;
     private DatabaseReference m_movieRef;
@@ -86,30 +85,32 @@ public class ReviewActivity extends Activity {
         Log.e(TAG, "onSubmitClick() >>");
 
 
-        m_movieRef.runTransaction(new Transaction.Handler() {
-
+        m_movieRef.runTransaction(new Transaction.Handler()
+        {
             @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-
+            public Transaction.Result doTransaction(MutableData mutableData)
+            {
                 Log.e(TAG, "doTransaction() >>" );
-
-
                 Movie movie = mutableData.getValue(Movie.class);
 
-                if (movie == null ) {
+                if (movie == null )
+                {
                     Log.e(TAG, "doTransaction() << movie is null" );
                     return Transaction.success(mutableData);
                 }
 
-                /*
-                if (prevRating == -1) {
+                if (prevRating == -1)
+                {
                     // Increment the review count and rating only in case the user enters a new review
-                    movie.incrementReviewCount();
+                    movie.incrementReviewsCount();
                     movie.incrementRating((int)userRating.getRating());
-                } else{
-                    movie.incrementRating((int)userRating.getRating() - prevRating);
                 }
-*/
+                else
+                {
+                    movie.incrementRating((int) userRating.getRating() - prevRating);
+                }
+
+                movie.updateRating();
                 mutableData.setValue(movie);
                 Log.e(TAG, "doTransaction() << movie was set");
                 return Transaction.success(mutableData);
