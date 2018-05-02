@@ -1,14 +1,8 @@
 package com.example.hadar.exercise02.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.widget.ImageView;
 
 import java.io.Serializable;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 public class Movie implements Serializable
 {
@@ -20,6 +14,7 @@ public class Movie implements Serializable
     private String m_cinemaLocation;
     private String m_thumbImage;
     private int m_rating;
+    private int m_averageRating;
     private int m_reviewsCount;
     private String m_movieDescription;
     private ImageView m_movieImage;
@@ -65,6 +60,11 @@ public class Movie implements Serializable
         return m_rating;
     }
 
+    public int getM_averageRating()
+    {
+        return m_averageRating;
+    }
+
     public int compareRating(Movie i_movie)
     {
         int result;
@@ -99,32 +99,18 @@ public class Movie implements Serializable
         return m_reviewsCount;
     }
 
-    public void incrementReviewCount() { m_reviewsCount++;}
+    public void incrementReviewsCount() { m_reviewsCount++;}
 
-    /*
-        public void setDate(Date i_date) throws Exception
+    public void incrementRating(int i_rating)
+    {
+        m_rating += i_rating;
+    }
+
+    public void updateRating()
+    {
+        if(m_reviewsCount != 0)
         {
-            Date currentDate = Calendar.getInstance().getTime();
-
-            if(i_date.before(currentDate))
-                throw new Exception("Error - Date already passed\n");
-
-            else
-                m_date = i_date;
+            m_averageRating = m_rating / m_reviewsCount;
         }
-
-        public void setPrice(double i_price) throws Exception
-        {
-            if(i_price < 0)
-                throw new Exception("Negative price is illegal");
-
-            else
-                m_price = i_price;
-
-        }
-
-    */
-
-
-
+    }
 }

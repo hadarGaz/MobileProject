@@ -18,8 +18,6 @@ import com.example.hadar.exercise02.Activity.SelectTicketsActivity;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.UserDetails;
-import com.facebook.internal.WebDialog;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -83,7 +81,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         i_movieViewHolder.getDateTextView().setText(movie.getM_date());
         i_movieViewHolder.getGenreTextView().setText(movie.getM_genre());
         i_movieViewHolder.getCinemaTextView().setText(movie.getM_cinemaLocation());
-        i_movieViewHolder.getRating().setRating(movie.getM_rating());
+        i_movieViewHolder.getRating().setRating(movie.getM_averageRating());
 
         int reviewsCount = movie.getM_reviewsCount();
         if( reviewsCount > 0)
