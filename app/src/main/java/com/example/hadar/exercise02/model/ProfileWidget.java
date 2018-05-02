@@ -112,10 +112,10 @@ public class ProfileWidget
 
     public static void displayUserImage(Context i_activityContext, ImageButton i_activityImageButton, UserDetails i_userDetails)
     {
-        Log.e(TAG, "displayUserImage() >> ");
+        Log.e(TAG, "displayUserImage() >> ing url= "+ i_userDetails.getUserPictureUrl());
 
         i_activityImageButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        //Glide.with(i_activityContext).load(i_userDetails.getUserPictureUrl()).into(i_activityImageButton);
+        Glide.with(i_activityContext).load(i_userDetails.getUserPictureUrl()).into(i_activityImageButton);
         Log.e(TAG, "displayUserImage() << ");
     }
 }

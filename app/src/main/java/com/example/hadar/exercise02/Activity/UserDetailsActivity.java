@@ -103,29 +103,28 @@ public class UserDetailsActivity extends AppCompatActivity
 
     public void showUserPicture()
     {
-
+/*
         Log.e(TAG,"pic name= "+ m_userDetails.getUserEmail() + ".jpg");
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         storageReference.child("Users Profile Picture/" + m_userDetails.getUserEmail() + ".jpg")
                 .getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                .addOnSuccessListener(new OnSuccessListener<Uri>()
+                {
                     @Override
-                    public void onSuccess(Uri uri) {
+                    public void onSuccess(Uri uri)
+                    {
+                        //m_userDetails.setUserPictureUrl(uri.toString());
                         Log.e(TAG,"pic src= "+ uri.toString());
-                        Glide.with(UserDetailsActivity.this)
-                                .load(uri.toString())
-                                .into(m_userPictureImageView);
                     }
                 });
-
-
-       /* m_userPictureUrl = m_userDetails.getUserPictureUrl();
+*/
+        m_userPictureUrl = m_userDetails.getUserPictureUrl();
 
         if (m_userPictureUrl != null)
         {
          m_userPictureImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
          Glide.with(this).load(m_userPictureUrl).into(m_userPictureImageView);
-        }*/
+        }
     }
 
     private void showUserName()
