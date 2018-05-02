@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/Exercise02.iml" filepath="$PROJECT_DIR$/Exercise02.iml" />
-=======
-      <module fileurl="file://$PROJECT_DIR$/Exercise_02.iml" filepath="$PROJECT_DIR$/Exercise_02.iml" />
-      <module fileurl="file://C:\Users\Liad Pasker\Desktop\Exercise_02\Mobile Project.iml" filepath="C:\Users\Liad Pasker\Desktop\Exercise_02\Mobile Project.iml" />
->>>>>>> 504ad02729acad320d273bbb905d9feb4eca641e
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
