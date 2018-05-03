@@ -44,10 +44,10 @@ public class RegistrationActivity extends AppCompatActivity
     private Uri m_userPictureUri;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate(Bundle i_savedInstanceState)
     {
 
-        super.onCreate(savedInstanceState);
+        super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_registration);
 
         findViews();

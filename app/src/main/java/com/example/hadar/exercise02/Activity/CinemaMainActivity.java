@@ -66,6 +66,7 @@ public class CinemaMainActivity extends AppCompatActivity
         getAllMovies();
         onSortBySpinnerItemSelection();
 
+
         GifPlayer.setCinemaAnim(true);
         Log.e(TAG, "gif source= "+ GifPlayer.s_LoadingBar.getId());
         GifPlayer.playGif();

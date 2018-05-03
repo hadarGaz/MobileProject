@@ -22,7 +22,8 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
-public class ReviewActivity extends Activity {
+public class ReviewActivity extends Activity
+{
 
     private final String TAG = "ReviewActivity";
     private Movie m_movie;
@@ -34,11 +35,12 @@ public class ReviewActivity extends Activity {
     private DatabaseReference m_movieRef;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle i_savedInstanceState)
+    {
 
         Log.e(TAG, "onCreate() >>");
 
-        super.onCreate(savedInstanceState);
+        super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_review);
 
         m_key = getIntent().getStringExtra("Key");
@@ -80,7 +82,8 @@ public class ReviewActivity extends Activity {
 
     }
 
-    public void onSubmitClick(View v) {
+    public void onSubmitClick(View i_view)
+    {
 
         Log.e(TAG, "onSubmitClick() >>");
 
@@ -88,15 +91,15 @@ public class ReviewActivity extends Activity {
         m_movieRef.runTransaction(new Transaction.Handler()
         {
             @Override
-            public Transaction.Result doTransaction(MutableData mutableData)
+            public Transaction.Result doTransaction(MutableData i_mutableData)
             {
                 Log.e(TAG, "doTransaction() >>" );
-                Movie movie = mutableData.getValue(Movie.class);
+                Movie movie = i_mutableData.getValue(Movie.class);
 
                 if (movie == null )
                 {
                     Log.e(TAG, "doTransaction() << movie is null" );
-                    return Transaction.success(mutableData);
+                    return Transaction.success(i_mutableData);
                 }
 
                 if (prevRating == -1)
@@ -111,23 +114,24 @@ public class ReviewActivity extends Activity {
                 }
 
                 movie.updateRating();
-                mutableData.setValue(movie);
+                i_mutableData.setValue(movie);
                 Log.e(TAG, "doTransaction() << movie was set");
-                return Transaction.success(mutableData);
+                return Transaction.success(i_mutableData);
 
             }
 
             @Override
-            public void onComplete(DatabaseError databaseError, boolean committed, DataSnapshot dataSnapshot) {
+            public void onComplete(DatabaseError i_databaseError, boolean i_committed, DataSnapshot i_dataSnapshot)
+            {
 
                 Log.e(TAG, "onComplete() >>" );
 
-                if (databaseError != null) {
-                    Log.e(TAG, "onComplete() << Error:" + databaseError.getMessage());
+                if (i_databaseError != null) {
+                    Log.e(TAG, "onComplete() << Error:" + i_databaseError.getMessage());
                     return;
                 }
 
-                if (committed) {
+                if (i_committed) {
                     Review review = new Review(
                             userReview.getText().toString(),
                             (int)userRating.getRating(),

@@ -97,9 +97,11 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
 
     private void initYouTubeListener()
     {
-        m_YouTubeInitListener=new YouTubePlayer.OnInitializedListener() {
+        m_YouTubeInitListener=new YouTubePlayer.OnInitializedListener()
+        {
             @Override
-            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b)
+            {
                 youTubePlayer.loadVideo(m_movie.getM_trailerURL());
                 m_YouTubePlayer = youTubePlayer;
                 youTubePlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener()
@@ -113,9 +115,8 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
             }
 
             @Override
-            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-
-            }
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult)
+            { }
         };
     }
 
@@ -178,7 +179,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         Log.e(TAG, "findViews() << ");
     }
 
-    public void onClickYouTubeButton(View view)
+    public void onClickYouTubeButton(View i_view)
     {
         m_youtubePlayButton.setVisibility(View.GONE);
         playYouTubeTrailer();
@@ -267,9 +268,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
 
             @Override
             public void onNothingSelected(AdapterView<?> parent)
-            {
-
-            }
+            { }
         });
 
         Log.e(TAG, "setSpinnersWithAdapter() << ");
