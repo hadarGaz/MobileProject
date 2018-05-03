@@ -326,7 +326,7 @@ public class CinemaMainActivity extends AppCompatActivity
     public void onClickSearchButton(View i_view)
     {
         String searchString = ((EditText)findViewById(R.id.edit_text_search_movie)).getText().toString();
-        String orderByMethod = ((RadioButton)findViewById(R.id.radioButtonByRating)).isChecked() ? "m_rating" : "m_price";
+        String orderByMethod = ((RadioButton)findViewById(R.id.radioButtonByRating)).isChecked() ? "m_averageRating" : "m_price";
         Query searchMovieQuery;
 
         Log.e(TAG, "onSearchButtonClick() >> searchString= " + searchString + ", orderBy = " + orderByMethod);

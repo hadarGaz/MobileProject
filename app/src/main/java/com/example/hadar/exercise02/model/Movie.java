@@ -69,12 +69,12 @@ public class Movie implements Serializable
     {
         int result;
 
-        if(m_rating - i_movie.m_rating < 0)
+        if(m_averageRating - i_movie.m_averageRating < 0)
         {
             result = -1;
         }
 
-        else if (m_rating - i_movie.m_rating > 0)
+        else if (m_averageRating - i_movie.m_averageRating > 0)
         {
             result = 1;
         }
