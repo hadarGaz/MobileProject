@@ -19,10 +19,12 @@ import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.adapter.ReviewsAdapter;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.ProfileWidget;
+import com.example.hadar.exercise02.model.Purchase;
 import com.example.hadar.exercise02.model.Review;
 import com.example.hadar.exercise02.model.UserDetails;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +35,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ReservationSummaryActivity extends AppCompatActivity
 {
@@ -49,6 +52,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
     private TextView m_textViewTicketType1;
     private TextView m_textViewTicketType2;
     private TextView m_textViewTicketType3;
+    private TextView m_textViewTotalPrice;
     private ImageButton m_profileWidgetImageButton;
     private List<Review> m_reviewsList =  new ArrayList<>();
     private RecyclerView m_recyclerViewMovieReviews;
@@ -65,11 +69,48 @@ public class ReservationSummaryActivity extends AppCompatActivity
 
         findViews();
         getMovieIntent();
-        displayUserImage();
-        setMovieDetails();
+
+        getUserDetailsAndContinueOnCreate();
+
+        setReviewsAdapter();
+        setListenerToReview();
+
+        Log.e(TAG, "onCreate() <<");
+    }
+
+    private void getUserDetailsAndContinueOnCreate()
+    {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/"
+                + FirebaseAuth.getInstance().getCurrentUser().getUid());
+        userRef.addValueEventListener(new ValueEventListener()
+                                      {
+                                          @Override
+                                          public void onDataChange (DataSnapshot dataSnapshot) {
+                                              m_userDetails = dataSnapshot.getValue(UserDetails.class);
+                                              displayUserImage();
+                                              setMovieDetails();
+                                          }
+                                          @Override
+                                          public void onCancelled (DatabaseError d) {
+
+                                          }
+                                      }
+        );
+    }
+
+    private void setReviewsAdapter()
+    {
+        Log.e(TAG, "setReviewsAdapter() >>");
 
         ReviewsAdapter reviewsAdapter = new ReviewsAdapter(m_reviewsList);
         m_recyclerViewMovieReviews.setAdapter(reviewsAdapter);
+
+        Log.e(TAG, "setReviewsAdapter() <<");
+    }
+
+    private void setListenerToReview()
+    {
+        Log.e(TAG, "setListenerToReview() >>");
 
         m_movieReviewsRef = FirebaseDatabase.getInstance().getReference("Movie/" + m_key +"/reviews");
 
@@ -96,7 +137,9 @@ public class ReservationSummaryActivity extends AppCompatActivity
                 Log.e(TAG, "onCancelled(Review) >>" + databaseError.getMessage());
             }
         });
-        Log.e(TAG, "onCreate() <<");
+
+        Log.e(TAG, "setListenerToReview() <<");
+
     }
 
     private void findViews()
@@ -118,6 +161,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
         m_textViewTicketType1 = findViewById(R.id.textViewTicketType1);
         m_textViewTicketType2 = findViewById(R.id.textViewTicketType2);
         m_textViewTicketType3 = findViewById(R.id.textViewTicketType3);
+        m_textViewTotalPrice = findViewById(R.id.textViewTotalPrice);
 
 
         Log.e(TAG, "findViews() <<");
@@ -130,7 +174,6 @@ public class ReservationSummaryActivity extends AppCompatActivity
 
         m_key = getIntent().getStringExtra("Key");
         m_movie = (Movie) getIntent().getSerializableExtra("Movie");
-        m_userDetails = (UserDetails) getIntent().getSerializableExtra("UserDetails");
 
         Log.e(TAG, "getMovieIntent() <<");
     }
@@ -139,21 +182,52 @@ public class ReservationSummaryActivity extends AppCompatActivity
     {
         Log.e(TAG, "setMovieDetails() >>");
 
+        m_textViewTicketType1.setVisibility(View.INVISIBLE);
+        m_textViewTicketType2.setVisibility(View.INVISIBLE);
+        m_textViewTicketType3.setVisibility(View.INVISIBLE);
         m_movieNameTextView.setText(m_movie.getM_name());
         m_dateTextView.setText(m_movie.getM_date().toString());
         m_CinemaLocationTextView.setText(m_movie.getM_cinemaLocation());
         m_jannerTextView.setText(m_movie.getM_genre().toString());
         m_movieDescriptionTextView.setText(m_movie.getM_movieDescription());
 
-
-
         setMovieImage();
+        setMoviePurchase();
 
         Log.e(TAG, "setMovieDetails() <<");
     }
 
+    private void setMoviePurchase()
+    {
+        Log.e(TAG, "setMoviePurchase() >>");
+
+        int value=0;
+        m_textViewTotalPrice.setText(String.valueOf(m_userDetails.getMoviesPurchaseMap().get(m_key).getM_purchaseAmount()) + "$");
+        Map<String, Integer> purchaseMap =  m_userDetails.getMoviesPurchaseMap().get(m_key).getM_mapOfTypeTicketsAndQuantity();
+
+        if((value= purchaseMap.get("Standard")) != 0)
+        {
+            m_textViewTicketType1.setText(String.valueOf(value) + " Standard");
+            m_textViewTicketType1.setVisibility(View.VISIBLE);
+        }
+        if((value= purchaseMap.get("Student")) != 0)
+        {
+            m_textViewTicketType2.setText(String.valueOf(value) + " Student");
+            m_textViewTicketType2.setVisibility(View.VISIBLE);
+        }
+        if((value= purchaseMap.get("Soldier")) != 0)
+        {
+            m_textViewTicketType3.setText(String.valueOf(value) + " Soldier");
+            m_textViewTicketType3.setVisibility(View.VISIBLE);
+        }
+
+        Log.e(TAG, "setMoviePurchase() <<");
+    }
+
     private void setMovieImage()
     {
+        Log.e(TAG, "setMovieImage() >>");
+
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         storageReference.child("Movie Pictures/" + m_movie.getM_thumbImage())
                 .getDownloadUrl()
@@ -167,6 +241,8 @@ public class ReservationSummaryActivity extends AppCompatActivity
                                 .into(m_imageViewMoviePic);
                     }
                 });
+
+        Log.e(TAG, "setMovieImage() <<");
     }
 
     public void onAddReviewClick(View i_View)
@@ -184,11 +260,34 @@ public class ReservationSummaryActivity extends AppCompatActivity
 
     public void onClickProfileWidgetImageButton(View i_View)
     {
+        Log.e(TAG, "onClickProfileWidgetImageButton() >>");
+
         ProfileWidget.onClickProfileWidget(this, m_profileWidgetImageButton, m_userDetails);
+
+        Log.e(TAG, "onClickProfileWidgetImageButton() <<");
+
     }
 
     private void displayUserImage()
     {
+        Log.e(TAG, "displayUserImage() >>");
+
         ProfileWidget.displayUserImage(this, m_profileWidgetImageButton, m_userDetails);
+
+        Log.e(TAG, "displayUserImage() <<");
+
+    }
+
+    public void onBuyMoreTicketsClick(View i_view)
+    {
+        Log.e(TAG, "onBuyMoreTicketsClick() >>");
+
+        Intent SelectTicketsIntent = new Intent(getApplicationContext(), SelectTicketsActivity.class);
+        SelectTicketsIntent.putExtra("Movie", m_movie);
+        SelectTicketsIntent.putExtra("Key", m_key);
+        startActivity(SelectTicketsIntent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+        Log.e(TAG, "onBuyMoreTicketsClick() <<");
     }
 }

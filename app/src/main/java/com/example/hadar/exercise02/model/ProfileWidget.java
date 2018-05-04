@@ -20,6 +20,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 public class ProfileWidget
 {
     private static final String TAG = "ProfileWidget";
@@ -117,5 +119,10 @@ public class ProfileWidget
         i_activityImageButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Glide.with(i_activityContext).load(i_userDetails.getUserPictureUrl()).into(i_activityImageButton);
         Log.e(TAG, "displayUserImage() << ");
+    }
+
+    public static void pauseGlideRequests()
+    {
+        Glide.with(getApplicationContext()).pauseRequests();
     }
 }

@@ -23,6 +23,7 @@ import com.example.hadar.exercise02.model.GifPlayer;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.ProfileWidget;
 import com.example.hadar.exercise02.model.UserDetails;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -60,12 +61,9 @@ public class CinemaMainActivity extends AppCompatActivity
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         findViews();
         setSortBySpinnerValues();
-        getIntentInput();
-        displayUserImage();
         setRecyclerViewOptions();
-        getAllMovies();
-        onSortBySpinnerItemSelection();
 
+        getUserDetailsAndContinueOnCreate();
 
         GifPlayer.setCinemaAnim(true);
         Log.e(TAG, "gif source= "+ GifPlayer.s_LoadingBar.getId());
@@ -74,15 +72,47 @@ public class CinemaMainActivity extends AppCompatActivity
         Log.e(TAG, "onCreate() << ");
 }
 
+    private void getUserDetailsAndContinueOnCreate()
+    {
+        Log.e(TAG, "getUserDetailsAndContinueOnCreate() >> ");
+
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/"
+                + FirebaseAuth.getInstance().getCurrentUser().getUid());
+        userRef.addValueEventListener(new ValueEventListener()
+                                      {
+                                          @Override
+                                          public void onDataChange (DataSnapshot dataSnapshot) {
+                                              m_userDetails = dataSnapshot.getValue(UserDetails.class);
+                                              displayUserImage();
+                                              getAllMovies();
+                                              onSortBySpinnerItemSelection();
+                                          }
+                                          @Override
+                                          public void onCancelled (DatabaseError d) {
+
+                                          }
+                                      }
+        );
+
+        Log.e(TAG, "getUserDetailsAndContinueOnCreate() << ");
+    }
+
     private void setSortBySpinnerValues()
     {
+        Log.e(TAG, "setSortBySpinnerValues() >> ");
+
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.sort_spinner_item, sortingMethods);
         spinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         m_sortBySpinner.setAdapter(spinnerAdapter);
+
+        Log.e(TAG, "setSortBySpinnerValues() << ");
+
     }
 
     private void onSortBySpinnerItemSelection()
     {
+        Log.e(TAG, "onSortBySpinnerItemSelection() >> ");
+
         m_sortBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
@@ -97,10 +127,15 @@ public class CinemaMainActivity extends AppCompatActivity
                 //No implementation needed
             }
         });
+
+        Log.e(TAG, "onSortBySpinnerItemSelection() << ");
+
     }
 
     private void sortBySpinnerItemSelected(String i_sortingMethod)
     {
+        Log.e(TAG, "sortBySpinnerItemSelected() >> ");
+
         if(i_sortingMethod == "Rating")
         {
             sortMoviesByRating();
@@ -112,10 +147,15 @@ public class CinemaMainActivity extends AppCompatActivity
         }
 
         m_recyclerView.getAdapter().notifyDataSetChanged();
+
+        Log.e(TAG, "sortBySpinnerItemSelected() << ");
+
     }
 
     private void sortMoviesByRating()
     {
+        Log.e(TAG, "sortMoviesByRating() >> ");
+
         //Ascending sort of rating
         m_moviesWithKeysList.sort(new Comparator<MovieWithKey>()
         {
@@ -126,10 +166,15 @@ public class CinemaMainActivity extends AppCompatActivity
                 return i_movieWithKey2.getMovie().compareRating(i_movieWithKey1.getMovie());
             }
         });
+
+        Log.e(TAG, "sortMoviesByRating() << ");
+
     }
 
     private void sortMoviesByGenre()
     {
+        Log.e(TAG, "sortMoviesByGenre() >> ");
+
         m_moviesWithKeysList.sort(new Comparator<MovieWithKey>()
         {
             @Override
@@ -138,6 +183,9 @@ public class CinemaMainActivity extends AppCompatActivity
                 return i_movieWithKey1.getMovie().getM_genre().compareTo(i_MovieWithKey2.getMovie().getM_genre());
             }
         });
+
+        Log.e(TAG, "sortMoviesByGenre() << ");
+
     }
 
     private void getAllMovies()
@@ -197,14 +245,13 @@ public class CinemaMainActivity extends AppCompatActivity
 
     private void handleChildAdded(DataSnapshot i_dataSnapshot)
     {
-        //Log.e(TAG, "onChildAdded(Movie) >> " + i_dataSnapshot.getKey());
+        Log.e(TAG, "onChildAdded(Movie) >> " + i_dataSnapshot.getKey());
 
-        Movie movie = i_dataSnapshot.getValue(Movie.class);
         MovieWithKey movieWithKey = new MovieWithKey(i_dataSnapshot.getValue(Movie.class), i_dataSnapshot.getKey());
         m_moviesWithKeysList.add(movieWithKey);
         m_recyclerView.getAdapter().notifyDataSetChanged();
 
-        //Log.e(TAG, "onChildAdded(Movie) <<");
+        Log.e(TAG, "onChildAdded(Movie) <<");
     }
 
     private void handleChildChanged(DataSnapshot i_dataSnapshot)
@@ -288,20 +335,18 @@ public class CinemaMainActivity extends AppCompatActivity
 
     private void displayUserImage()
     {
+        Log.e(TAG, "displayUserImage() >> ");
+
         ProfileWidget.displayUserImage(this, m_profileWidgetImageButton, m_userDetails);
-    }
 
-    private void getIntentInput()
-    {
-        Log.e(TAG, "getIntentInput() >> ");
+        Log.e(TAG, "displayUserImage() << ");
 
-        m_userDetails = (UserDetails) getIntent().getSerializableExtra("User Details");
-
-        Log.e(TAG, "getIntentInput() << ");
     }
 
     private void updateMoviesWithKeysList(DataSnapshot i_dataSnapshot)
     {
+        Log.e(TAG, "updateMoviesWithKeysList() >> ");
+
         for (DataSnapshot dataSnapshot : i_dataSnapshot.getChildren())
         {
             Movie movie = dataSnapshot.getValue(Movie.class);
@@ -321,10 +366,14 @@ public class CinemaMainActivity extends AppCompatActivity
         });
 
         m_recyclerView.getAdapter().notifyDataSetChanged();
+
+        Log.e(TAG, "updateMoviesWithKeysList() << ");
+
     }
 
     public void onClickSearchButton(View i_view)
     {
+
         String searchString = ((EditText)findViewById(R.id.edit_text_search_movie)).getText().toString();
         String orderByMethod = ((RadioButton)findViewById(R.id.radioButtonByRating)).isChecked() ? "m_averageRating" : "m_price";
         Query searchMovieQuery;
@@ -368,6 +417,8 @@ public class CinemaMainActivity extends AppCompatActivity
 
     public void onClickRadioButton(View i_view)
     {
+        Log.e(TAG, "onClickRadioButton() >> ");
+
         if(i_view.getId() == R.id.radioButtonByRating)
         {
             m_orderByPriceRadioButton.setChecked(false);
@@ -377,10 +428,17 @@ public class CinemaMainActivity extends AppCompatActivity
         {
             m_orderByRatingRadioButton.setChecked(false);
         }
+
+        Log.e(TAG, "onClickRadioButton() << ");
+
     }
 
     public void onClickProfileWidgetImageButton(View i_view)
     {
+        Log.e(TAG, "onClickProfileWidgetImageButton() >> ");
+
         ProfileWidget.onClickProfileWidget(this, m_profileWidgetImageButton, m_userDetails);
+
+        Log.e(TAG, "onClickProfileWidgetImageButton() >> ");
     }
 }

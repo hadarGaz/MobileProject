@@ -14,6 +14,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.example.hadar.exercise02.Activity.ReservationSummaryActivity;
 import com.example.hadar.exercise02.Activity.SelectTicketsActivity;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.R;
@@ -216,10 +217,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                 public void onClick(View i_view)
                 {
                     Context context = i_view.getContext();
-                    Intent intent = new Intent(context, SelectTicketsActivity.class);
+                    Intent intent;
+                    if(m_userDetails.getMoviesPurchaseMap().containsKey(m_selectedMovieKey) == true)
+                    {
+                        intent = new Intent(context, ReservationSummaryActivity.class);
+                    }
+                    else {
+                        intent = new Intent(context, SelectTicketsActivity.class);
+                    }
                     intent.putExtra("Movie",m_selectedMovie);
                     intent.putExtra("Key", m_selectedMovieKey);
-                    intent.putExtra("UserDetails", m_userDetails);
+                    //intent.putExtra("UserDetails", m_userDetails);
                     context.startActivity(intent);
 
                     //IMPLEMENT MISSING GO TO RIGHT ACTIVITY ON CHOOSING MOVIE *********************

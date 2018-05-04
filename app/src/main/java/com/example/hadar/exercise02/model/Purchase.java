@@ -27,6 +27,10 @@ public class Purchase implements Serializable {
         return m_mapOfTypeTicketsAndQuantity;
     }
 
+    public void setM_purchaseAmount(double m_purchaseAmount) {
+        this.m_purchaseAmount = m_purchaseAmount;
+    }
+
     public double getM_purchaseAmount()
     {
         return m_purchaseAmount;

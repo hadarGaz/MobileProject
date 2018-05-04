@@ -90,6 +90,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         Log.e(TAG, "onCreate() << ");
     }
 
+
     private void getUserDetailsAndContinueOnCreate()
     {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/"
@@ -226,7 +227,6 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         Log.e(TAG, "getIntentInput() >> ");
 
         m_movie = (Movie) getIntent().getSerializableExtra("Movie");
-       // m_userDetails = (UserDetails)  getIntent().getSerializableExtra("UserDetails");
         m_key = getIntent().getStringExtra("Key");
 
         Log.e(TAG, "getIntentInput() << ");
@@ -383,10 +383,8 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
                 Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
                 reservationSummaryIntent.putExtra("Movie", m_movie);
                 reservationSummaryIntent.putExtra("Key", m_key);
-                reservationSummaryIntent.putExtra("UserDetails", m_userDetails);
                 startActivity(reservationSummaryIntent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                finish();
 
                 Log.e(TAG, "onClickBuyTickets() << ");
             }
@@ -400,14 +398,19 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
 
     private void setUserPurchaseMap()
     {
+        Log.e(TAG, "setUserPurchaseMap() >> ");
+
         Map<String, Integer> purchaseMap;
         Purchase purchase = m_userDetails.getMoviesPurchaseMap().get(m_key);
         if(purchase != null)
         {
+            purchase.setM_purchaseAmount(purchase.getM_purchaseAmount() +
+                    Double.valueOf(m_textViewTotalPriceForMovie.getText().toString()));
+
             purchaseMap = purchase.getM_mapOfTypeTicketsAndQuantity();
             purchaseMap.put(STANDARD,(purchaseMap.get(STANDARD) + m_spinnerStandard.getSelectedItemPosition()));
-            purchaseMap.put(SOLDIER,(purchaseMap.get(SOLDIER) + m_spinnerStandard.getSelectedItemPosition()));
-            purchaseMap.put(STUDENT,(purchaseMap.get(STUDENT) + m_spinnerStandard.getSelectedItemPosition()));
+            purchaseMap.put(SOLDIER,(purchaseMap.get(SOLDIER) + m_spinnerSoldier.getSelectedItemPosition()));
+            purchaseMap.put(STUDENT,(purchaseMap.get(STUDENT) + m_spinnerStudent.getSelectedItemPosition()));
         }
         else
         {
@@ -423,6 +426,8 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
             m_userDetails.getMoviesPurchaseMap().put(m_key,new Purchase(
                     m_key,purchaseMap,Double.valueOf(m_textViewTotalPriceForMovie.getText().toString())));
         }
+
+        Log.e(TAG, "setUserPurchaseMap() << ");
     }
 
     private void handleAnonymousOnClickBuyTickets()
