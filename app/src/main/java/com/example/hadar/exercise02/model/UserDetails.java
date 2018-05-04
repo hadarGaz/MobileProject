@@ -5,14 +5,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseUser;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserDetails implements Serializable
 {
     private String m_userName;
     private String m_userEmail;
     private String m_userPictureUrl;
-    private List<String> m_moviesStringList = new ArrayList<>();
+    private Map<String,Purchase> m_moviesPurchaseMap = new HashMap<>();
 
     public UserDetails()
     {
@@ -89,8 +91,13 @@ public class UserDetails implements Serializable
         return "User Name: " + m_userName +", Email: " + m_userEmail;
     }
 
-    public List<String> getMoviesStringList()
+    public Map<String,Purchase> getMoviesPurchaseMap()
     {
-        return m_moviesStringList;
+        return m_moviesPurchaseMap;
     }
+
+    public void setMoviesPurchaseMap(Map<String, Purchase> m_moviesPurchaseMap) {
+        this.m_moviesPurchaseMap = m_moviesPurchaseMap;
+    }
+
 }

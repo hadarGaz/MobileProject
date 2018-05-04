@@ -46,6 +46,9 @@ public class ReservationSummaryActivity extends AppCompatActivity
     private TextView m_CinemaLocationTextView;
     private TextView m_jannerTextView;
     private TextView m_movieDescriptionTextView;
+    private TextView m_textViewTicketType1;
+    private TextView m_textViewTicketType2;
+    private TextView m_textViewTicketType3;
     private ImageButton m_profileWidgetImageButton;
     private List<Review> m_reviewsList =  new ArrayList<>();
     private RecyclerView m_recyclerViewMovieReviews;
@@ -112,6 +115,10 @@ public class ReservationSummaryActivity extends AppCompatActivity
         m_recyclerViewMovieReviews.setItemAnimator(new DefaultItemAnimator());
         m_addReviewButton = findViewById(R.id.buttonNewReview);
         m_imageViewMoviePic =  findViewById(R.id.imageViewMoviePic);
+        m_textViewTicketType1 = findViewById(R.id.textViewTicketType1);
+        m_textViewTicketType2 = findViewById(R.id.textViewTicketType2);
+        m_textViewTicketType3 = findViewById(R.id.textViewTicketType3);
+
 
         Log.e(TAG, "findViews() <<");
 
@@ -138,6 +145,8 @@ public class ReservationSummaryActivity extends AppCompatActivity
         m_jannerTextView.setText(m_movie.getM_genre().toString());
         m_movieDescriptionTextView.setText(m_movie.getM_movieDescription());
 
+
+
         setMovieImage();
 
         Log.e(TAG, "setMovieDetails() <<");
@@ -148,7 +157,8 @@ public class ReservationSummaryActivity extends AppCompatActivity
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         storageReference.child("Movie Pictures/" + m_movie.getM_thumbImage())
                 .getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                .addOnSuccessListener(new OnSuccessListener<Uri>()
+                {
                     @Override
                     public void onSuccess(Uri uri) {
                         Log.e(TAG,"pic src= "+ uri.toString());

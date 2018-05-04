@@ -92,6 +92,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
         i_movieViewHolder.getMoviePriceTextView().setText(movie.getM_price() + "$");
 
+        /*
         if(m_userDetails.getMoviesStringList() != null) {
             Iterator iterator = m_userDetails.getMoviesStringList().iterator();
             while (iterator.hasNext()) {
@@ -101,6 +102,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                 }
             }
         }
+        */
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder

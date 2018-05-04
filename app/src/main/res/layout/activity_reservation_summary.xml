@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="0dp"
-        android:layout_height="225dp"
+        android:layout_height="285dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,16 +22,28 @@
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="251dp">
+                android:layout_height="match_parent"
+                android:background="@android:color/black">
+
+                <ImageView
+                    android:id="@+id/imageViewTicket"
+                    android:layout_width="373dp"
+                    android:layout_height="253dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.545"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@mipmap/movie_ticket" />
 
                 <ImageView
                     android:id="@+id/imageViewMoviePic"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="13dp"
+                    android:layout_width="79dp"
+                    android:layout_height="76dp"
+                    android:layout_marginStart="52dp"
+                    android:layout_marginTop="8dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view"
+                    app:layout_constraintTop_toBottomOf="@+id/viewBottom"
                     app:srcCompat="@android:color/black" />
 
 
@@ -39,26 +51,27 @@
                     android:id="@+id/textViewMovieName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="132dp"
-                    android:layout_marginTop="16dp"
-                    android:text="TextView"
+                    android:layout_marginStart="148dp"
+                    android:text="[MovieName]"
+                    android:textColor="@android:color/black"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/viewTop" />
 
                 <View
-                    android:layout_width="300dp"
+                    android:id="@+id/viewTop"
+                    android:layout_width="270dp"
                     android:layout_height="1dp"
-                    android:layout_marginStart="22dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="56dp"
+                    android:layout_marginTop="72dp"
                     android:background="@android:color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
-                    android:id="@+id/view"
-                    android:layout_width="300dp"
+                    android:id="@+id/viewBottom"
+                    android:layout_width="270dp"
                     android:layout_height="1dp"
-                    android:layout_marginStart="22dp"
+                    android:layout_marginStart="56dp"
                     android:background="@android:color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textViewMovieName" />
@@ -67,19 +80,21 @@
                     android:id="@+id/textViewDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="7dp"
-                    android:layout_marginTop="13dp"
-                    android:text="TextView"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:text="[Date]"
+                    android:textColor="@android:color/black"
                     app:layout_constraintStart_toEndOf="@+id/imageViewMoviePic"
-                    app:layout_constraintTop_toBottomOf="@+id/view" />
+                    app:layout_constraintTop_toBottomOf="@+id/viewBottom" />
 
                 <TextView
                     android:id="@+id/textViewCinemaLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="7dp"
-                    android:layout_marginTop="16dp"
-                    android:text="TextView"
+                    android:layout_marginTop="8dp"
+                    android:text="[CinemaLocation]"
+                    android:textColor="@android:color/black"
                     app:layout_constraintStart_toEndOf="@+id/imageViewMoviePic"
                     app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
 
@@ -88,8 +103,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="7dp"
-                    android:layout_marginTop="16dp"
-                    android:text="TextView"
+                    android:layout_marginTop="8dp"
+                    android:text="[Genre]"
+                    android:textColor="@android:color/black"
                     app:layout_constraintStart_toEndOf="@+id/imageViewMoviePic"
                     app:layout_constraintTop_toBottomOf="@+id/textViewCinemaLocation" />
 
@@ -97,11 +113,41 @@
                     android:id="@+id/textViewMovieDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="11dp"
-                    android:text="TextView"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="44dp"
+                    android:text="[MovieDescription]"
+                    android:textColor="@android:color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageViewMoviePic" />
+
+                <TextView
+                    android:id="@+id/textViewTicketType1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="[TicketType1]"
+                    android:textColor="@android:color/black"
+                    tools:layout_editor_absoluteX="257dp"
+                    tools:layout_editor_absoluteY="158dp" />
+
+                <TextView
+                    android:id="@+id/textViewTicketType2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="[TicketType2]"
+                    android:textColor="@android:color/black"
+                    tools:layout_editor_absoluteX="257dp"
+                    tools:layout_editor_absoluteY="177dp" />
+
+                <TextView
+                    android:id="@+id/textViewTicketType3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="[TicketType3]"
+                    android:textColor="@android:color/black"
+                    tools:layout_editor_absoluteX="257dp"
+                    tools:layout_editor_absoluteY="200dp" />
+
+
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
     </FrameLayout>
@@ -109,22 +155,22 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/MovieReview"
         android:layout_width="344dp"
-        android:layout_height="262dp"
+        android:layout_height="164dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="297dp" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:text="Movie details"
-        android:textSize="30sp"
+        android:text="Reservation succeeded"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

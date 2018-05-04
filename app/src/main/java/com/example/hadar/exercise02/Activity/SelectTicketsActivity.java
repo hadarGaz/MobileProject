@@ -1,8 +1,10 @@
 package com.example.hadar.exercise02.Activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,23 +19,35 @@ import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.GifPlayer;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.ProfileWidget;
+import com.example.hadar.exercise02.model.Purchase;
 import com.example.hadar.exercise02.model.UserDetails;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class SelectTicketsActivity extends YouTubeBaseActivity{
 
     private static final String TAG = "SelectTicketsActivity";
     private static final int MAX_CHAR = 5;
+    private static final String STANDARD = "Standard";
+    private static final String STUDENT = "Student";
+    private static final String SOLDIER = "Soldier";
     private ImageView m_imageViewMoviePic;
     private ImageView m_youtubePlayButton;
     private ImageButton m_profileWidgetImageButton;
@@ -68,15 +82,37 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
 
         findViews();
         getIntentInput();
-        displayUserImage();
-        displayMovieImage();
-        setMovieDetails();
-        setPrices();
-        setSpinnersWithAdapter();
-        initYouTubeListener();
-        setMovieImage();
+
+        //get m_userDetails from DB (only after getting m_userDetails we can continue to other function)
+        getUserDetailsAndContinueOnCreate();
+
 
         Log.e(TAG, "onCreate() << ");
+    }
+
+    private void getUserDetailsAndContinueOnCreate()
+    {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/"
+                + FirebaseAuth.getInstance().getCurrentUser().getUid());
+        userRef.addValueEventListener(new ValueEventListener()
+                                      {
+                                          @Override
+                                          public void onDataChange (DataSnapshot dataSnapshot) {
+                                              m_userDetails = dataSnapshot.getValue(UserDetails.class);
+                                              displayUserImage();
+                                              displayMovieImage();
+                                              setMovieDetails();
+                                              setPrices();
+                                              setSpinnersWithAdapter();
+                                              initYouTubeListener();
+                                              setMovieImage();
+                                          }
+                                          @Override
+                                          public void onCancelled (DatabaseError d) {
+
+                                          }
+                                      }
+        );
     }
 
     private void setMovieImage()
@@ -190,7 +226,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         Log.e(TAG, "getIntentInput() >> ");
 
         m_movie = (Movie) getIntent().getSerializableExtra("Movie");
-        m_userDetails = (UserDetails)  getIntent().getSerializableExtra("UserDetails");
+       // m_userDetails = (UserDetails)  getIntent().getSerializableExtra("UserDetails");
         m_key = getIntent().getStringExtra("Key");
 
         Log.e(TAG, "getIntentInput() << ");
@@ -234,7 +270,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                spinnerItemSelected("Standard",Double.valueOf(parent.getItemAtPosition(position).toString()));
+                spinnerItemSelected(STANDARD,Double.valueOf(parent.getItemAtPosition(position).toString()));
             }
 
             @Override
@@ -249,7 +285,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                spinnerItemSelected("Student",Double.valueOf(parent.getItemAtPosition(position).toString()));
+                spinnerItemSelected(STUDENT,Double.valueOf(parent.getItemAtPosition(position).toString()));
             }
 
             @Override
@@ -263,7 +299,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                spinnerItemSelected("Soldier",Double.valueOf(parent.getItemAtPosition(position).toString()));
+                spinnerItemSelected(SOLDIER,Double.valueOf(parent.getItemAtPosition(position).toString()));
             }
 
             @Override
@@ -283,15 +319,15 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         double pricePerTicketType = 0;
         switch (i_TicketType)
         {
-            case "Standard":
+            case STANDARD:
                 pricePerTicketType = (Double.valueOf(m_textViewStandardPrice.getText().toString()));
                 textView = m_textViewTotalPriceStandard;
                 break;
-            case "Student":
+            case STUDENT:
                 pricePerTicketType = (Double.valueOf(m_textViewStudentPrice.getText().toString()));
                 textView = m_textViewTotalPriceStudent;
                 break;
-            case "Soldier":
+            case SOLDIER:
                 pricePerTicketType = (Double.valueOf(m_textViewSoldierPrice.getText().toString()));
                 textView = m_textViewTotalPriceSoldier;
                 break;
@@ -339,13 +375,12 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
 
             else
             {
-                m_userDetails.getMoviesStringList().add(m_key);
+                setUserPurchaseMap();
+
                 DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
                 userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
 
-
                 Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
-                // reservationSummaryIntent.putExtra("Key", );
                 reservationSummaryIntent.putExtra("Movie", m_movie);
                 reservationSummaryIntent.putExtra("Key", m_key);
                 reservationSummaryIntent.putExtra("UserDetails", m_userDetails);
@@ -360,6 +395,33 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         else
         {
             Toast.makeText(this, "Please select number of tickets.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void setUserPurchaseMap()
+    {
+        Map<String, Integer> purchaseMap;
+        Purchase purchase = m_userDetails.getMoviesPurchaseMap().get(m_key);
+        if(purchase != null)
+        {
+            purchaseMap = purchase.getM_mapOfTypeTicketsAndQuantity();
+            purchaseMap.put(STANDARD,(purchaseMap.get(STANDARD) + m_spinnerStandard.getSelectedItemPosition()));
+            purchaseMap.put(SOLDIER,(purchaseMap.get(SOLDIER) + m_spinnerStandard.getSelectedItemPosition()));
+            purchaseMap.put(STUDENT,(purchaseMap.get(STUDENT) + m_spinnerStandard.getSelectedItemPosition()));
+        }
+        else
+        {
+            purchaseMap = new HashMap<String, Integer>()
+            {
+                {
+                    put(STANDARD,m_spinnerStandard.getSelectedItemPosition());
+                    put(SOLDIER,m_spinnerSoldier.getSelectedItemPosition());
+                    put(STUDENT,m_spinnerStudent.getSelectedItemPosition());
+                }
+            };
+
+            m_userDetails.getMoviesPurchaseMap().put(m_key,new Purchase(
+                    m_key,purchaseMap,Double.valueOf(m_textViewTotalPriceForMovie.getText().toString())));
         }
     }
 
