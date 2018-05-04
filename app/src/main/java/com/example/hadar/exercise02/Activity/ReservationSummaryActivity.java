@@ -177,9 +177,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
         intent.putExtra("Movie", m_movie);
         intent.putExtra("Key", m_key);
         intent.putExtra("UserDetails", m_userDetails);
-
         startActivity(intent);
-        finish();
 
         Log.e(TAG, "onAddReviewClick() <<");
     }

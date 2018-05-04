@@ -2,12 +2,12 @@ package com.example.hadar.exercise02.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.Movie;
@@ -18,20 +18,19 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 public class ReviewActivity extends Activity
 {
-
     private final String TAG = "ReviewActivity";
+    private final int NEW_RATING = -1;
     private Movie m_movie;
     private String m_key;
     private UserDetails m_user;
-    private int prevRating = -1;
-    private TextView userReview;
+    private int prevRating = NEW_RATING;
+    private TextView reviewText;
     private RatingBar userRating;
+    private Review m_userReview;
     private DatabaseReference m_movieRef;
 
     @Override
@@ -47,7 +46,7 @@ public class ReviewActivity extends Activity
         m_movie = (Movie) getIntent().getSerializableExtra("Movie");
         m_user = (UserDetails) getIntent().getSerializableExtra("UserDetails");
 
-        userReview = findViewById(R.id.new_user_review);
+        reviewText = findViewById(R.id.new_user_review);
         userRating = findViewById(R.id.new_user_rating);
 
 
@@ -62,7 +61,7 @@ public class ReviewActivity extends Activity
 
                         Review review = snapshot.getValue(Review.class);
                         if (review != null) {
-                            userReview.setText(review.getM_textReview());
+                            reviewText.setText(review.getM_textReview());
                             userRating.setRating(review.getM_rating());
                             prevRating = review.getM_rating();
                         }
@@ -82,13 +81,86 @@ public class ReviewActivity extends Activity
 
     }
 
+    private boolean checkIfReviewSubmissionIsValidAndToastIfNot()
+    {
+        boolean isValidReview;
+
+        if((int)userRating.getRating() == 0)
+        {
+            Toast.makeText(ReviewActivity.this, "Please select your rating.", Toast.LENGTH_LONG).show();
+            isValidReview = false;
+        }
+
+        else
+        {
+            isValidReview = true;
+        }
+
+        return isValidReview;
+    }
+
+    private void handleNewReview()
+    {
+        m_movie.incrementReviewsCount();
+        m_movie.incrementRating((int)userRating.getRating());
+    }
+
+    private void handleEditedReview()
+    {
+        m_movie.incrementRating((int) userRating.getRating() - prevRating);
+    }
+
+    private void createUserReview()
+    {
+        m_userReview = new Review(reviewText.getText().toString(), (int)userRating.getRating(),
+                                  m_user.getUserEmail());
+    }
+
+    private void updateMovieOnDatabase()
+    {
+        m_movieRef.child("m_reviewsCount").setValue(m_movie.getM_reviewsCount());
+        m_movieRef.child("m_averageRating").setValue(m_movie.getM_averageRating());
+        m_movieRef.child("m_rating").setValue(m_movie.getM_rating());
+        m_movieRef.child("reviews").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userReview);
+    }
+
+    private void moveToReservationSummaryActivity()
+    {
+        Intent intent = new Intent(getApplicationContext(),ReservationSummaryActivity.class);
+        intent.putExtra("Movie", m_movie);
+        intent.putExtra("Key", m_key);
+        intent.putExtra("UserDetails",m_user);
+        startActivity(intent);
+        finish();
+    }
+
     public void onSubmitClick(View i_view)
     {
-
         Log.e(TAG, "onSubmitClick() >>");
 
+        if(checkIfReviewSubmissionIsValidAndToastIfNot())
+        {
+            if (prevRating == NEW_RATING)
+            {
+                handleNewReview();
+            }
 
-        m_movieRef.runTransaction(new Transaction.Handler()
+            else
+            {
+                handleEditedReview();
+            }
+
+            m_movie.updateRating();
+            createUserReview();
+            updateMovieOnDatabase();
+            moveToReservationSummaryActivity();
+        }
+
+        Log.e(TAG, "onSubmitClick() <<");
+    }
+}
+
+/*m_movieRef.runTransaction(new Transaction.Handler()
         {
             @Override
             public Transaction.Result doTransaction(MutableData i_mutableData)
@@ -133,7 +205,7 @@ public class ReviewActivity extends Activity
 
                 if (i_committed) {
                     Review review = new Review(
-                            userReview.getText().toString(),
+                            reviewText.getText().toString(),
                             (int)userRating.getRating(),
                             m_user.getUserEmail());
 
@@ -150,12 +222,4 @@ public class ReviewActivity extends Activity
 
                 Log.e(TAG, "onComplete() <<" );
             }
-        });
-
-
-
-        Log.e(TAG, "onSubmitClick() <<");
-    }
-
-}
-
+        });*/
