@@ -2,6 +2,9 @@ package com.example.hadar.exercise02.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -93,17 +96,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
         i_movieViewHolder.getMoviePriceTextView().setText(movie.getM_price() + "$");
 
-        /*
-        if(m_userDetails.getMoviesStringList() != null) {
-            Iterator iterator = m_userDetails.getMoviesStringList().iterator();
-            while (iterator.hasNext()) {
-                if (iterator.next().equals(movieKey)) {
-                    //i_movieViewHolder.getMoviePriceTextView().setTextColor(R.color.colorPrimary);
-                    break;
-                }
-            }
+        if(m_userDetails.getMoviesPurchaseMap().containsKey(movieKey))
+        {
+            i_movieViewHolder.getImageViewIsPurchase().setVisibility(View.VISIBLE);
         }
-        */
+        else {
+            i_movieViewHolder.getImageViewIsPurchase().setVisibility(View.INVISIBLE);
+        }
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder
@@ -120,6 +119,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         private Movie m_selectedMovie;
         private String m_selectedMovieKey;
         private RatingBar m_ratingBar;
+        private ImageView m_imageViewIsPurchase;
 
         public MovieViewHolder(Context i_context, View i_view)
         {
@@ -196,6 +196,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             m_selectedMovieKey = i_key;
         }
 
+        public ImageView getImageViewIsPurchase() { return m_imageViewIsPurchase; }
+
         private void findViews(View i_view)
         {
             m_movieCardView = i_view.findViewById(R.id.card_view_movie);
@@ -207,6 +209,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             m_reviewsCountTextView = i_view.findViewById(R.id.movie_review_count);
             m_ratingBar = i_view.findViewById(R.id.movie_rating);
             m_moviePriceTextView = i_view.findViewById(R.id.movie_price);
+            m_imageViewIsPurchase = i_view.findViewById(R.id.imageViewIsPurchase);
+
+            LayerDrawable stars = (LayerDrawable) m_ratingBar.getProgressDrawable();
+            stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+            stars.getDrawable(0).setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+            stars.getDrawable(1).setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
         }
 
         private void cardViewClickInit()
