@@ -13,23 +13,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.DetailsValidation;
 import com.example.hadar.exercise02.model.UserDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 public class RegistrationActivity extends AppCompatActivity
 {
@@ -69,7 +62,6 @@ public class RegistrationActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     public void onBackPressed()
     {
@@ -104,6 +96,7 @@ public class RegistrationActivity extends AppCompatActivity
         startActivityForResult(Intent.createChooser(i, "Select Picture"), RESULT_LOAD_IMAGE);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void onSubmit(View i_view)
     {
         //check validation
@@ -152,6 +145,7 @@ public class RegistrationActivity extends AppCompatActivity
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void updateNameAndUriToUserAndSendVerification()
     {
         UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
@@ -173,12 +167,14 @@ public class RegistrationActivity extends AppCompatActivity
             });
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void addUserToDB()
     {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
         userRef.child(m_firebaseAuth.getCurrentUser().getUid()).setValue(new UserDetails(m_firebaseAuth.getCurrentUser()));
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void sendVerificationAndGoBackToMainActivity()
     {
         m_firebaseAuth.getCurrentUser().sendEmailVerification()
@@ -195,6 +191,7 @@ public class RegistrationActivity extends AppCompatActivity
             });
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void showEmailSentDialogAndGoBackToMainActivity()
     {
         new AlertDialog.Builder(this)

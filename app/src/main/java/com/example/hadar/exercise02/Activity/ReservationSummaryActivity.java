@@ -1,11 +1,11 @@
 package com.example.hadar.exercise02.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.adapter.ReviewsAdapter;
@@ -34,7 +33,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,11 +43,10 @@ public class ReservationSummaryActivity extends AppCompatActivity
     private Movie m_movie;
     private String m_key;
     private UserDetails m_userDetails;
-    private FloatingActionButton m_addReviewButton;
     private TextView m_movieNameTextView;
     private TextView m_dateTextView;
     private TextView m_CinemaLocationTextView;
-    private TextView m_jannerTextView;
+    private TextView m_genreTextView;
     private TextView m_movieDescriptionTextView;
     private TextView m_textViewTicketType1;
     private TextView m_textViewTicketType2;
@@ -58,7 +55,6 @@ public class ReservationSummaryActivity extends AppCompatActivity
     private ImageButton m_profileWidgetImageButton;
     private List<Review> m_reviewsList =  new ArrayList<>();
     private RecyclerView m_recyclerViewMovieReviews;
-    private DatabaseReference m_movieReviewsRef;
     private ImageView m_imageViewMoviePic;
     private RatingBar m_ratingBarForMovie;
 
@@ -81,15 +77,6 @@ public class ReservationSummaryActivity extends AppCompatActivity
         Log.e(TAG, "onCreate() <<");
     }
 
-    /*
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        ProfileWidget.pauseGlideRequests();
-    }
-*/
-
     @Override
     protected void onResume()
     {
@@ -97,6 +84,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
         setListenerToReview();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void getUserDetailsAndContinueOnCreate()
     {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/"
@@ -131,9 +119,9 @@ public class ReservationSummaryActivity extends AppCompatActivity
     {
         Log.e(TAG, "setListenerToReview() >>");
 
-        m_movieReviewsRef = FirebaseDatabase.getInstance().getReference("Movie/" + m_key +"/reviews");
+        DatabaseReference movieReviewsRef = FirebaseDatabase.getInstance().getReference("Movie/" + m_key + "/reviews");
 
-        m_movieReviewsRef.addListenerForSingleValueEvent(new ValueEventListener()
+        movieReviewsRef.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot snapshot)
@@ -171,14 +159,13 @@ public class ReservationSummaryActivity extends AppCompatActivity
         m_dateTextView = findViewById(R.id.textViewDate);
         m_movieNameTextView = findViewById(R.id.textViewMovieName);
         m_CinemaLocationTextView = findViewById(R.id.textViewCinemaLocation);
-        m_jannerTextView = findViewById(R.id.textViewGenre);
+        m_genreTextView = findViewById(R.id.textViewGenre);
         m_movieDescriptionTextView = findViewById(R.id.textViewMovieDescription);
         m_profileWidgetImageButton = findViewById(R.id.profile_widget);
         m_recyclerViewMovieReviews = findViewById(R.id.MovieReview);
         m_recyclerViewMovieReviews.setHasFixedSize(true);
         m_recyclerViewMovieReviews.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         m_recyclerViewMovieReviews.setItemAnimator(new DefaultItemAnimator());
-        m_addReviewButton = findViewById(R.id.buttonNewReview);
         m_imageViewMoviePic =  findViewById(R.id.imageViewMoviePic);
         m_textViewTicketType1 = findViewById(R.id.textViewTicketType1);
         m_textViewTicketType2 = findViewById(R.id.textViewTicketType2);
@@ -213,9 +200,9 @@ public class ReservationSummaryActivity extends AppCompatActivity
         m_textViewTicketType2.setVisibility(View.INVISIBLE);
         m_textViewTicketType3.setVisibility(View.INVISIBLE);
         m_movieNameTextView.setText(m_movie.getM_name());
-        m_dateTextView.setText(m_movie.getM_date().toString());
+        m_dateTextView.setText(m_movie.getM_date());
         m_CinemaLocationTextView.setText(m_movie.getM_cinemaLocation());
-        m_jannerTextView.setText(m_movie.getM_genre().toString());
+        m_genreTextView.setText(m_movie.getM_genre());
         m_movieDescriptionTextView.setText(m_movie.getM_movieDescription());
         m_ratingBarForMovie.setRating(m_movie.getM_rating());
         setMovieImage();
@@ -224,11 +211,12 @@ public class ReservationSummaryActivity extends AppCompatActivity
         Log.e(TAG, "setMovieDetails() <<");
     }
 
+    @SuppressLint("SetTextI18n")
     private void setMoviePurchase()
     {
         Log.e(TAG, "setMoviePurchase() >>");
 
-        int value=0;
+        int value;
         m_textViewTotalPrice.setText(String.valueOf(m_userDetails.getMoviesPurchaseMap().get(m_key).getM_purchaseAmount()) + "$");
         Map<String, Integer> purchaseMap =  m_userDetails.getMoviesPurchaseMap().get(m_key).getM_mapOfTypeTicketsAndQuantity();
 

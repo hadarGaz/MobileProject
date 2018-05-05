@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.hadar.exercise02.model.GifPlayer;
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.DetailsValidation;
@@ -46,7 +45,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -204,6 +202,7 @@ public class SignInActivity extends Activity
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void onSignInClick(View i_view)
     {
         Log.e(TAG, "onSignInClick() >>");
@@ -262,6 +261,7 @@ public class SignInActivity extends Activity
         Log.e(TAG, "onSignInClick() <<");
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void OnForgotPasswordClick(View i_view)
     {
         Log.e(TAG, "OnForgotPasswordClick() >> ");
@@ -409,6 +409,7 @@ public class SignInActivity extends Activity
         Log.e(TAG, "handleSignInResult() <<");
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void firebaseAuthWithGoogle(final GoogleSignInAccount i_googleSignInAccount)
     {
         Log.e(TAG, "firebaseAuthWithGoogle() >>, id = " + i_googleSignInAccount.getId());
@@ -517,7 +518,7 @@ public class SignInActivity extends Activity
         {
             case "Google":
                 changeUserDetailsPictureUrlForGoogle(m_userDetails);
-                m_userDetails.setUserEmail(m_googleSignInAccount.getEmail().toString());
+                m_userDetails.setUserEmail(m_googleSignInAccount.getEmail());
                 break;
 
             case "Facebook":
@@ -527,9 +528,6 @@ public class SignInActivity extends Activity
 
             case "EmailPassword":
                 break;
-
-            default:
-                return;
         }
     }
 
@@ -606,6 +604,7 @@ public class SignInActivity extends Activity
         Log.e(TAG, "facebookLoginInit() <<");
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void handleFacebookAccessToken(AccessToken i_accessToken)
     {
         Log.e(TAG, "handleFacebookAccessToken () >>" + i_accessToken.getToken());
@@ -614,10 +613,10 @@ public class SignInActivity extends Activity
 
         m_firebaseAuth.signInWithCredential(credential)
         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> i_completedTask)
             {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> i_completedTask)
+                {
                 Log.e(TAG, "Facebook: onComplete() >> " + i_completedTask.isSuccessful());
 
                 if (i_completedTask.isSuccessful())
@@ -697,6 +696,7 @@ public class SignInActivity extends Activity
                 });
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void updateProfile()
     {
         UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
