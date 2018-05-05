@@ -115,12 +115,30 @@ public class ReservationSummaryActivity extends AppCompatActivity
         Log.e(TAG, "setReviewsAdapter() <<");
     }
 
+    //Note for me: Check if can be replaced with List.contains()
+    private boolean doesReviewListContainAReview(Review i_review)
+    {
+        boolean reviewFound = false;
+
+        for(int i = 0; i<m_reviewsList.size(); ++i)
+        {
+            if(m_reviewsList.get(i).getM_userEmail() != null &&
+               m_reviewsList.get(i).getM_userEmail().equals(i_review.getM_userEmail()))
+            {
+                reviewFound = true;
+                break;
+            }
+        }
+
+        return reviewFound;
+    }
+
     private void setListenerToReview()
     {
         Log.e(TAG, "setListenerToReview() >>");
 
+        m_reviewsList.clear();
         DatabaseReference movieReviewsRef = FirebaseDatabase.getInstance().getReference("Movie/" + m_key + "/reviews");
-
         movieReviewsRef.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
@@ -132,7 +150,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
                 for (DataSnapshot dataSnapshot : snapshot.getChildren())
                 {
                     Review review = dataSnapshot.getValue(Review.class);
-                    if (!m_reviewsList.contains(review))
+                    if (!(doesReviewListContainAReview(review)))
                     {
                         m_reviewsList.add(review);
                     }
@@ -249,11 +267,10 @@ public class ReservationSummaryActivity extends AppCompatActivity
                 .addOnSuccessListener(new OnSuccessListener<Uri>()
                 {
                     @Override
-                    public void onSuccess(Uri uri) {
-                        Log.e(TAG,"pic src= "+ uri.toString());
-                        Glide.with(ReservationSummaryActivity.this)
-                                .load(uri.toString())
-                                .into(m_imageViewMoviePic);
+                    public void onSuccess(Uri uri)
+                    {
+                        Log.e(TAG, "pic src= " + uri.toString());
+                        Glide.with(getApplicationContext()).load(uri.toString()).into(m_imageViewMoviePic);
                     }
                 });
 
@@ -277,7 +294,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
     {
         Log.e(TAG, "onClickProfileWidgetImageButton() >>");
 
-        ProfileWidget.onClickProfileWidget(this, m_profileWidgetImageButton, m_userDetails);
+        ProfileWidget.onClickProfileWidget(getApplicationContext(), m_profileWidgetImageButton, m_userDetails);
 
         Log.e(TAG, "onClickProfileWidgetImageButton() <<");
 
@@ -301,7 +318,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
     {
         Log.e(TAG, "displayUserImage() >>");
 
-        ProfileWidget.displayUserImage(this, m_profileWidgetImageButton, m_userDetails);
+        ProfileWidget.displayUserImage(getApplicationContext(), m_profileWidgetImageButton, m_userDetails);
 
         Log.e(TAG, "displayUserImage() <<");
 

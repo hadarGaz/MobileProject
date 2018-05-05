@@ -445,10 +445,10 @@ public class SignInActivity extends Activity
         if(m_firebaseUser != null)
         {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
-            userRef.child(m_firebaseUser.getUid()).setValue(new UserDetails(m_firebaseUser));
+            userRef.child(m_firebaseUser.getUid()).setValue(m_userDetails);
 
             Intent CinemaMainIntent = new Intent(getApplicationContext(), CinemaMainActivity.class);
-            Log.e(TAG,"signinActivity, img url= "+ m_userDetails.getUserPictureUrl());
+            Log.e(TAG,"SignInActivity, img url = "+ m_userDetails.getUserPictureUrl());
             CinemaMainIntent.putExtra("User Details", m_userDetails);
             GifPlayer.stopGif();
             startActivity(CinemaMainIntent);

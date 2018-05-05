@@ -90,7 +90,8 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         userRef.addValueEventListener(new ValueEventListener()
                                       {
                                           @Override
-                                          public void onDataChange (DataSnapshot dataSnapshot) {
+                                          public void onDataChange(DataSnapshot dataSnapshot)
+                                          {
                                               m_userDetails = dataSnapshot.getValue(UserDetails.class);
                                               displayUserImage();
                                               displayMovieImage();
@@ -100,8 +101,10 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
                                               initYouTubeListener();
                                               setMovieImage();
                                           }
+
                                           @Override
-                                          public void onCancelled (DatabaseError d) {
+                                          public void onCancelled(DatabaseError d)
+                                          {
 
                                           }
                                       }
@@ -438,11 +441,11 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
 
     public void onClickProfileWidgetImageButton(View i_view)
     {
-        ProfileWidget.onClickProfileWidget(this, m_profileWidgetImageButton, m_userDetails);
+        ProfileWidget.onClickProfileWidget(getApplicationContext(), m_profileWidgetImageButton, m_userDetails);
     }
 
     private void displayUserImage()
     {
-        ProfileWidget.displayUserImage(this, m_profileWidgetImageButton, m_userDetails);
+        ProfileWidget.displayUserImage(getApplicationContext(), m_profileWidgetImageButton, m_userDetails);
     }
 }

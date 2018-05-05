@@ -20,7 +20,6 @@ public class UserDetails implements Serializable
     {
     }
 
-
     public UserDetails(String i_userName, String i_userEmail, String i_userPictureUrl)
     {
         m_userName = i_userName;

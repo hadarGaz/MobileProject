@@ -47,27 +47,6 @@ public class UserDetailsActivity extends AppCompatActivity
         });
     }
 
-  /*  @Override
-    public void onBackPressed()
-    {
-        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Exit App")
-                .setMessage("Are you sure you want to exit?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                        Intent exitIntent = new Intent(Intent.ACTION_MAIN);
-                        exitIntent.addCategory(Intent.CATEGORY_HOME);
-                        exitIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(exitIntent);
-                    }
-                })
-                .setNegativeButton("No", null)
-                .show();
-    }*/
-
     @Override
     public void finish()
     {

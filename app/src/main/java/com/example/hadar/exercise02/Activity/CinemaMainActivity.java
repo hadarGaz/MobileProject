@@ -364,7 +364,7 @@ public class CinemaMainActivity extends AppCompatActivity
     {
         Log.e(TAG, "displayUserImage() >> ");
 
-        ProfileWidget.displayUserImage(this, m_profileWidgetImageButton, m_userDetails);
+        ProfileWidget.displayUserImage(getApplicationContext(), m_profileWidgetImageButton, m_userDetails);
 
         Log.e(TAG, "displayUserImage() << ");
 
@@ -464,7 +464,7 @@ public class CinemaMainActivity extends AppCompatActivity
     {
         Log.e(TAG, "onClickProfileWidgetImageButton() >> ");
 
-        ProfileWidget.onClickProfileWidget(this, m_profileWidgetImageButton, m_userDetails);
+        ProfileWidget.onClickProfileWidget(getApplicationContext(), m_profileWidgetImageButton, m_userDetails);
 
         Log.e(TAG, "onClickProfileWidgetImageButton() >> ");
     }
