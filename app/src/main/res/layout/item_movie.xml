@@ -72,7 +72,7 @@
                 card_view:layout_constraintTop_toBottomOf="@+id/movie_genre" />
 
             <RatingBar
-                android:id="@+id/movie_rating"
+                android:id="@+id/ratingBarForMovie"
                 style="@style/Widget.AppCompat.RatingBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="17dp"
@@ -106,7 +106,7 @@
                 android:layout_marginStart="8dp"
                 android:textColor="@android:color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintStart_toEndOf="@+id/movie_rating" />
+                card_view:layout_constraintStart_toEndOf="@+id/ratingBarForMovie" />
 
             <TextView
                 android:id="@+id/movie_cinema"

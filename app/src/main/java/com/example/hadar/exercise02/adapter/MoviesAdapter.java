@@ -26,7 +26,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>
@@ -207,7 +206,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             m_genreTextView = i_view.findViewById(R.id.movie_genre);
             m_cinemaTextView = i_view.findViewById(R.id.movie_cinema);
             m_reviewsCountTextView = i_view.findViewById(R.id.movie_review_count);
-            m_ratingBar = i_view.findViewById(R.id.movie_rating);
+            m_ratingBar = i_view.findViewById(R.id.ratingBarForMovie);
             m_moviePriceTextView = i_view.findViewById(R.id.movie_price);
             m_imageViewIsPurchase = i_view.findViewById(R.id.imageViewIsPurchase);
 

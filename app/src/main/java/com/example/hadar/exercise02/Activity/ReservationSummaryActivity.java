@@ -1,6 +1,9 @@
 package com.example.hadar.exercise02.Activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,10 +23,8 @@ import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.adapter.ReviewsAdapter;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.ProfileWidget;
-import com.example.hadar.exercise02.model.Purchase;
 import com.example.hadar.exercise02.model.Review;
 import com.example.hadar.exercise02.model.UserDetails;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -58,6 +60,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
     private RecyclerView m_recyclerViewMovieReviews;
     private DatabaseReference m_movieReviewsRef;
     private ImageView m_imageViewMoviePic;
+    private RatingBar m_ratingBarForMovie;
 
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
@@ -77,6 +80,15 @@ public class ReservationSummaryActivity extends AppCompatActivity
 
         Log.e(TAG, "onCreate() <<");
     }
+
+    /*
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        ProfileWidget.pauseGlideRequests();
+    }
+*/
 
     private void getUserDetailsAndContinueOnCreate()
     {
@@ -162,7 +174,12 @@ public class ReservationSummaryActivity extends AppCompatActivity
         m_textViewTicketType2 = findViewById(R.id.textViewTicketType2);
         m_textViewTicketType3 = findViewById(R.id.textViewTicketType3);
         m_textViewTotalPrice = findViewById(R.id.textViewTotalPrice);
+        m_ratingBarForMovie = findViewById(R.id.ratingBarForMovie);
 
+        LayerDrawable stars = (LayerDrawable) m_ratingBarForMovie.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(0).setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(1).setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
 
         Log.e(TAG, "findViews() <<");
 
@@ -190,7 +207,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
         m_CinemaLocationTextView.setText(m_movie.getM_cinemaLocation());
         m_jannerTextView.setText(m_movie.getM_genre().toString());
         m_movieDescriptionTextView.setText(m_movie.getM_movieDescription());
-
+        m_ratingBarForMovie.setRating(m_movie.getM_rating());
         setMovieImage();
         setMoviePurchase();
 

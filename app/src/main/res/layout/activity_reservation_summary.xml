@@ -124,12 +124,12 @@
                     android:id="@+id/textViewMovieDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="52dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="55dp"
+                    android:layout_marginTop="4dp"
                     android:text="[MovieDescription]"
                     android:textColor="@android:color/black"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageViewMoviePic" />
+                    app:layout_constraintTop_toBottomOf="@+id/ratingBarForMovie" />
 
                 <TextView
                     android:id="@+id/textViewTicketType1"
@@ -175,6 +175,19 @@
                     app:layout_constraintStart_toEndOf="@+id/viewVec"
                     app:layout_constraintTop_toBottomOf="@+id/textViewTicketType3" />
 
+                <RatingBar
+                    android:id="@+id/ratingBarForMovie"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="17dp"
+                    android:layout_marginStart="57dp"
+                    android:layout_marginTop="4dp"
+                    android:numStars="5"
+                    android:progressTint="@color/yellow"
+                    android:rating="0"
+                    android:stepSize="0.1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageViewMoviePic" />
 
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
@@ -184,10 +197,10 @@
         android:id="@+id/MovieReview"
         android:layout_width="382dp"
         android:layout_height="156dp"
-        android:layout_marginBottom="7dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonNewReview"
+        app:layout_constraintBottom_toTopOf="@+id/imageViewBuyMoreTicketButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -208,10 +221,10 @@
         android:id="@+id/buttonNewReview"
         android:layout_width="58dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginBottom="56dp"
         android:onClick="onAddReviewClick"
-        android:src="@android:drawable/ic_menu_add"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@android:color/background_light"
         app:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -227,14 +240,29 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/liad_icon" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginStart="108dp"
+    <ImageButton
+        android:id="@+id/imageViewBuyMoreTicketButton"
+        android:layout_width="139dp"
+        android:layout_height="57dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="101dp"
+        android:background="@android:color/black"
         android:onClick="onBuyMoreTicketsClick"
-        android:text="Buy more ticket"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@mipmap/movie_white" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="20dp"
+        android:text="Buy more ticket"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewBuyMoreTicketButton"
+        app:layout_constraintStart_toStartOf="@+id/imageViewBuyMoreTicketButton" />
 
 </android.support.constraint.ConstraintLayout>
