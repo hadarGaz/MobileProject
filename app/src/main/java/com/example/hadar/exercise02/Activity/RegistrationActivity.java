@@ -34,6 +34,7 @@ import com.google.firebase.storage.UploadTask;
 public class RegistrationActivity extends AppCompatActivity
 {
     private static final String TAG = "RegistrationActivity";
+    private String m_sourceActivity;
     private static final int RESULT_LOAD_IMAGE = 1;
     private FirebaseAuth m_firebaseAuth;
     private boolean m_isPictureUploaded = false;
@@ -50,6 +51,7 @@ public class RegistrationActivity extends AppCompatActivity
         super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_registration);
 
+        m_sourceActivity = getIntent().getStringExtra("Source Activity");
         findViews();
         checkIfEmailHasAlreadyBeenWritten();
     }
@@ -80,7 +82,15 @@ public class RegistrationActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface i_dialogInterface, int i_num)
                     {
-                        goBackToMainActivity();
+                        if(("AskForSignInActivity").equals(m_sourceActivity))
+                        {
+                            goBackToAskForSignInActivity();
+                        }
+
+                        else
+                        {
+                            goBackToMainActivity();
+                        }
                     }
                 })
                 .setNegativeButton("No", null)
@@ -199,6 +209,12 @@ public class RegistrationActivity extends AppCompatActivity
                     }
                 })
                 .show();
+    }
+
+    private void goBackToAskForSignInActivity()
+    {
+        super.onBackPressed();
+        finish();
     }
 
     private void goBackToMainActivity()

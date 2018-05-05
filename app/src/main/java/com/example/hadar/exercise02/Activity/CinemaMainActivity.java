@@ -1,5 +1,8 @@
 package com.example.hadar.exercise02.Activity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -71,6 +74,33 @@ public class CinemaMainActivity extends AppCompatActivity
 
         Log.e(TAG, "onCreate() << ");
 }
+
+    @Override
+    public void onBackPressed()
+    {
+        showExitAppDialog();
+    }
+
+    private void showExitAppDialog()
+    {
+        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Exit App")
+                .setMessage("Are you sure you want to exit?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface i_dialogInterface, int i_num)
+                    {
+                        Intent exitIntent = new Intent(Intent.ACTION_MAIN);
+                        exitIntent.addCategory(Intent.CATEGORY_HOME);
+                        exitIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(exitIntent);
+                        finishAffinity();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
 
     private void getUserDetailsAndContinueOnCreate()
     {

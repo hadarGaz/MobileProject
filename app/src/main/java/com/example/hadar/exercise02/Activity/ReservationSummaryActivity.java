@@ -90,6 +90,13 @@ public class ReservationSummaryActivity extends AppCompatActivity
     }
 */
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        setListenerToReview();
+    }
+
     private void getUserDetailsAndContinueOnCreate()
     {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/"
@@ -137,7 +144,10 @@ public class ReservationSummaryActivity extends AppCompatActivity
                 for (DataSnapshot dataSnapshot : snapshot.getChildren())
                 {
                     Review review = dataSnapshot.getValue(Review.class);
-                    m_reviewsList.add(review);
+                    if (!m_reviewsList.contains(review))
+                    {
+                        m_reviewsList.add(review);
+                    }
                 }
                 m_recyclerViewMovieReviews.getAdapter().notifyDataSetChanged();
                 Log.e(TAG, "onDataChange(Review) <<");
@@ -283,6 +293,20 @@ public class ReservationSummaryActivity extends AppCompatActivity
 
         Log.e(TAG, "onClickProfileWidgetImageButton() <<");
 
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        goToCinemaMainActivity();
+    }
+
+    private void goToCinemaMainActivity()
+    {
+        Intent cinemaMainActivity = new Intent(getApplicationContext(), CinemaMainActivity.class);
+        startActivity(cinemaMainActivity);
+        finish();
     }
 
     private void displayUserImage()

@@ -55,6 +55,7 @@ public class SignInActivity extends Activity
     private static final String TAG = "SignInActivity";
     private static final String GOOGLE_URL_PATH_TO_REMOVE = "s96-c/photo.jpg";
     private static final String GOOGLE_URL_PATH_TO_ADD = "s400-c/photo.jpg";
+    private String m_sourceActivity = null;
     private static int GOOGLE_SIGN_IN = 100;
     private FirebaseAuth m_firebaseAuth;
     private FirebaseAuth.AuthStateListener m_AuthListener;
@@ -76,6 +77,7 @@ public class SignInActivity extends Activity
         super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        m_sourceActivity = getIntent().getStringExtra("Source Activity");
         m_firebaseAuth = FirebaseAuth.getInstance();
         m_FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
@@ -148,6 +150,26 @@ public class SignInActivity extends Activity
 
     @Override
     public void onBackPressed()
+    {
+        if(("AskForSignInActivity").equals(m_sourceActivity))
+        {
+            goBackToAskForSignInActivity();
+        }
+
+        else
+        {
+            showExitAppDialog();
+        }
+
+    }
+
+    private void goBackToAskForSignInActivity()
+    {
+        super.onBackPressed();
+        finish();
+    }
+
+    private void showExitAppDialog()
     {
         new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Exit App")
@@ -466,7 +488,6 @@ public class SignInActivity extends Activity
         Log.e(TAG,"upload method <<");
     }
 
-
     private void uploadImageToStorage(StorageReference i_storageRef, Uri i_ImageUri)
     {
 
@@ -481,8 +502,6 @@ public class SignInActivity extends Activity
                     }
                 });
     }
-
-
 
     private void handleAllSignInSuccess(String i_loginMethod)
     {

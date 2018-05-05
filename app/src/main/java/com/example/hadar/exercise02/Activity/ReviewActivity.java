@@ -153,7 +153,7 @@ public class ReviewActivity extends Activity
             m_movie.updateRating();
             createUserReview();
             updateMovieOnDatabase();
-            moveToReservationSummaryActivity();
+            super.onBackPressed();
         }
 
         Log.e(TAG, "onSubmitClick() <<");
