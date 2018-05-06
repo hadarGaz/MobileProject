@@ -504,6 +504,13 @@ public class SignInActivity extends Activity
     {
         Log.e(TAG, "updateUIAndMoveToCinemaMainActivity() >>");
 
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        userRef.child("userEmail").setValue(m_userDetails.getUserEmail());
+        userRef.child("userName").setValue(m_userDetails.getUserName());
+
+
         if(m_firebaseUser != null)
         {
             Intent CinemaMainIntent = new Intent(getApplicationContext(), CinemaMainActivity.class);
