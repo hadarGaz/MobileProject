@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     tools:context="com.example.hadar.exercise02.Activity.CinemaMainActivity"
     tools:layout_editor_absoluteY="25dp">
 
@@ -14,7 +15,7 @@
         android:layout_height="177dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="72dp"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/background_light"
         android:paddingBottom="12dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
@@ -31,11 +32,13 @@
             android:layout_width="match_parent"
             android:layout_height="145dp"
             android:layout_marginTop="12dp"
+            android:background="@android:color/black"
             android:clickable="true">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@android:color/black"
                 android:gravity="center_vertical">
 
                 <EditText
@@ -119,6 +122,7 @@
         android:layout_width="65dp"
         android:layout_height="65dp"
         android:layout_marginTop="4dp"
+        android:background="@android:color/black"
         android:onClick="onClickProfileWidgetImageButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
