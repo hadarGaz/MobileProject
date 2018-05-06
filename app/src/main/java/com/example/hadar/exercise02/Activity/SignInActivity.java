@@ -508,13 +508,7 @@ public class SignInActivity extends Activity
 
         if(m_firebaseUser != null)
         {
-           // DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
-           // userRef.child(m_firebaseUser.getUid()).setValue(new UserDetails(m_firebaseUser));
-
             Intent CinemaMainIntent = new Intent(getApplicationContext(), CinemaMainActivity.class);
-            //Log.e(TAG,"signinActivity, img url= "+ m_userDetails.getUserPictureUrl());
-            //CinemaMainIntent.putExtra("User Details", m_userDetails);
-
             GifPlayer.stopGif();
             startActivity(CinemaMainIntent);
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -613,7 +607,7 @@ public class SignInActivity extends Activity
 
     private void ifNewUserAddToDBAndUpdateUI()
     {
-        Log.e(TAG,"ifNewUserAddToDB >>");
+        Log.e(TAG,"ifNewUserAddToDBAndUpdateUI >>");
 
         if(m_firebaseUser != null)
         {
@@ -634,7 +628,7 @@ public class SignInActivity extends Activity
                                     m_userDetails.setUserPictureUrl(m_imageUrl.toString());
                                 }
 
-                            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+                                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
                                 userRef.child(m_firebaseUser.getUid()).setValue(m_userDetails);
                             }
                             updateUIAndMoveToCinemaMainActivity();
@@ -646,7 +640,7 @@ public class SignInActivity extends Activity
 
         }
 
-        Log.e(TAG,"ifNewUserAddToDB <<");
+        Log.e(TAG,"ifNewUserAddToDBAndUpdateUI <<");
     }
 
     private void facebookLoginInit()

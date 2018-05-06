@@ -222,7 +222,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
         m_CinemaLocationTextView.setText(m_movie.getM_cinemaLocation());
         m_genreTextView.setText(m_movie.getM_genre());
         m_movieDescriptionTextView.setText(m_movie.getM_movieDescription());
-        m_ratingBarForMovie.setRating(m_movie.getM_rating());
+        m_ratingBarForMovie.setRating(m_movie.getM_averageRating());
         setMovieImage();
         setMoviePurchase();
 
