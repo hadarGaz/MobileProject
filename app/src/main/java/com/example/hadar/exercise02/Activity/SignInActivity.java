@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -42,8 +43,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -70,10 +74,13 @@ public class SignInActivity extends Activity
     private FirebaseRemoteConfig m_FirebaseRemoteConfig;
     private LoginButton m_facebookLoginButton;
     private Uri m_imageUrl=null;
+    private String m_loginMethod;
 
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
     {
+        Log.e(TAG, "onCreate() >>");
+
         super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -86,6 +93,7 @@ public class SignInActivity extends Activity
         googleSignInInit();
         firebaseAuthenticationInit();
 
+        Log.e(TAG, "onCreate() <<");
     }
 
     @Override
@@ -116,6 +124,8 @@ public class SignInActivity extends Activity
 
     public static void setUserEmailToFacebookUser(UserDetails i_userDetails, FirebaseUser i_firebaseUser)
     {
+        Log.e(TAG, "setUserEmailToFacebookUser() >>");
+
         for (UserInfo userInfo: i_firebaseUser.getProviderData())
         {
             if(userInfo.getProviderId().equals("facebook.com"))
@@ -123,10 +133,14 @@ public class SignInActivity extends Activity
                 i_userDetails.setUserEmail(userInfo.getEmail());
             }
         }
+        Log.e(TAG, "setUserEmailToFacebookUser() <<");
+
     }
 
     public static void changeUserDetailsPictureUrlForFacebook(UserDetails i_userDetails)
     {
+        Log.e(TAG, "changeUserDetailsPictureUrlForFacebook() >>");
+
         Profile facebookProfile = Profile.getCurrentProfile();
 
         if(facebookProfile != null)
@@ -135,10 +149,14 @@ public class SignInActivity extends Activity
 
             i_userDetails.setUserPictureUrl(newPicturePath);
         }
+        Log.e(TAG, "changeUserDetailsPictureUrlForFacebook() <<");
+
     }
 
     public static void changeUserDetailsPictureUrlForGoogle(UserDetails i_userDetails)
     {
+        Log.e(TAG, "changeUserDetailsPictureUrlForGoogle() >>");
+
         String userDetailsPictureUrl = i_userDetails.getUserPictureUrl();
 
         if(userDetailsPictureUrl != null)
@@ -146,11 +164,15 @@ public class SignInActivity extends Activity
             String newPicturePath = userDetailsPictureUrl.replace(GOOGLE_URL_PATH_TO_REMOVE, GOOGLE_URL_PATH_TO_ADD);
             i_userDetails.setUserPictureUrl(newPicturePath);
         }
+        Log.e(TAG, "changeUserDetailsPictureUrlForGoogle() <<");
+
     }
 
     @Override
     public void onBackPressed()
     {
+        Log.e(TAG, "onBackPressed() >>");
+
         if(("AskForSignInActivity").equals(m_sourceActivity))
         {
             goBackToAskForSignInActivity();
@@ -160,17 +182,26 @@ public class SignInActivity extends Activity
         {
             showExitAppDialog();
         }
+        Log.e(TAG, "onBackPressed() <<");
+
 
     }
 
     private void goBackToAskForSignInActivity()
     {
+        Log.e(TAG, "goBackToAskForSignInActivity() >>");
+
         super.onBackPressed();
         finish();
+
+        Log.e(TAG, "goBackToAskForSignInActivity() <<");
+
     }
 
     private void showExitAppDialog()
     {
+        Log.e(TAG, "showExitAppDialog() >>");
+
         new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Exit App")
                 .setMessage("Are you sure you want to exit?")
@@ -188,11 +219,16 @@ public class SignInActivity extends Activity
                 })
                 .setNegativeButton("No", null)
                 .show();
+
+        Log.e(TAG, "showExitAppDialog() <<");
+
     }
 
     @Override
     public void onActivityResult(int i_requestCode, int i_resultCode, Intent i_dataIntent)
     {
+        Log.e(TAG, "onActivityResult() >>");
+
         super.onActivityResult(i_requestCode, i_resultCode, i_dataIntent);
 
         m_callbackManager.onActivityResult(i_requestCode, i_resultCode, i_dataIntent);
@@ -202,6 +238,8 @@ public class SignInActivity extends Activity
             Task<GoogleSignInAccount> googleSignInTask = GoogleSignIn.getSignedInAccountFromIntent(i_dataIntent);
             handleGoogleSignInResult(googleSignInTask);
         }
+        Log.e(TAG, "onActivityResult() <<");
+
     }
 
     public void onSignInClick(View i_view)
@@ -301,6 +339,8 @@ public class SignInActivity extends Activity
 
     public void onSignInAnonymouslyClick(View i_view)
     {
+        Log.e(TAG, "onSignInAnonymouslyClick() >>");
+
         GifPlayer.setAnonymousSignIn(true);
         GifPlayer.playGif();
 
@@ -337,29 +377,44 @@ public class SignInActivity extends Activity
                         }
                     }
                 });
+
+        Log.e(TAG, "onSignInAnonymouslyClick() <<");
+
     }
 
     public void onSignUpClick(View i_view)
     {
+        Log.e(TAG, "onSignUpClick() >>");
+
         Intent regIntent = new Intent(getApplicationContext(), RegistrationActivity.class);
         regIntent.putExtra("Email", m_userEmailEditText.getText().toString());
         regIntent.putExtra("MAIN_CALL", true);
         startActivity(regIntent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
+
+        Log.e(TAG, "onSignUpClick() <<");
+
     }
 
     private void findViews()
     {
+        Log.e(TAG, "findViews() >>");
+
         GifPlayer.s_LoadingBar =findViewById(R.id.load_bar);
         m_userEmailEditText = findViewById(R.id.editTextEmail);
         m_userPasswordEditText = findViewById(R.id.editTextPassword);
         m_googleSignInButton = findViewById(R.id.google_sign_in_button);
         m_facebookLoginButton = findViewById(R.id.buttonFacebook);
+
+        Log.e(TAG, "findViews() <<");
+
     }
 
     private void googleSignInInit()
     {
+        Log.e(TAG, "googleSignInInit() >>");
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestProfile()
@@ -378,13 +433,20 @@ public class SignInActivity extends Activity
                 onClickGoogleButton();
             }
         });
+
+        Log.e(TAG, "googleSignInInit() <<");
     }
 
     private void onClickGoogleButton()
     {
+        Log.e(TAG, "onClickGoogleButton() >>");
+
         Intent signInIntent = m_googleSignInClient.getSignInIntent();
         GifPlayer.playGif();
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
+
+        Log.e(TAG, "onClickGoogleButton() <<");
+
     }
 
     private void handleGoogleSignInResult(Task<GoogleSignInAccount> i_completedTask)
@@ -439,26 +501,31 @@ public class SignInActivity extends Activity
         Log.e(TAG, "firebaseAuthWithGoogle() <<");
     }
 
-    private void updateUIAndMoveToUserDetailsActivity()
+    private void updateUIAndMoveToCinemaMainActivity()
     {
+        Log.e(TAG, "updateUIAndMoveToCinemaMainActivity() >>");
+
         if(m_firebaseUser != null)
         {
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
-            userRef.child(m_firebaseUser.getUid()).setValue(new UserDetails(m_firebaseUser));
+           // DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+           // userRef.child(m_firebaseUser.getUid()).setValue(new UserDetails(m_firebaseUser));
 
             Intent CinemaMainIntent = new Intent(getApplicationContext(), CinemaMainActivity.class);
-            Log.e(TAG,"signinActivity, img url= "+ m_userDetails.getUserPictureUrl());
-            CinemaMainIntent.putExtra("User Details", m_userDetails);
+            //Log.e(TAG,"signinActivity, img url= "+ m_userDetails.getUserPictureUrl());
+            //CinemaMainIntent.putExtra("User Details", m_userDetails);
             GifPlayer.stopGif();
             startActivity(CinemaMainIntent);
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             finish();
         }
+
+        Log.e(TAG, "updateUIAndMoveToCinemaMainActivity() <<");
+
     }
 
     private void checkAndUploadUserImageToStorage(final Uri i_photoUri, String i_email)
     {
-        Log.e(TAG,"uploadMethod >>");
+        Log.e(TAG,"checkAndUploadUserImageToStorage >>");
 
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageReferenceProfilePic = firebaseStorage.getReference();
@@ -485,11 +552,12 @@ public class SignInActivity extends Activity
                     }
                 });
 
-        Log.e(TAG,"upload method <<");
+        Log.e(TAG,"checkAndUploadUserImageToStorage <<");
     }
 
     private void uploadImageToStorage(StorageReference i_storageRef, Uri i_ImageUri)
     {
+        Log.e(TAG,"uploadImageToStorage >>");
 
         i_storageRef.putFile(i_ImageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
@@ -501,18 +569,26 @@ public class SignInActivity extends Activity
                         Toast.makeText(SignInActivity.this, "Upload User Image Succsses",Toast.LENGTH_LONG).show();
                     }
                 });
+
+        Log.e(TAG,"uploadImageToStorage <<");
     }
 
     private void handleAllSignInSuccess(String i_loginMethod)
     {
+        Log.e(TAG,"handleAllSignInSuccess >>");
+
+        m_loginMethod = i_loginMethod;
         m_firebaseUser = m_firebaseAuth.getCurrentUser();
-        createUserDetailsFromFirebaseUser();
-        overrideUserDetailsInformation(i_loginMethod);
-        updateUIAndMoveToUserDetailsActivity();
+        ifNewUserAddToDBAndUpdateUI();
+
+        Log.e(TAG,"handleAllSignInSuccess <<");
+
     }
 
     private void overrideUserDetailsInformation(String i_loginMethod)
     {
+        Log.e(TAG,"overrideUserDetailsInformation >>");
+
         switch (i_loginMethod)
         {
             case "Google":
@@ -531,19 +607,47 @@ public class SignInActivity extends Activity
             default:
                 return;
         }
+
+        Log.e(TAG,"overrideUserDetailsInformation <<");
+
     }
 
-    private void createUserDetailsFromFirebaseUser()
+    private void ifNewUserAddToDBAndUpdateUI()
     {
+        Log.e(TAG,"ifNewUserAddToDB >>");
+
         if(m_firebaseUser != null)
         {
-            m_userDetails = new UserDetails(m_firebaseUser);
+            FirebaseDatabase.getInstance().getReference("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .addListenerForSingleValueEvent(new ValueEventListener()
+                    {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot)
+                        {
+                            if (!snapshot.exists()) //user not exists in DB
+                            {
+                                m_userDetails = new UserDetails(m_firebaseUser);
+                                overrideUserDetailsInformation(m_loginMethod);
+
+                                if(m_imageUrl!=null)
+                                {
+                                    m_userDetails.setUserPictureUrl(m_imageUrl.toString());
+                                }
+
+                            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+                                userRef.child(m_firebaseUser.getUid()).setValue(m_userDetails);
+                            }
+                            updateUIAndMoveToCinemaMainActivity();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError firebaseError) { }
+                     });
+
         }
 
-        if(m_imageUrl!=null)
-        {
-            m_userDetails.setUserPictureUrl(m_imageUrl.toString());
-        }
+        Log.e(TAG,"ifNewUserAddToDB <<");
     }
 
     private void facebookLoginInit()
@@ -659,24 +763,34 @@ public class SignInActivity extends Activity
 
     private void showWaitingForEmailVerificationDialog()
     {
+        Log.e(TAG,"showWaitingForEmailVerificationDialog >>");
+
         new AlertDialog.Builder(this)
                 .setMessage("Waiting for email verification.\nPlease verify your account and sign in again.\n")
                 .setCancelable(false)
                 .setPositiveButton("OK", null)
                 .show();
+
+        Log.e(TAG,"showWaitingForEmailVerificationDialog <<");
     }
 
     private void showPasswordResetWasSentDialog()
     {
+        Log.e(TAG,"showPasswordResetWasSentDialog >>");
+
         new AlertDialog.Builder(this)
                 .setMessage("A password reset request has been sent to:\n" + m_userEmailEditText.getText().toString())
                 .setCancelable(false)
                 .setPositiveButton("OK", null)
                 .show();
+
+        Log.e(TAG,"showPasswordResetWasSentDialog <<");
     }
 
     private void signInAnonymously()
     {
+        Log.e(TAG,"signInAnonymously >>");
+
         m_firebaseAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
                 {
@@ -695,10 +809,14 @@ public class SignInActivity extends Activity
                         }
                     }
                 });
+
+        Log.e(TAG,"signInAnonymously <<");
     }
 
     private void updateProfile()
     {
+        Log.e(TAG,"updateProfile >>");
+
         UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder()
                 .setDisplayName("Anonymous")
                 .build();
@@ -715,5 +833,8 @@ public class SignInActivity extends Activity
                         }
                     }
                 });
+
+        Log.e(TAG,"updateProfile <<");
+
     }
 }
