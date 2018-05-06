@@ -33,7 +33,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -71,7 +70,6 @@ public class SignInActivity extends Activity
     private FirebaseUser m_firebaseUser = null;
     private FirebaseRemoteConfig m_FirebaseRemoteConfig;
     private LoginButton m_facebookLoginButton;
-    private Uri m_imageUrl=null;
     private String m_loginMethod;
 
     @Override
@@ -267,7 +265,7 @@ public class SignInActivity extends Activity
                     {
                         if (m_firebaseAuth.getCurrentUser().isEmailVerified())
                         {
-                            checkAndUploadUserImageToStorage(m_firebaseAuth.getCurrentUser().getPhotoUrl(), m_firebaseAuth.getCurrentUser().getEmail());
+                            //checkAndUploadUserImageToStorage(m_firebaseAuth.getCurrentUser().getPhotoUrl(), m_firebaseAuth.getCurrentUser().getEmail());
                             Log.e(TAG, "calling updateUI 5");
                             handleAllSignInSuccess("EmailPassword");
                         }
@@ -519,48 +517,45 @@ public class SignInActivity extends Activity
 
     }
 
-    private void checkAndUploadUserImageToStorage(final Uri i_photoUri, String i_email)
+    private void checkAndUploadUserImageToStorage(final Uri i_internalPhotoUri, String i_email)
     {
         Log.e(TAG,"checkAndUploadUserImageToStorage >>");
 
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageReferenceProfilePic = firebaseStorage.getReference();
-        final StorageReference imageRef = storageReferenceProfilePic.child("Users Profile Picture/"+ i_email + ".jpg");
+        final StorageReference storageImageRef = storageReferenceProfilePic.child("Users Profile Picture/"+ i_email + ".jpg");
 
-        imageRef.getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>()
-                {
-                    @Override
-                    public void onSuccess(Uri uri)
-                    {
-                        Log.e(TAG,"==> Image found in storage"+ uri.toString());
-                        m_userDetails.setUserPictureUrl(uri.toString());
-                        m_imageUrl=uri;
-                    }
-                })
+        storageImageRef.getDownloadUrl()
                 .addOnFailureListener(new OnFailureListener()
                 {
+                    //Image is not in storage, uploading it.
                     @Override
                     public void onFailure(@NonNull Exception e)
                     {
-                        uploadImageToStorage(imageRef, i_photoUri);
                         Log.e(TAG,"==> Image search failed, uploaded a new image");
+                        uploadImageToStorage(storageImageRef, i_internalPhotoUri);
                     }
                 });
 
         Log.e(TAG,"checkAndUploadUserImageToStorage <<");
     }
 
-    private void uploadImageToStorage(StorageReference i_storageRef, Uri i_ImageUri)
+    @SuppressWarnings("ConstantConditions")
+    private void uploadImageToStorage(StorageReference i_storageImageRef, Uri i_internalPhotoUri)
     {
         Log.e(TAG,"uploadImageToStorage >>");
 
-        i_storageRef.putFile(i_ImageUri)
+        final DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+
+        i_storageImageRef.putFile(i_internalPhotoUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
                 {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
                     {
+                        String storagePhotoURL = taskSnapshot.getDownloadUrl().toString();
+                        m_userDetails.setUserPictureUrl(storagePhotoURL);
+                        userRef.child(m_firebaseUser.getUid()).child("userPictureUrl").setValue(storagePhotoURL);
                         Log.e(TAG,"Upload image success");
                         Toast.makeText(SignInActivity.this, "Upload User Image Succsses",Toast.LENGTH_LONG).show();
                     }
@@ -581,6 +576,7 @@ public class SignInActivity extends Activity
 
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void overrideUserDetailsInformation(String i_loginMethod)
     {
         Log.e(TAG,"overrideUserDetailsInformation >>");
@@ -598,6 +594,7 @@ public class SignInActivity extends Activity
                 break;
 
             case "EmailPassword":
+                checkAndUploadUserImageToStorage(m_firebaseAuth.getCurrentUser().getPhotoUrl(), m_firebaseAuth.getCurrentUser().getEmail());
                 break;
         }
 
@@ -605,9 +602,13 @@ public class SignInActivity extends Activity
 
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void ifNewUserAddToDBAndUpdateUI()
     {
         Log.e(TAG,"ifNewUserAddToDBAndUpdateUI >>");
+
+        m_userDetails = new UserDetails(m_firebaseUser);
+        overrideUserDetailsInformation(m_loginMethod);
 
         if(m_firebaseUser != null)
         {
@@ -620,14 +621,6 @@ public class SignInActivity extends Activity
                         {
                             if (!snapshot.exists()) //user not exists in DB
                             {
-                                m_userDetails = new UserDetails(m_firebaseUser);
-                                overrideUserDetailsInformation(m_loginMethod);
-
-                                if(m_imageUrl!=null)
-                                {
-                                    m_userDetails.setUserPictureUrl(m_imageUrl.toString());
-                                }
-
                                 DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
                                 userRef.child(m_firebaseUser.getUid()).setValue(m_userDetails);
                             }
