@@ -1,10 +1,8 @@
 package com.example.hadar.exercise02.Activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.hadar.exercise02.R;
-import com.example.hadar.exercise02.model.GifPlayer;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.ProfileWidget;
 import com.example.hadar.exercise02.model.Purchase;
@@ -26,9 +23,7 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,10 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class SelectTicketsActivity extends YouTubeBaseActivity{
 
@@ -70,7 +63,6 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     private Movie m_movie;
     private UserDetails m_userDetails;
     private String m_key;
-    //int i=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -90,7 +82,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         Log.e(TAG, "onCreate() << ");
     }
 
-
+    @SuppressWarnings("ConstantConditions")
     private void getUserDetailsAndContinueOnCreate()
     {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users/"
@@ -98,7 +90,8 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         userRef.addValueEventListener(new ValueEventListener()
                                       {
                                           @Override
-                                          public void onDataChange (DataSnapshot dataSnapshot) {
+                                          public void onDataChange(DataSnapshot dataSnapshot)
+                                          {
                                               m_userDetails = dataSnapshot.getValue(UserDetails.class);
                                               displayUserImage();
                                               displayMovieImage();
@@ -108,8 +101,10 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
                                               initYouTubeListener();
                                               setMovieImage();
                                           }
+
                                           @Override
-                                          public void onCancelled (DatabaseError d) {
+                                          public void onCancelled(DatabaseError d)
+                                          {
 
                                           }
                                       }
@@ -362,6 +357,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         return totalSelectedTickets != 0;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void onClickBuyTickets(View v)
     {
         if(didUserPickAnyTicket())
@@ -440,7 +436,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     {
         String resStr = String.valueOf(i_Str);
         int maxLength = (resStr.length() < MAX_CHAR)?resStr.length():MAX_CHAR;
-        return (resStr.substring(0,maxLength));
+        return (resStr.substring(0, maxLength));
     }
 
     public void onClickProfileWidgetImageButton(View i_view)
@@ -450,6 +446,6 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
 
     private void displayUserImage()
     {
-        ProfileWidget.displayUserImage(this, m_profileWidgetImageButton, m_userDetails);
+        ProfileWidget.displayUserImage(getApplicationContext(), m_profileWidgetImageButton, m_userDetails);
     }
 }

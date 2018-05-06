@@ -38,13 +38,16 @@
             <TextView
                 android:id="@+id/TextViewReviewerEmail"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="24dp"
                 android:layout_marginBottom="84dp"
-                android:layout_marginRight="4dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="8dp"
                 android:text="[reviewer mail]"
                 android:textColor="@android:color/holo_blue_dark"
                 card_view:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintRight_toRightOf="parent" />
+                card_view:layout_constraintRight_toRightOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintVertical_bias="0.615" />
 
             <RatingBar
                 android:id="@+id/RatingBatReview"

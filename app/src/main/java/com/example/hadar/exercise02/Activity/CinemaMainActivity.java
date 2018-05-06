@@ -16,9 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-
 import android.widget.ImageButton;
-
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.adapter.MoviesAdapter;
 import com.example.hadar.exercise02.adapter.MovieWithKey;
@@ -33,13 +31,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-// searchMovie,2 filter, 2 sort, pictures to movie
 public class CinemaMainActivity extends AppCompatActivity
 {
     private static final String TAG = "CinemaMainActivity";
@@ -102,6 +98,7 @@ public class CinemaMainActivity extends AppCompatActivity
                 .show();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void getUserDetailsAndContinueOnCreate()
     {
         Log.e(TAG, "getUserDetailsAndContinueOnCreate() >> ");
@@ -131,7 +128,7 @@ public class CinemaMainActivity extends AppCompatActivity
     {
         Log.e(TAG, "setSortBySpinnerValues() >> ");
 
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.sort_spinner_item, sortingMethods);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.sort_spinner_item, sortingMethods);
         spinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         m_sortBySpinner.setAdapter(spinnerAdapter);
 
@@ -166,12 +163,12 @@ public class CinemaMainActivity extends AppCompatActivity
     {
         Log.e(TAG, "sortBySpinnerItemSelected() >> ");
 
-        if(i_sortingMethod == "Rating")
+        if(i_sortingMethod.equals("Rating"))
         {
             sortMoviesByRating();
         }
 
-        else if (i_sortingMethod == "Genre")
+        else if (i_sortingMethod.equals("Genre"))
         {
             sortMoviesByGenre();
         }
@@ -367,7 +364,7 @@ public class CinemaMainActivity extends AppCompatActivity
     {
         Log.e(TAG, "displayUserImage() >> ");
 
-        ProfileWidget.displayUserImage(this, m_profileWidgetImageButton, m_userDetails);
+        ProfileWidget.displayUserImage(getApplicationContext(), m_profileWidgetImageButton, m_userDetails);
 
         Log.e(TAG, "displayUserImage() << ");
 
@@ -381,7 +378,7 @@ public class CinemaMainActivity extends AppCompatActivity
         {
             Movie movie = dataSnapshot.getValue(Movie.class);
 
-            Log.e(TAG, "updateSongList() >> adding song: " + movie.getM_name());
+            Log.e(TAG, "updateSongList() >> adding song");
             String dataSnapshotKey = dataSnapshot.getKey();
             m_moviesWithKeysList.add(new MovieWithKey(movie, dataSnapshotKey));
         }

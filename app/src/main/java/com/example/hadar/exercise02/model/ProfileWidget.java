@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-
 import com.bumptech.glide.Glide;
 import com.example.hadar.exercise02.Activity.SignInActivity;
 import com.example.hadar.exercise02.Activity.UserDetailsActivity;
@@ -19,8 +18,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class ProfileWidget
 {
@@ -114,15 +111,11 @@ public class ProfileWidget
 
     public static void displayUserImage(Context i_activityContext, ImageButton i_activityImageButton, UserDetails i_userDetails)
     {
-        Log.e(TAG, "displayUserImage() >> ing url= "+ i_userDetails.getUserPictureUrl());
+        Log.e(TAG, "displayUserImage() >> ing url= " + i_userDetails.getUserPictureUrl());
 
         i_activityImageButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Glide.with(i_activityContext).load(i_userDetails.getUserPictureUrl()).into(i_activityImageButton);
+        i_activityImageButton.bringToFront();
         Log.e(TAG, "displayUserImage() << ");
-    }
-
-    public static void pauseGlideRequests()
-    {
-        Glide.with(getApplicationContext()).pauseRequests();
     }
 }

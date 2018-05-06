@@ -1,5 +1,6 @@
 package com.example.hadar.exercise02.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,6 +22,7 @@ import com.example.hadar.exercise02.Activity.ReservationSummaryActivity;
 import com.example.hadar.exercise02.Activity.SelectTicketsActivity;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.R;
+import com.example.hadar.exercise02.model.ProfileWidget;
 import com.example.hadar.exercise02.model.UserDetails;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -223,21 +225,22 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                 @Override
                 public void onClick(View i_view)
                 {
-                    Context context = i_view.getContext();
+                    Context activityContext = i_view.getContext();
                     Intent intent;
-                    if(m_userDetails.getMoviesPurchaseMap().containsKey(m_selectedMovieKey) == true)
+
+                    if(m_userDetails.getMoviesPurchaseMap().containsKey(m_selectedMovieKey))
                     {
-                        intent = new Intent(context, ReservationSummaryActivity.class);
+                        intent = new Intent(activityContext, ReservationSummaryActivity.class);
                     }
-                    else {
-                        intent = new Intent(context, SelectTicketsActivity.class);
+
+                    else
+                    {
+                        intent = new Intent(activityContext, SelectTicketsActivity.class);
                     }
+
                     intent.putExtra("Movie",m_selectedMovie);
                     intent.putExtra("Key", m_selectedMovieKey);
-                    //intent.putExtra("UserDetails", m_userDetails);
-                    context.startActivity(intent);
-
-                    //IMPLEMENT MISSING GO TO RIGHT ACTIVITY ON CHOOSING MOVIE *********************
+                    activityContext.startActivity(intent);
                 }
             });
         }

@@ -1,13 +1,8 @@
 package com.example.hadar.exercise02.Activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,21 +16,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 public class UserDetailsActivity extends AppCompatActivity
 {
-    private static final String TAG = "UserDetailsActivity";
     private ImageView m_userPictureImageView;
-    private String m_userPictureUrl;
     private Button m_signOutButton;
     private TextView m_UserNameTextView;
     private TextView m_UserEmailTextView;
-    private Intent m_inputIntent;
     private UserDetails m_userDetails;
 
     @Override
@@ -58,27 +46,6 @@ public class UserDetailsActivity extends AppCompatActivity
             }
         });
     }
-
-  /*  @Override
-    public void onBackPressed()
-    {
-        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Exit App")
-                .setMessage("Are you sure you want to exit?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                        Intent exitIntent = new Intent(Intent.ACTION_MAIN);
-                        exitIntent.addCategory(Intent.CATEGORY_HOME);
-                        exitIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(exitIntent);
-                    }
-                })
-                .setNegativeButton("No", null)
-                .show();
-    }*/
 
     @Override
     public void finish()
@@ -103,27 +70,12 @@ public class UserDetailsActivity extends AppCompatActivity
 
     public void showUserPicture()
     {
-/*
-        Log.e(TAG,"pic name= "+ m_userDetails.getUserEmail() + ".jpg");
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        storageReference.child("Users Profile Picture/" + m_userDetails.getUserEmail() + ".jpg")
-                .getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>()
-                {
-                    @Override
-                    public void onSuccess(Uri uri)
-                    {
-                        //m_userDetails.setUserPictureUrl(uri.toString());
-                        Log.e(TAG,"pic src= "+ uri.toString());
-                    }
-                });
-*/
-        m_userPictureUrl = m_userDetails.getUserPictureUrl();
+        String userPictureUrl = m_userDetails.getUserPictureUrl();
 
-        if (m_userPictureUrl != null)
+        if (userPictureUrl != null)
         {
-         m_userPictureImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-         Glide.with(this).load(m_userPictureUrl).into(m_userPictureImageView);
+            m_userPictureImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            Glide.with(this).load(userPictureUrl).into(m_userPictureImageView);
         }
     }
 
@@ -139,8 +91,8 @@ public class UserDetailsActivity extends AppCompatActivity
 
     private void getIntentInput()
     {
-        m_inputIntent = getIntent();
-        m_userDetails = (UserDetails) m_inputIntent.getSerializableExtra("User Details");
+        Intent inputIntent = getIntent();
+        m_userDetails = (UserDetails) inputIntent.getSerializableExtra("User Details");
     }
 
     private void findViews()

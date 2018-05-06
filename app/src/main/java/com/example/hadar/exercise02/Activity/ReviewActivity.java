@@ -1,14 +1,12 @@
 package com.example.hadar.exercise02.Activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.Movie;
 import com.example.hadar.exercise02.model.Review;
@@ -25,7 +23,6 @@ public class ReviewActivity extends Activity
     private final String TAG = "ReviewActivity";
     private final int NEW_RATING = -1;
     private Movie m_movie;
-    private String m_key;
     private UserDetails m_user;
     private int prevRating = NEW_RATING;
     private TextView reviewText;
@@ -33,6 +30,7 @@ public class ReviewActivity extends Activity
     private Review m_userReview;
     private DatabaseReference m_movieRef;
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
     {
@@ -42,7 +40,7 @@ public class ReviewActivity extends Activity
         super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_review);
 
-        m_key = getIntent().getStringExtra("Key");
+        String movieKey = getIntent().getStringExtra("Key");
         m_movie = (Movie) getIntent().getSerializableExtra("Movie");
         m_user = (UserDetails) getIntent().getSerializableExtra("UserDetails");
 
@@ -50,7 +48,7 @@ public class ReviewActivity extends Activity
         userRating = findViewById(R.id.new_user_rating);
 
 
-        m_movieRef = FirebaseDatabase.getInstance().getReference("Movie/" + m_key);
+        m_movieRef = FirebaseDatabase.getInstance().getReference("Movie/" + movieKey);
 
         m_movieRef.child("/reviews/" +  FirebaseAuth.getInstance().getCurrentUser().getUid()).
                 addListenerForSingleValueEvent(new ValueEventListener() {
@@ -116,22 +114,13 @@ public class ReviewActivity extends Activity
                                   m_user.getUserEmail());
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void updateMovieOnDatabase()
     {
         m_movieRef.child("m_reviewsCount").setValue(m_movie.getM_reviewsCount());
         m_movieRef.child("m_averageRating").setValue(m_movie.getM_averageRating());
         m_movieRef.child("m_rating").setValue(m_movie.getM_rating());
         m_movieRef.child("reviews").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userReview);
-    }
-
-    private void moveToReservationSummaryActivity()
-    {
-        Intent intent = new Intent(getApplicationContext(),ReservationSummaryActivity.class);
-        intent.putExtra("Movie", m_movie);
-        intent.putExtra("Key", m_key);
-        intent.putExtra("UserDetails",m_user);
-        startActivity(intent);
-        finish();
     }
 
     public void onSubmitClick(View i_view)
@@ -159,67 +148,3 @@ public class ReviewActivity extends Activity
         Log.e(TAG, "onSubmitClick() <<");
     }
 }
-
-/*m_movieRef.runTransaction(new Transaction.Handler()
-        {
-            @Override
-            public Transaction.Result doTransaction(MutableData i_mutableData)
-            {
-                Log.e(TAG, "doTransaction() >>" );
-                Movie movie = i_mutableData.getValue(Movie.class);
-
-                if (movie == null )
-                {
-                    Log.e(TAG, "doTransaction() << movie is null" );
-                    return Transaction.success(i_mutableData);
-                }
-
-                if (prevRating == -1)
-                {
-                    // Increment the review count and rating only in case the user enters a new review
-                    movie.incrementReviewsCount();
-                    movie.incrementRating((int)userRating.getRating());
-                }
-                else
-                {
-                    movie.incrementRating((int) userRating.getRating() - prevRating);
-                }
-
-                movie.updateRating();
-                i_mutableData.setValue(movie);
-                Log.e(TAG, "doTransaction() << movie was set");
-                return Transaction.success(i_mutableData);
-
-            }
-
-            @Override
-            public void onComplete(DatabaseError i_databaseError, boolean i_committed, DataSnapshot i_dataSnapshot)
-            {
-
-                Log.e(TAG, "onComplete() >>" );
-
-                if (i_databaseError != null) {
-                    Log.e(TAG, "onComplete() << Error:" + i_databaseError.getMessage());
-                    return;
-                }
-
-                if (i_committed) {
-                    Review review = new Review(
-                            reviewText.getText().toString(),
-                            (int)userRating.getRating(),
-                            m_user.getUserEmail());
-
-                    m_movieRef.child("/reviews/" + FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(review);
-                }
-
-
-                Intent intent = new Intent(getApplicationContext(),ReservationSummaryActivity.class);
-                intent.putExtra("Movie", m_movie);
-                intent.putExtra("Key", m_key);
-                intent.putExtra("UserDetails",m_user);
-                startActivity(intent);
-                finish();
-
-                Log.e(TAG, "onComplete() <<" );
-            }
-        });*/

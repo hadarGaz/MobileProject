@@ -116,10 +116,9 @@
 
     <ImageButton
         android:id="@+id/profile_widget"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="4dp"
         android:onClick="onClickProfileWidgetImageButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
