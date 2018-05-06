@@ -294,7 +294,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
     {
         Log.e(TAG, "onClickProfileWidgetImageButton() >>");
 
-        ProfileWidget.onClickProfileWidget(getApplicationContext(), m_profileWidgetImageButton, m_userDetails);
+        ProfileWidget.onClickProfileWidget(this, m_profileWidgetImageButton, m_userDetails);
 
         Log.e(TAG, "onClickProfileWidgetImageButton() <<");
 

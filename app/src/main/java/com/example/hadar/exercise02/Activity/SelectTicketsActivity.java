@@ -441,7 +441,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
 
     public void onClickProfileWidgetImageButton(View i_view)
     {
-        ProfileWidget.onClickProfileWidget(getApplicationContext(), m_profileWidgetImageButton, m_userDetails);
+        ProfileWidget.onClickProfileWidget(this, m_profileWidgetImageButton, m_userDetails);
     }
 
     private void displayUserImage()
