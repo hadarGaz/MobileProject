@@ -47,11 +47,11 @@ public class ReservationSummaryActivity extends AppCompatActivity
     private TextView m_dateTextView;
     private TextView m_CinemaLocationTextView;
     private TextView m_genreTextView;
-    private TextView m_movieDescriptionTextView;
     private TextView m_textViewTicketType1;
     private TextView m_textViewTicketType2;
     private TextView m_textViewTicketType3;
     private TextView m_textViewTotalPrice;
+    private TextView m_textViewReviewCount;
     private ImageButton m_profileWidgetImageButton;
     private List<Review> m_reviewsList =  new ArrayList<>();
     private RecyclerView m_recyclerViewMovieReviews;
@@ -178,7 +178,6 @@ public class ReservationSummaryActivity extends AppCompatActivity
         m_movieNameTextView = findViewById(R.id.textViewMovieName);
         m_CinemaLocationTextView = findViewById(R.id.textViewCinemaLocation);
         m_genreTextView = findViewById(R.id.textViewGenre);
-        m_movieDescriptionTextView = findViewById(R.id.textViewMovieDescription);
         m_profileWidgetImageButton = findViewById(R.id.profile_widget);
         m_recyclerViewMovieReviews = findViewById(R.id.MovieReview);
         m_recyclerViewMovieReviews.setHasFixedSize(true);
@@ -190,6 +189,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
         m_textViewTicketType3 = findViewById(R.id.textViewTicketType3);
         m_textViewTotalPrice = findViewById(R.id.textViewTotalPrice);
         m_ratingBarForMovie = findViewById(R.id.ratingBarForMovie);
+        m_textViewReviewCount = findViewById(R.id.textViewReviewCount);
 
         LayerDrawable stars = (LayerDrawable) m_ratingBarForMovie.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
@@ -221,8 +221,8 @@ public class ReservationSummaryActivity extends AppCompatActivity
         m_dateTextView.setText(m_movie.getM_date());
         m_CinemaLocationTextView.setText(m_movie.getM_cinemaLocation());
         m_genreTextView.setText(m_movie.getM_genre());
-        m_movieDescriptionTextView.setText(m_movie.getM_movieDescription());
         m_ratingBarForMovie.setRating(m_movie.getM_averageRating());
+        m_textViewReviewCount.setText("(" + m_movie.getM_reviewsCount() + ")");
         setMovieImage();
         setMoviePurchase();
 
