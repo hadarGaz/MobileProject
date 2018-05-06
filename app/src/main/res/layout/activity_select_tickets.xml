@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     tools:context=".Activity.SelectTicketsActivity">
 
     <TextView
@@ -23,22 +24,23 @@
         android:layout_height="65dp"
         android:layout_marginTop="4dp"
         android:onClick="onClickProfileWidgetImageButton"
-        app:srcCompat="@mipmap/liad_icon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/liad_icon" />
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="0dp"
         android:layout_height="251dp"
-        android:layout_marginTop="0dp"
+        android:background="@android:color/background_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_widget">
 
         <android.support.constraint.ConstraintLayout
-            android:layout_width="394dp"
-            android:layout_height="251dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:background="@drawable/theare">
 
             <TextView
@@ -108,7 +110,7 @@
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="12dp"
-        android:background="@android:color/black"
+        android:background="@android:color/background_light"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTicketLabel" />
 
@@ -275,20 +277,9 @@
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="14dp"
-        android:background="@android:color/black"
+        android:background="@android:color/background_light"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewSoldierLabel" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="121dp"
-        android:onClick="onClickBuyTickets"
-        android:text="Buy ticket"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textViewTotalPriceForMovie"
@@ -299,5 +290,30 @@
         android:text="TextView"
         app:layout_constraintStart_toEndOf="@+id/SpinnerSoldieer"
         app:layout_constraintTop_toBottomOf="@+id/textViewTotalPriceSoldier" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="139dp"
+        android:layout_height="57dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="128dp"
+        android:background="@android:color/black"
+        android:onClick="onClickBuyTickets"
+        android:scaleType="fitXY"
+        android:src="@mipmap/movie_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="25dp"
+        android:text="BUY TICKET"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+        app:layout_constraintStart_toStartOf="@+id/imageButton" />
 
 </android.support.constraint.ConstraintLayout>
