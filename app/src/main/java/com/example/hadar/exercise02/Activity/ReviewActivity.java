@@ -25,8 +25,8 @@ public class ReviewActivity extends Activity
     private Movie m_movie;
     private UserDetails m_user;
     private int prevRating = NEW_RATING;
-    private TextView reviewText;
-    private RatingBar userRating;
+    private TextView m_textViewReview;
+    private RatingBar m_rating;
     private Review m_userReview;
     private DatabaseReference m_movieRef;
 
@@ -44,8 +44,8 @@ public class ReviewActivity extends Activity
         m_movie = (Movie) getIntent().getSerializableExtra("Movie");
         m_user = (UserDetails) getIntent().getSerializableExtra("UserDetails");
 
-        reviewText = findViewById(R.id.new_user_review);
-        userRating = findViewById(R.id.new_user_rating);
+        m_textViewReview = findViewById(R.id.new_user_review);
+        m_rating = findViewById(R.id.new_user_rating);
 
 
         m_movieRef = FirebaseDatabase.getInstance().getReference("Movie/" + movieKey);
@@ -59,8 +59,8 @@ public class ReviewActivity extends Activity
 
                         Review review = snapshot.getValue(Review.class);
                         if (review != null) {
-                            reviewText.setText(review.getM_textReview());
-                            userRating.setRating(review.getM_rating());
+                            m_textViewReview.setText(review.getM_textReview());
+                            m_rating.setRating(review.getM_rating());
                             prevRating = review.getM_rating();
                         }
 
@@ -83,7 +83,7 @@ public class ReviewActivity extends Activity
     {
         boolean isValidReview;
 
-        if((int)userRating.getRating() == 0)
+        if((int) m_rating.getRating() == 0)
         {
             Toast.makeText(ReviewActivity.this, "Please select your rating.", Toast.LENGTH_LONG).show();
             isValidReview = false;
@@ -100,17 +100,17 @@ public class ReviewActivity extends Activity
     private void handleNewReview()
     {
         m_movie.incrementReviewsCount();
-        m_movie.incrementRating((int)userRating.getRating());
+        m_movie.incrementRating((int) m_rating.getRating());
     }
 
     private void handleEditedReview()
     {
-        m_movie.incrementRating((int) userRating.getRating() - prevRating);
+        m_movie.incrementRating((int) m_rating.getRating() - prevRating);
     }
 
     private void createUserReview()
     {
-        m_userReview = new Review(reviewText.getText().toString(), (int)userRating.getRating(),
+        m_userReview = new Review(m_textViewReview.getText().toString(), (int) m_rating.getRating(),
                                   m_user.getUserEmail());
     }
 

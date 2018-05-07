@@ -52,8 +52,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="148dp"
+                    android:fontFamily="casual"
                     android:text="[MovieName]"
                     android:textColor="@android:color/black"
+                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/viewTop" />
 
@@ -94,7 +96,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="8dp"
                     android:text="[Date]"
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/holo_blue_dark"
                     app:layout_constraintStart_toEndOf="@+id/imageViewMoviePic"
                     app:layout_constraintTop_toBottomOf="@+id/viewBottom" />
 
@@ -105,7 +107,7 @@
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="8dp"
                     android:text="[CinemaLocation]"
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/holo_blue_dark"
                     app:layout_constraintStart_toEndOf="@+id/imageViewMoviePic"
                     app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
 
@@ -116,7 +118,7 @@
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="8dp"
                     android:text="[Genre]"
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/holo_blue_dark"
                     app:layout_constraintStart_toEndOf="@+id/imageViewMoviePic"
                     app:layout_constraintTop_toBottomOf="@+id/textViewCinemaLocation" />
 

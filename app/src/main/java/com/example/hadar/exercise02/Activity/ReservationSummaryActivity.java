@@ -40,6 +40,7 @@ import java.util.Map;
 public class ReservationSummaryActivity extends AppCompatActivity
 {
     private static final String TAG ="ReservationSummaryActivity";
+    private static final int MAX_CHAR = 5;
     private Movie m_movie;
     private String m_key;
     private UserDetails m_userDetails;
@@ -92,13 +93,15 @@ public class ReservationSummaryActivity extends AppCompatActivity
         userRef.addValueEventListener(new ValueEventListener()
                                       {
                                           @Override
-                                          public void onDataChange (DataSnapshot dataSnapshot) {
+                                          public void onDataChange (DataSnapshot dataSnapshot)
+                                          {
                                               m_userDetails = dataSnapshot.getValue(UserDetails.class);
                                               displayUserImage();
                                               setMovieDetails();
                                           }
                                           @Override
-                                          public void onCancelled (DatabaseError d) {
+                                          public void onCancelled (DatabaseError d)
+                                          {
 
                                           }
                                       }
@@ -235,7 +238,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
         Log.e(TAG, "setMoviePurchase() >>");
 
         int value;
-        m_textViewTotalPrice.setText(String.valueOf(m_userDetails.getMoviesPurchaseMap().get(m_key).getM_purchaseAmount()) + "$");
+        m_textViewTotalPrice.setText(limitStrToMaxChar(String.valueOf(m_userDetails.getMoviesPurchaseMap().get(m_key).getM_purchaseAmount())) + "$");
         Map<String, Integer> purchaseMap =  m_userDetails.getMoviesPurchaseMap().get(m_key).getM_mapOfTypeTicketsAndQuantity();
 
         if((value= purchaseMap.get("Standard")) != 0)
@@ -335,5 +338,12 @@ public class ReservationSummaryActivity extends AppCompatActivity
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
         Log.e(TAG, "onBuyMoreTicketsClick() <<");
+    }
+
+    private String limitStrToMaxChar(String i_Str)
+    {
+        String resStr = String.valueOf(i_Str);
+        int maxLength = (resStr.length() < MAX_CHAR)?resStr.length():MAX_CHAR;
+        return (resStr.substring(0, maxLength));
     }
 }

@@ -564,7 +564,7 @@ public class SignInActivity extends Activity
                         m_userDetails.setUserPictureUrl(storagePhotoURL);
                         userRef.child(m_firebaseUser.getUid()).child("userPictureUrl").setValue(storagePhotoURL);
                         Log.e(TAG,"Upload image success");
-                        Toast.makeText(SignInActivity.this, "Upload User Image Succsses",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(SignInActivity.this, "Upload User Image Succsses",Toast.LENGTH_LONG).show();
                     }
                 });
 

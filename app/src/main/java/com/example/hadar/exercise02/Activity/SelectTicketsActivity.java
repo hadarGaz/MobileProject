@@ -120,7 +120,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
                     @Override
                     public void onSuccess(Uri uri) {
                         Log.e(TAG,"pic src= "+ uri.toString());
-                        Glide.with(SelectTicketsActivity.this)
+                        Glide.with(getApplicationContext())
                                 .load(uri.toString())
                                 .into(m_imageViewMoviePic);
                     }
@@ -358,7 +358,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     }
 
     @SuppressWarnings("ConstantConditions")
-    public void onClickBuyTickets(View v)
+    public void onClickBuyTickets(View i_view)
     {
         if(didUserPickAnyTicket())
         {
