@@ -114,11 +114,11 @@
         android:id="@+id/textViewSignUpAnonymously"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/google_sign_in_button"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="74dp"
+        android:layout_above="@+id/pre_sign_up"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="13dp"
         android:onClick="onSignInAnonymouslyClick"
-        android:text="@string/Sign_in_anonymously"
+        android:text="Skip"
         android:textColor="@android:color/holo_blue_bright"
         android:visibility="visible" />
 
