@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02.Activity;
+package com.example.hadar.AcadeMovie.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -13,11 +13,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
-import com.example.hadar.exercise02.R;
-import com.example.hadar.exercise02.model.Movie;
-import com.example.hadar.exercise02.model.ProfileWidget;
-import com.example.hadar.exercise02.model.Purchase;
-import com.example.hadar.exercise02.model.UserDetails;
+import com.example.hadar.AcadeMovie.R;
+import com.example.hadar.AcadeMovie.model.Movie;
+import com.example.hadar.AcadeMovie.model.ProfileWidget;
+import com.example.hadar.AcadeMovie.model.Purchase;
+import com.example.hadar.AcadeMovie.model.UserDetails;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;

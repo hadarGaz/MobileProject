@@ -1,6 +1,6 @@
-package com.example.hadar.exercise02.adapter;
+package com.example.hadar.AcadeMovie.adapter;
 
-import com.example.hadar.exercise02.model.Movie;
+import com.example.hadar.AcadeMovie.model.Movie;
 
 public class MovieWithKey
 {

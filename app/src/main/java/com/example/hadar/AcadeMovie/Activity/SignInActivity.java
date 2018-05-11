@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02.Activity;
+package com.example.hadar.AcadeMovie.Activity;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -11,10 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.example.hadar.exercise02.model.GifPlayer;
-import com.example.hadar.exercise02.R;
-import com.example.hadar.exercise02.model.DetailsValidation;
-import com.example.hadar.exercise02.model.UserDetails;
+import com.example.hadar.AcadeMovie.model.GifPlayer;
+import com.example.hadar.AcadeMovie.R;
+import com.example.hadar.AcadeMovie.model.DetailsValidation;
+import com.example.hadar.AcadeMovie.model.UserDetails;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;

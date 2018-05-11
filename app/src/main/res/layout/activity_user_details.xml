@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hadar.exercise02.Activity.SplashActivity">
+    tools:context="com.example.hadar.AcadeMovie.Activity.SplashActivity">
 
     <ImageView
         android:id="@+id/background"
@@ -36,7 +36,7 @@
         android:layout_alignStart="@+id/buttonSignOut"
         android:layout_alignTop="@+id/LabelUserName"
         android:paddingLeft="3dp"
-        android:text="@User Name:"
+        android:text="User Name:"
         android:textSize="16sp" />
 
 
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/TextViewUserName"
         android:layout_alignTop="@+id/LabelEmail"
-        android:text="@Email:"
+        android:text="Email:"
         android:textSize="16sp" />
 
     <Button

@@ -1,9 +1,9 @@
-package com.example.hadar.exercise02.model;
+package com.example.hadar.AcadeMovie.model;
 
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
-import com.example.hadar.exercise02.R;
+import com.example.hadar.AcadeMovie.R;
 
 import pl.droidsonroids.gif.GifTextView;
 

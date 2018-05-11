@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02;
+package com.example.hadar.AcadeMovie;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

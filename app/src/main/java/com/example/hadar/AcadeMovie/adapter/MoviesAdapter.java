@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02.adapter;
+package com.example.hadar.AcadeMovie.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,12 +18,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.example.hadar.exercise02.Activity.ReservationSummaryActivity;
-import com.example.hadar.exercise02.Activity.SelectTicketsActivity;
-import com.example.hadar.exercise02.model.Movie;
-import com.example.hadar.exercise02.R;
-import com.example.hadar.exercise02.model.ProfileWidget;
-import com.example.hadar.exercise02.model.UserDetails;
+import com.example.hadar.AcadeMovie.Activity.ReservationSummaryActivity;
+import com.example.hadar.AcadeMovie.Activity.SelectTicketsActivity;
+import com.example.hadar.AcadeMovie.model.Movie;
+import com.example.hadar.AcadeMovie.R;
+import com.example.hadar.AcadeMovie.model.ProfileWidget;
+import com.example.hadar.AcadeMovie.model.UserDetails;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;

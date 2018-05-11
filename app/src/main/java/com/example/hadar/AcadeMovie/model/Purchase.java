@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02.model;
+package com.example.hadar.AcadeMovie.model;
 
 import java.io.Serializable;
 import java.util.Map;

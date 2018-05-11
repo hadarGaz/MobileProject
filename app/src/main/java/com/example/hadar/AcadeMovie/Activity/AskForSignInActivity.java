@@ -1,10 +1,10 @@
-package com.example.hadar.exercise02.Activity;
+package com.example.hadar.AcadeMovie.Activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import com.example.hadar.exercise02.R;
+import com.example.hadar.AcadeMovie.R;
 
 public class AskForSignInActivity extends AppCompatActivity
 {
