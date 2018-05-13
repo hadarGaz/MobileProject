@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.hadar.AcadeMovie.model.GifPlayer;
 import com.example.hadar.AcadeMovie.R;
@@ -50,6 +51,8 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.w3c.dom.Text;
 
 public class SignInActivity extends Activity
 {
@@ -405,8 +408,24 @@ public class SignInActivity extends Activity
         m_googleSignInButton = findViewById(R.id.google_sign_in_button);
         m_facebookLoginButton = findViewById(R.id.buttonFacebook);
 
+        TextView signInAnonymous = findViewById(R.id.textViewSignUpAnonymously);
+        checkAndHideSkipTextView(signInAnonymous);
+
         Log.e(TAG, "findViews() <<");
 
+    }
+
+    private void checkAndHideSkipTextView(final TextView i_signInAnonymous)
+    {
+        FirebaseRemoteConfig.getInstance().fetch(0);
+        FirebaseRemoteConfig.getInstance().activateFetched();
+        String anonymousStatus = FirebaseRemoteConfig.getInstance().getString("allow_anonymous_user");
+
+        if(anonymousStatus.equals("false"))
+        {
+            i_signInAnonymous.setClickable(false);
+            i_signInAnonymous.setVisibility(TextView.GONE);
+        }
     }
 
     private void googleSignInInit()
