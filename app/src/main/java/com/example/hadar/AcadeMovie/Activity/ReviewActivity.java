@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02.Activity;
+package com.example.hadar.AcadeMovie.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,10 +7,10 @@ import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.hadar.exercise02.R;
-import com.example.hadar.exercise02.model.Movie;
-import com.example.hadar.exercise02.model.Review;
-import com.example.hadar.exercise02.model.UserDetails;
+import com.example.hadar.AcadeMovie.R;
+import com.example.hadar.AcadeMovie.model.Movie;
+import com.example.hadar.AcadeMovie.model.Review;
+import com.example.hadar.AcadeMovie.model.UserDetails;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02.Activity;
+package com.example.hadar.AcadeMovie.Activity;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -10,13 +10,14 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hadar.AcadeMovie.model.GifPlayer;
+import com.example.hadar.AcadeMovie.model.DetailsValidation;
+import com.example.hadar.AcadeMovie.model.UserDetails;
 import com.example.hadar.exercise02.Analytics.AnalyticsManager;
-import com.example.hadar.exercise02.model.GifPlayer;
 import com.example.hadar.exercise02.R;
-import com.example.hadar.exercise02.model.DetailsValidation;
-import com.example.hadar.exercise02.model.UserDetails;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -52,6 +53,8 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.w3c.dom.Text;
 
 public class SignInActivity extends Activity
 {
@@ -408,8 +411,24 @@ public class SignInActivity extends Activity
         m_googleSignInButton = findViewById(R.id.google_sign_in_button);
         m_facebookLoginButton = findViewById(R.id.buttonFacebook);
 
+        TextView signInAnonymous = findViewById(R.id.textViewSignUpAnonymously);
+        checkAndHideSkipTextView(signInAnonymous);
+
         Log.e(TAG, "findViews() <<");
 
+    }
+
+    private void checkAndHideSkipTextView(final TextView i_signInAnonymous)
+    {
+        FirebaseRemoteConfig.getInstance().fetch(0);
+        FirebaseRemoteConfig.getInstance().activateFetched();
+        String anonymousStatus = FirebaseRemoteConfig.getInstance().getString("allow_anonymous_user");
+
+        if(anonymousStatus.equals("false"))
+        {
+            i_signInAnonymous.setClickable(false);
+            i_signInAnonymous.setVisibility(TextView.GONE);
+        }
     }
 
     private void googleSignInInit()

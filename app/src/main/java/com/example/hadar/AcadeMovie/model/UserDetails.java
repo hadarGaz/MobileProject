@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02.model;
+package com.example.hadar.AcadeMovie.model;
 
 import android.net.Uri;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;

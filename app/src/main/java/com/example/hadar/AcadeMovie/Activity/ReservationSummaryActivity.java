@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02.Activity;
+package com.example.hadar.AcadeMovie.Activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -18,12 +18,12 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.example.hadar.exercise02.R;
-import com.example.hadar.exercise02.adapter.ReviewsAdapter;
-import com.example.hadar.exercise02.model.Movie;
-import com.example.hadar.exercise02.model.ProfileWidget;
-import com.example.hadar.exercise02.model.Review;
-import com.example.hadar.exercise02.model.UserDetails;
+import com.example.hadar.AcadeMovie.R;
+import com.example.hadar.AcadeMovie.adapter.ReviewsAdapter;
+import com.example.hadar.AcadeMovie.model.Movie;
+import com.example.hadar.AcadeMovie.model.ProfileWidget;
+import com.example.hadar.AcadeMovie.model.Review;
+import com.example.hadar.AcadeMovie.model.UserDetails;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;

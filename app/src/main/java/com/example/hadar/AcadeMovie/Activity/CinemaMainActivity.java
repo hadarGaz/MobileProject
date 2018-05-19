@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02.Activity;
+package com.example.hadar.AcadeMovie.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,13 +17,13 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.ImageButton;
-import com.example.hadar.exercise02.R;
-import com.example.hadar.exercise02.adapter.MoviesAdapter;
-import com.example.hadar.exercise02.adapter.MovieWithKey;
-import com.example.hadar.exercise02.model.GifPlayer;
-import com.example.hadar.exercise02.model.Movie;
-import com.example.hadar.exercise02.model.ProfileWidget;
-import com.example.hadar.exercise02.model.UserDetails;
+import com.example.hadar.AcadeMovie.R;
+import com.example.hadar.AcadeMovie.adapter.MoviesAdapter;
+import com.example.hadar.AcadeMovie.adapter.MovieWithKey;
+import com.example.hadar.AcadeMovie.model.GifPlayer;
+import com.example.hadar.AcadeMovie.model.Movie;
+import com.example.hadar.AcadeMovie.model.ProfileWidget;
+import com.example.hadar.AcadeMovie.model.UserDetails;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;

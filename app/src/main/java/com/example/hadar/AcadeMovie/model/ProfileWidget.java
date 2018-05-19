@@ -1,4 +1,4 @@
-package com.example.hadar.exercise02.model;
+package com.example.hadar.AcadeMovie.model;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,9 +9,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import com.bumptech.glide.Glide;
-import com.example.hadar.exercise02.Activity.SignInActivity;
-import com.example.hadar.exercise02.Activity.UserDetailsActivity;
-import com.example.hadar.exercise02.R;
+import com.example.hadar.AcadeMovie.Activity.SignInActivity;
+import com.example.hadar.AcadeMovie.Activity.UserDetailsActivity;
+import com.example.hadar.AcadeMovie.R;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
