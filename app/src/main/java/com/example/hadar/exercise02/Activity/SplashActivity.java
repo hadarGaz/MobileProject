@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.hadar.exercise02.Analytics.AnalyticsManager;
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.UserDetails;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -25,6 +26,7 @@ public class SplashActivity extends AppCompatActivity
 
         m_googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
         m_firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        AnalyticsManager.getInstance().init(getApplicationContext());
 
         startRunThread();
     }

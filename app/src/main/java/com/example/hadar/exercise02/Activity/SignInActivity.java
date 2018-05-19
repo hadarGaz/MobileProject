@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.hadar.exercise02.Analytics.AnalyticsManager;
 import com.example.hadar.exercise02.model.GifPlayer;
 import com.example.hadar.exercise02.R;
 import com.example.hadar.exercise02.model.DetailsValidation;
@@ -71,6 +73,7 @@ public class SignInActivity extends Activity
     private FirebaseRemoteConfig m_FirebaseRemoteConfig;
     private LoginButton m_facebookLoginButton;
     private String m_loginMethod;
+    private AnalyticsManager m_analyticsManager = AnalyticsManager.getInstance();
 
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
