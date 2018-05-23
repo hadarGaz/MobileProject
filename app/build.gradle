@@ -44,6 +44,10 @@ dependencies {
     implementation 'com.mixpanel.android:mixpanel-android:5.4.0'
     implementation 'com.flurry.android:analytics:10.0.0@aar'
     implementation 'com.appsee:appsee-android:+'
+    compile 'com.google.firebase:firebase-core:15.0.2'
+    compile 'com.google.firebase:firebase-messaging:15.0.2'
+    compile 'com.google.android.gms:play-services-location:15.0.1'
+    compile 'com.google.android.gms:play-services-places:15.0.1'
 }
 allprojects {
     repositories {
