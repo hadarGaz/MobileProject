@@ -52,14 +52,14 @@
             android:screenOrientation="portrait" />
         <activity android:name=".Activity.ReviewActivity" />
         <activity android:name=".Activity.AskForSignInActivity"></activity>
-        <meta-data android:name="com.appsee.ApiKey" android:value="e205f6807f75482f99d48cf8887b4f2b" />
+
 
         <service android:name=".model.AcademovieMessegingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-
+        <meta-data android:name="com.appsee.ApiKey" android:value="e205f6807f75482f99d48cf8887b4f2b" />
     </application>
 
 </manifest>
