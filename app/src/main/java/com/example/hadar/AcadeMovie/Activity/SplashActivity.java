@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.example.hadar.exercise02.Analytics.AnalyticsManager;
-import com.example.hadar.exercise02.R;
+import com.example.hadar.AcadeMovie.Analytics.AnalyticsManager;
+import com.example.hadar.AcadeMovie.R;
 import com.example.hadar.AcadeMovie.model.UserDetails;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;

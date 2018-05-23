@@ -14,6 +14,8 @@ public class UserDetails implements Serializable
     private String m_userName;
     private String m_userEmail;
     private String m_userPictureUrl;
+    private double m_totalPurchaseAmount=0;
+    private int m_totalTicketsCount=0;
     private Map<String,Purchase> m_moviesPurchaseMap = new HashMap<>();
 
     public UserDetails()
@@ -97,6 +99,22 @@ public class UserDetails implements Serializable
 
     public void setMoviesPurchaseMap(Map<String, Purchase> m_moviesPurchaseMap) {
         this.m_moviesPurchaseMap = m_moviesPurchaseMap;
+    }
+
+    public double getM_totalPurchaseAmount() {
+        return m_totalPurchaseAmount;
+    }
+
+    public void setM_totalPurchaseAmount(double m_totalPurchaseAmount) {
+        this.m_totalPurchaseAmount = m_totalPurchaseAmount;
+    }
+
+    public int getM_totalTicketsCount() {
+        return m_totalTicketsCount;
+    }
+
+    public void setM_totalTicketsCount(int m_totalTicketsCount) {
+        this.m_totalTicketsCount = m_totalTicketsCount;
     }
 
 }

@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.hadar.AcadeMovie.Analytics.AnalyticsManager;
 import com.example.hadar.AcadeMovie.R;
 import com.example.hadar.AcadeMovie.adapter.ReviewsAdapter;
 import com.example.hadar.AcadeMovie.model.Movie;
@@ -58,6 +59,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
     private RecyclerView m_recyclerViewMovieReviews;
     private ImageView m_imageViewMoviePic;
     private RatingBar m_ratingBarForMovie;
+    private AnalyticsManager m_analyticsManager = AnalyticsManager.getInstance();
 
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
@@ -331,6 +333,8 @@ public class ReservationSummaryActivity extends AppCompatActivity
     {
         Log.e(TAG, "onBuyMoreTicketsClick() >>");
 
+        m_analyticsManager.trackRepeatPurchase(m_movie);
+        m_analyticsManager.setUserProperty(m_userDetails);
         Intent SelectTicketsIntent = new Intent(getApplicationContext(), SelectTicketsActivity.class);
         SelectTicketsIntent.putExtra("Movie", m_movie);
         SelectTicketsIntent.putExtra("Key", m_key);

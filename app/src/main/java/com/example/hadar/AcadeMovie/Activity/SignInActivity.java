@@ -13,11 +13,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hadar.AcadeMovie.R;
 import com.example.hadar.AcadeMovie.model.GifPlayer;
 import com.example.hadar.AcadeMovie.model.DetailsValidation;
 import com.example.hadar.AcadeMovie.model.UserDetails;
-import com.example.hadar.exercise02.Analytics.AnalyticsManager;
-import com.example.hadar.exercise02.R;
+import com.example.hadar.AcadeMovie.Analytics.*;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -53,8 +53,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import org.w3c.dom.Text;
 
 public class SignInActivity extends Activity
 {
@@ -639,6 +637,8 @@ public class SignInActivity extends Activity
         m_userDetails = new UserDetails(m_firebaseUser);
         overrideUserDetailsInformation(m_loginMethod);
 
+        analyticsSignUpEvent();
+
         if(m_firebaseUser != null)
         {
             FirebaseDatabase.getInstance().getReference("Users")
@@ -853,5 +853,12 @@ public class SignInActivity extends Activity
 
         Log.e(TAG,"updateProfile <<");
 
+    }
+
+    private void analyticsSignUpEvent()
+    {
+        m_analyticsManager.trackSignupEvent(m_loginMethod);
+        m_analyticsManager.setUserID(m_firebaseUser.getUid());
+        m_analyticsManager.setUserProperty(m_userDetails);
     }
 }

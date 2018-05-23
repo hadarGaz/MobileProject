@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.ImageButton;
+
+import com.example.hadar.AcadeMovie.Analytics.AnalyticsManager;
 import com.example.hadar.AcadeMovie.R;
 import com.example.hadar.AcadeMovie.adapter.MoviesAdapter;
 import com.example.hadar.AcadeMovie.adapter.MovieWithKey;
@@ -48,6 +50,7 @@ public class CinemaMainActivity extends AppCompatActivity
     private RadioButton m_orderByPriceRadioButton;
     private RadioButton m_orderByRatingRadioButton;
     private Spinner m_sortBySpinner;
+    private AnalyticsManager m_analyticsManager = AnalyticsManager.getInstance();
 
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
@@ -412,6 +415,8 @@ public class CinemaMainActivity extends AppCompatActivity
         if(!searchString.isEmpty())
         {
             searchMovieQuery = m_allMoviesReference.orderByChild("m_name").startAt(searchString).endAt(searchString + "\uf8ff");
+            m_analyticsManager.trackSearchEvent(searchString);
+            m_analyticsManager.setUserProperty(m_userDetails);
         }
 
         else
