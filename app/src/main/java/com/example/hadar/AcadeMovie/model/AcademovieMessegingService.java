@@ -156,9 +156,7 @@ public class AcademovieMessegingService extends FirebaseMessagingService
 /*
         String m_Title = "title";
         String m_Body = "body";
-
         Log.e(TAG, "Messege Recieved >>");
-
         //////////////////////////////////////////
         String title = "title";
         String body = "body";
