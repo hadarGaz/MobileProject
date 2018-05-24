@@ -12,10 +12,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.hadar.AcadeMovie.model.GifPlayer;
+
 import com.example.hadar.AcadeMovie.R;
+import com.example.hadar.AcadeMovie.model.GifPlayer;
 import com.example.hadar.AcadeMovie.model.DetailsValidation;
 import com.example.hadar.AcadeMovie.model.UserDetails;
+import com.example.hadar.AcadeMovie.Analytics.*;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -52,8 +54,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Text;
-
 public class SignInActivity extends Activity
 {
     private static final String TAG = "SignInActivity";
@@ -74,6 +74,7 @@ public class SignInActivity extends Activity
     private FirebaseRemoteConfig m_FirebaseRemoteConfig;
     private LoginButton m_facebookLoginButton;
     private String m_loginMethod;
+    private AnalyticsManager m_analyticsManager = AnalyticsManager.getInstance();
 
     @Override
     protected void onCreate(Bundle i_savedInstanceState)
@@ -636,6 +637,8 @@ public class SignInActivity extends Activity
         m_userDetails = new UserDetails(m_firebaseUser);
         overrideUserDetailsInformation(m_loginMethod);
 
+        analyticsSignUpEvent();
+
         if(m_firebaseUser != null)
         {
             FirebaseDatabase.getInstance().getReference("Users")
@@ -850,5 +853,12 @@ public class SignInActivity extends Activity
 
         Log.e(TAG,"updateProfile <<");
 
+    }
+
+    private void analyticsSignUpEvent()
+    {
+        m_analyticsManager.trackSignupEvent(m_loginMethod);
+        m_analyticsManager.setUserID(m_firebaseUser.getUid());
+        m_analyticsManager.setUserProperty(m_userDetails);
     }
 }

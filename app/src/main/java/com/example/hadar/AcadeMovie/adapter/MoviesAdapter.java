@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.example.hadar.AcadeMovie.Activity.ReservationSummaryActivity;
 import com.example.hadar.AcadeMovie.Activity.SelectTicketsActivity;
+import com.example.hadar.AcadeMovie.Analytics.AnalyticsManager;
 import com.example.hadar.AcadeMovie.model.Movie;
 import com.example.hadar.AcadeMovie.R;
 import com.example.hadar.AcadeMovie.model.ProfileWidget;
@@ -121,6 +122,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         private String m_selectedMovieKey;
         private RatingBar m_ratingBar;
         private ImageView m_imageViewIsPurchase;
+        private AnalyticsManager m_analyticsManager = AnalyticsManager.getInstance();
 
         public MovieViewHolder(Context i_context, View i_view)
         {
@@ -236,6 +238,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                     else
                     {
                         intent = new Intent(activityContext, SelectTicketsActivity.class);
+                        m_analyticsManager.trackMovieDetailsEvent("Movie_details_view",m_selectedMovie);
+                        m_analyticsManager.setUserProperty(m_userDetails);
                     }
 
                     intent.putExtra("Movie",m_selectedMovie);

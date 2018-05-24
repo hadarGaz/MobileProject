@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.hadar.AcadeMovie.Analytics.AnalyticsManager;
 import com.example.hadar.AcadeMovie.R;
 import com.example.hadar.AcadeMovie.model.Movie;
 import com.example.hadar.AcadeMovie.model.Review;
@@ -29,6 +31,7 @@ public class ReviewActivity extends Activity
     private RatingBar m_rating;
     private Review m_userReview;
     private DatabaseReference m_movieRef;
+    private AnalyticsManager m_analyticsManager = AnalyticsManager.getInstance();
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -132,11 +135,13 @@ public class ReviewActivity extends Activity
             if (prevRating == NEW_RATING)
             {
                 handleNewReview();
+                m_analyticsManager.trackMovieNewRating(m_movie,(int) m_rating.getRating());
             }
 
             else
             {
                 handleEditedReview();
+                m_analyticsManager.trackMovieEditRating(m_movie,(int) m_rating.getRating(),prevRating);
             }
 
             m_movie.updateRating();

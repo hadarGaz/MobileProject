@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.example.hadar.AcadeMovie.Analytics.AnalyticsManager;
 import com.example.hadar.AcadeMovie.R;
 import com.example.hadar.AcadeMovie.model.Movie;
 import com.example.hadar.AcadeMovie.model.ProfileWidget;
@@ -63,6 +64,8 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     private Movie m_movie;
     private UserDetails m_userDetails;
     private String m_key;
+    private AnalyticsManager m_analyticsManager = AnalyticsManager.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -372,6 +375,9 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
             else
             {
                 setUserPurchaseMap();
+                updateUserDetailsPurchase();
+                m_analyticsManager.trackPurchase(m_movie);
+                m_analyticsManager.setUserProperty(m_userDetails);
 
                 DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
                 userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
@@ -390,6 +396,16 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         {
             Toast.makeText(this, "Please select number of tickets.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void updateUserDetailsPurchase()
+    {
+        m_userDetails.setM_totalPurchaseAmount(m_userDetails.getM_totalPurchaseAmount() +
+                Double.valueOf(m_textViewTotalPriceForMovie.getText().toString()));
+        m_userDetails.setM_totalTicketsCount(m_userDetails.getM_totalTicketsCount() +
+                m_spinnerStandard.getSelectedItemPosition() +
+                m_spinnerSoldier.getSelectedItemPosition() +
+                m_spinnerStudent.getSelectedItemPosition());
     }
 
     private void setUserPurchaseMap()
