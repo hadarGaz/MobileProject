@@ -4,15 +4,21 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import com.example.hadar.AcadeMovie.Activity.SplashActivity;
 import com.example.hadar.AcadeMovie.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 
 /**
@@ -25,6 +31,7 @@ import java.util.Map;
  * ONLY key-value push allowed.
  * 'key' = "title", 'value' = "<whatever title you wish to perform>"
  * 'key' = "body", 'value' = "<whatever body message you wish to perform>"
+ * 'key' = "image", 'value' = "<image link>"
  */
 
 
@@ -35,6 +42,7 @@ public class AcademovieMessegingService extends FirebaseMessagingService
     private String m_Title;
     private String m_Body;
     private Uri m_SoundRri;
+    private String m_ImageUrl;
 
 
     @Override
@@ -44,13 +52,15 @@ public class AcademovieMessegingService extends FirebaseMessagingService
 
         Log.e(TAG, "onMessageReceived >> [" + i_RemoteMessage + "]");
 
-        if(validateMessegeAndUpdateParams(i_RemoteMessage) == false)
+        if(validateMessageAndUpdateParams(i_RemoteMessage) == false)
         {
             Log.e(TAG, "messege invalid!");
             return;
         }
 
         updateData(i_RemoteMessage);
+
+        Bitmap image= getBitmapfromUrl(m_ImageUrl);
 
         //Creates Notification
         Intent intent = new Intent(this, SplashActivity.class);
@@ -64,13 +74,32 @@ public class AcademovieMessegingService extends FirebaseMessagingService
                 .setContentTitle(m_Title)
                 .setContentText(m_Body)
                 .setAutoCancel(true)
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(image))
                 .setContentIntent(pendingIntent)
-                .setSound(m_SoundRri);
-
+                .setSound(m_SoundRri)
+                .addAction(R.drawable.cinema, "Order Now", pendingIntent)
+                .setColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, notificationBuilder.build());
+    }
+
+    public Bitmap getBitmapfromUrl(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(input);
+            return bitmap;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        }
     }
 
     private void updateData(RemoteMessage i_remoteMessage)
@@ -83,6 +112,8 @@ public class AcademovieMessegingService extends FirebaseMessagingService
 
         m_Body= getValue("body");
         Log.e(TAG, "m_Body = "+ m_Body);
+
+        m_ImageUrl = getValue("image");
 
         updateRingtone();
     }
@@ -110,27 +141,14 @@ public class AcademovieMessegingService extends FirebaseMessagingService
         }
     }
 
-    private boolean validateMessegeAndUpdateParams(RemoteMessage i_remoteMessage)
+    private boolean validateMessageAndUpdateParams(RemoteMessage i_remoteMessage)
     {
         boolean valid=true;
 
-        if (i_remoteMessage.getNotification() == null)
+        if (i_remoteMessage.getNotification() == null || i_remoteMessage.getData().size() == 0)
         {
             valid=false;
-            Log.e(TAG, "onMessageReceived() >> Notification is empty");
-        }
-        else
-        {
-            //m_Title = i_remoteMessage.getNotification().getTitle();
-            //m_Body = i_remoteMessage.getNotification().getBody();
-            //Log.e(TAG, "onMessageReceived() >> title= " + m_Title + " , body= " + m_Body);
-        }
-
-        // Check if message contains a data payload.
-        if (i_remoteMessage.getData().size() == 0)
-        {
-            Log.e(TAG, "onMessageReceived() << No data doing nothing");
-            valid=false;
+            Log.e(TAG, "onMessageReceived() >> Invalid data");
         }
 
         return valid;
