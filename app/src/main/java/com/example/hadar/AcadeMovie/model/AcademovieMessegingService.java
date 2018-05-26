@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.example.hadar.AcadeMovie.Activity.SplashActivity;
 import com.example.hadar.AcadeMovie.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -50,6 +52,8 @@ public class AcademovieMessegingService extends FirebaseMessagingService
         super.onMessageReceived(i_RemoteMessage);
         Log.e(TAG, "onMessageReceived >> [" + i_RemoteMessage + "]");
 
+        Toast.makeText(this,"push works!", Toast.LENGTH_LONG);
+
         if(validateMessageAndUpdateParams(i_RemoteMessage) == false)
         {
             Log.e(TAG, "messege invalid!");
@@ -82,6 +86,7 @@ public class AcademovieMessegingService extends FirebaseMessagingService
 
         notificationManager.notify(1, notificationBuilder.build());
     }
+    
 
     public Bitmap getBitmapFromUrl(String imageUrl)
     {
