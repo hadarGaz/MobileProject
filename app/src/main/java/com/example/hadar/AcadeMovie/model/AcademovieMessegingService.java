@@ -44,12 +44,10 @@ public class AcademovieMessegingService extends FirebaseMessagingService
     private Uri m_SoundRri;
     private String m_ImageUrl;
 
-
     @Override
     public void onMessageReceived(RemoteMessage i_RemoteMessage)
     {
         super.onMessageReceived(i_RemoteMessage);
-
         Log.e(TAG, "onMessageReceived >> [" + i_RemoteMessage + "]");
 
         if(validateMessageAndUpdateParams(i_RemoteMessage) == false)
@@ -59,8 +57,7 @@ public class AcademovieMessegingService extends FirebaseMessagingService
         }
 
         updateData(i_RemoteMessage);
-
-        Bitmap image= getBitmapfromUrl(m_ImageUrl);
+        Bitmap image= getBitmapFromUrl(m_ImageUrl);
 
         //Creates Notification
         Intent intent = new Intent(this, SplashActivity.class);
@@ -82,11 +79,14 @@ public class AcademovieMessegingService extends FirebaseMessagingService
 
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(Context.NOTIFICATION_SERVICE);
+
         notificationManager.notify(1, notificationBuilder.build());
     }
 
-    public Bitmap getBitmapfromUrl(String imageUrl) {
-        try {
+    public Bitmap getBitmapFromUrl(String imageUrl)
+    {
+        try
+        {
             URL url = new URL(imageUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
@@ -94,11 +94,12 @@ public class AcademovieMessegingService extends FirebaseMessagingService
             InputStream input = connection.getInputStream();
             Bitmap bitmap = BitmapFactory.decodeStream(input);
             return bitmap;
-
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
+            Log.e(TAG, "Error loading image.");
             return null;
-
         }
     }
 
@@ -170,115 +171,3 @@ public class AcademovieMessegingService extends FirebaseMessagingService
         return result;
     }
 }
-
-/*
-        String m_Title = "title";
-        String m_Body = "body";
-        Log.e(TAG, "Messege Recieved >>");
-        //////////////////////////////////////////
-        String title = "title";
-        String body = "body";
-
-        int icon = R.drawable.cinema;
-        Uri soundRri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Map<String,String> data;
-        RemoteMessage.Notification notification;
-
-        Log.e(TAG, "From: " + remoteMessage.getFrom());
-
-
-        if (remoteMessage.getNotification() == null)
-        {
-            Log.e(TAG, "onMessageReceived() >> Notification is empty");
-        }
-        else
-        {
-           // notification = remoteMessage.getNotification();
-           // m_Title = notification.getTitle();
-           // m_Body = notification.getBody();
-            Log.e(TAG, "onMessageReceived() >> title= " + title + " , body= " + body);
-        }
-        // Check if message contains a data payload.
-        if (remoteMessage.getData().size() == 0)
-        {
-            Log.e(TAG, "onMessageReceived() << No data doing nothing");
-            return;
-        }
-
-
-        //parse the data
-        data = remoteMessage.getData();
-        Log.e(TAG, "Message data : " + data);
-
-
-        m_Title= getValue(data, "title");
-        Log.e(TAG, "m_Title = "+ m_Title);
-
-        m_Body= getValue(data, "body");
-        Log.e(TAG, "m_Body = "+ m_Body);
-
-
-        String value = data.get("small_icon");
-
-        if (value != null  && value.equals("alarm"))
-        {
-            icon = R.drawable.cinema;
-        }
-
-        value = data.get("sound");
-        if (value != null)
-        {
-            if (value.equals("alert"))
-            {
-                soundRri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            }
-            else if (value.equals("ringtone"))
-            {
-                soundRri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-            }
-        }
-
-        Intent intent = new Intent(this, SplashActivity.class);
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent,
-                PendingIntent.FLAG_ONE_SHOT);
-
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, null)
-                        .setContentTitle(m_Title)
-                        .setContentText(m_Body)
-                        .setContentIntent(pendingIntent)
-                        .setSmallIcon(icon)
-                        .setSound(soundRri);
-
-
-        value = data.get("action");
-        if (value != null) {
-            if (value.contains("share")) {
-                PendingIntent pendingShareIntent = PendingIntent.getActivity(this, 0 , intent,
-                        PendingIntent.FLAG_ONE_SHOT);
-                notificationBuilder.addAction(new NotificationCompat.Action(R.drawable.cinema,"Share",pendingShareIntent));
-            }
-            if (value.contains("go to sale")) {
-                PendingIntent pendingShareIntent = PendingIntent.getActivity(this, 0 , intent,
-                        PendingIntent.FLAG_ONE_SHOT);
-                notificationBuilder.addAction(new NotificationCompat.Action(R.drawable.cinema,"Go to sale!",pendingShareIntent));
-            }
-
-        }
-
-NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.notify(0 , notificationBuilder.build());
-
-                Log.e(TAG, "onMessageReceived() <<");
-
-                //////////////////////////////////////////
-
-                Log.e(TAG, "From: " + remoteMessage.getFrom());
-                Log.e(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
-
- */
