@@ -11,21 +11,14 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.example.hadar.AcadeMovie.Activity.SplashActivity;
 import com.example.hadar.AcadeMovie.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
-
-/**
- * Created by Liad Pasker on 15/05/2018.
- */
 
 /**
  * ** IMPORTANT NOTE: **
@@ -36,8 +29,7 @@ import java.util.Map;
  * 'key' = "image", 'value' = "<image link>"
  */
 
-
-public class AcademovieMessegingService extends FirebaseMessagingService
+public class AcademovieMessagingService extends FirebaseMessagingService
 {
     private static final String TAG = "FCM Service";
     private Map<String,String> m_Data;
@@ -46,24 +38,18 @@ public class AcademovieMessegingService extends FirebaseMessagingService
     private Uri m_SoundRri;
     private String m_ImageUrl;
 
+
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onMessageReceived(RemoteMessage i_RemoteMessage)
     {
         super.onMessageReceived(i_RemoteMessage);
         Log.e(TAG, "onMessageReceived >> [" + i_RemoteMessage + "]");
 
-        Toast.makeText(this,"push works!", Toast.LENGTH_LONG);
-
-        if(validateMessageAndUpdateParams(i_RemoteMessage) == false)
-        {
-            Log.e(TAG, "messege invalid!");
-            return;
-        }
-
         updateData(i_RemoteMessage);
         Bitmap image= getBitmapFromUrl(m_ImageUrl);
 
-        //Creates Notification
+        //Creating a notification
         Intent intent = new Intent(this, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -97,7 +83,8 @@ public class AcademovieMessegingService extends FirebaseMessagingService
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
+            Bitmap bitmap;
+            bitmap = BitmapFactory.decodeStream(input);
             return bitmap;
         }
         catch (Exception e)
@@ -135,7 +122,6 @@ public class AcademovieMessegingService extends FirebaseMessagingService
             {
                 m_SoundRri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             }
-
             else if (value.equals("ringtone"))
             {
                 m_SoundRri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
@@ -147,32 +133,8 @@ public class AcademovieMessegingService extends FirebaseMessagingService
         }
     }
 
-    private boolean validateMessageAndUpdateParams(RemoteMessage i_remoteMessage)
-    {
-        boolean valid=true;
-
-        if (i_remoteMessage.getNotification() == null || i_remoteMessage.getData().size() == 0)
-        {
-            valid=false;
-            Log.e(TAG, "onMessageReceived() >> Invalid data");
-        }
-
-        return valid;
-    }
-
     private String getValue(String i_Value)
     {
-        String value = m_Data.get(i_Value);
-        String result=null;
-
-        if (value != null) {
-            result = value;
-        }
-        else
-        {
-            Log.e(TAG, i_Value +" is null" );
-        }
-
-        return result;
+        return m_Data.get(i_Value);
     }
 }

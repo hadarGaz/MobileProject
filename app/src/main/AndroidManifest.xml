@@ -54,11 +54,13 @@
         <activity android:name=".Activity.AskForSignInActivity"></activity>
 
 
-        <service android:name=".model.AcademovieMessegingService">
+        <service android:name=".model.AcademovieMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+        <service android:name=".model.PushTokenHandler" />
+
         <meta-data android:name="com.appsee.ApiKey" android:value="e205f6807f75482f99d48cf8887b4f2b" />
     </application>
 
