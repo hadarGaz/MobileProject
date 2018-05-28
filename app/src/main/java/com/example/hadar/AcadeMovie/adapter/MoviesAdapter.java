@@ -238,7 +238,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                     else
                     {
                         intent = new Intent(activityContext, SelectTicketsActivity.class);
-                        m_analyticsManager.trackMovieDetailsEvent("Movie_details_view",m_selectedMovie);
+                        m_analyticsManager.trackMovieDetailsEvent(m_selectedMovie);
                         m_analyticsManager.setUserProperty(m_userDetails);
                     }
 

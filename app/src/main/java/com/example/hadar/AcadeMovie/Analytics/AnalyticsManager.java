@@ -84,8 +84,9 @@ public class AnalyticsManager {
 
     }
 
-    public void trackMovieDetailsEvent(String event , Movie i_movie)
+    public void trackMovieDetailsEvent(Movie i_movie)
     {
+        String eventName = "Movie_details_view";
         Bundle params = new Bundle();
 
         params.putString("movie_name", i_movie.getM_name());
@@ -93,7 +94,7 @@ public class AnalyticsManager {
         params.putString("movie_genre", i_movie.getM_genre());
         params.putDouble("movie_rating", i_movie.getM_averageRating());
 
-        m_firebaseAnalytics.logEvent(event,params);
+        m_firebaseAnalytics.logEvent(eventName,params);
 
         //AppSee
         Map<String, Object> eventParams = new HashMap<String, Object>();
@@ -102,7 +103,7 @@ public class AnalyticsManager {
         eventParams.put("movie_genre", i_movie.getM_genre());
         eventParams.put("movie_rating", i_movie.getM_averageRating());
 
-        Appsee.addEvent(event,eventParams);
+        Appsee.addEvent(eventName,eventParams);
     }
 
     public void trackPurchase(Movie i_movie)
@@ -184,7 +185,7 @@ public class AnalyticsManager {
         params.putString("movie_genre", i_movie.getM_genre());
         params.putDouble("movie_rating", i_movie.getM_averageRating());
 
-        m_firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE,params);
+        m_firebaseAnalytics.logEvent(eventName,params);
 
         //AppSee
         Map<String, Object> eventParams = new HashMap<String, Object>();
