@@ -49,8 +49,17 @@
         <activity
             android:name=".Activity.SelectTicketsActivity"
             android:configChanges="orientation|screenSize"
+            android:taskAffinity=""
+            android:launchMode="singleTask"
+            android:excludeFromRecents="true"
+            android:parentActivityName=".Activity.SplashActivity"
             android:screenOrientation="portrait" />
+
+
+
         <activity android:name=".Activity.ReviewActivity" />
+
+
         <activity android:name=".Activity.AskForSignInActivity"></activity>
 
 

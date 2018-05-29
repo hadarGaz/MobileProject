@@ -2,6 +2,7 @@ package com.example.hadar.AcadeMovie.model;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,8 +12,16 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+
+import com.example.hadar.AcadeMovie.Activity.SelectTicketsActivity;
 import com.example.hadar.AcadeMovie.Activity.SplashActivity;
 import com.example.hadar.AcadeMovie.R;
+import com.example.hadar.AcadeMovie.adapter.MovieWithKey;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import java.io.InputStream;
@@ -36,7 +45,9 @@ public class AcademovieMessagingService extends FirebaseMessagingService
     private String m_Title;
     private String m_Body;
     private Uri m_SoundRri;
+    private String m_movieUID = null;
     private String m_ImageUrl;
+    private Intent m_campaignIntent;
 
 
     @SuppressWarnings("ConstantConditions")
@@ -47,14 +58,17 @@ public class AcademovieMessagingService extends FirebaseMessagingService
         Log.e(TAG, "onMessageReceived >> [" + i_RemoteMessage + "]");
 
         updateData(i_RemoteMessage);
+        
+        if(m_movieUID != null)
+            handleSpecificMovieCampaign();
+        
+        else
+            handleGeneralCampaign();
+
         Bitmap image= getBitmapFromUrl(m_ImageUrl);
 
-        //Creating a notification
-        Intent intent = new Intent(this, SplashActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1,
-                intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                m_campaignIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,null)
                 .setSmallIcon(R.drawable.cinema)
@@ -72,7 +86,37 @@ public class AcademovieMessagingService extends FirebaseMessagingService
 
         notificationManager.notify(1, notificationBuilder.build());
     }
-    
+
+    private void handleGeneralCampaign()
+    {
+        m_campaignIntent = new Intent(this, SplashActivity.class);
+        m_campaignIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    }
+
+    private void handleSpecificMovieCampaign()
+    {
+        m_campaignIntent = new Intent(this, SelectTicketsActivity.class);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Movie/"+m_movieUID);
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                MovieWithKey movieWithKey = new MovieWithKey(dataSnapshot.getValue((Movie.class)), dataSnapshot.getKey());
+                m_campaignIntent.putExtra("Movie", movieWithKey.getMovie());
+                m_campaignIntent.putExtra("Key", movieWithKey.getKey());
+                m_campaignIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Log.e(TAG, "MOVIE NAME: "+movieWithKey.getMovie().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+    }
 
     public Bitmap getBitmapFromUrl(String imageUrl)
     {
@@ -107,6 +151,8 @@ public class AcademovieMessagingService extends FirebaseMessagingService
         Log.e(TAG, "m_Body = "+ m_Body);
 
         m_ImageUrl = getValue("image");
+
+        m_movieUID = getValue("movieuid");
 
         updateRingtone();
     }
