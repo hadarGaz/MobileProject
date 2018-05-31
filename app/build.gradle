@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.example.hadar.exercise02"
+        applicationId "com.project.hadar.AcadeMovie"
         minSdkVersion 24
         targetSdkVersion 26
         versionCode 1

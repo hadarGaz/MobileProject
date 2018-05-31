@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:532986331050:android:1c46be2a97dc3311",
         "android_client_info": {
-          "package_name": "com.example.hadar.exercise02"
+          "package_name": "com.project.hadar.AcadeMovie"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "532986331050-4upmj99auabk9mab1t5napqpvq413ctc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.hadar.exercise02",
+            "package_name": "com.project.hadar.AcadeMovie",
             "certificate_hash": "78bf9600638c76cd73be4efa8498b525174cfcc0"
           }
         },
@@ -26,7 +26,7 @@
           "client_id": "532986331050-gpnm7rhjv92hmeqf4ao4u43eudra29og.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.hadar.exercise02",
+            "package_name": "com.project.hadar.AcadeMovie",
             "certificate_hash": "d352f6e07cb9a1043d4243556d81c27d048f50c3"
           }
         },
@@ -34,7 +34,7 @@
           "client_id": "532986331050-g49enna6r17mp9mpmsfc7sfkvm5ph73c.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.hadar.exercise02",
+            "package_name": "com.project.hadar.AcadeMovie",
             "certificate_hash": "59abf750b864727e25174309e89e93ec31156112"
           }
         },
