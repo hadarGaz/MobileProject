@@ -4,7 +4,7 @@
     <string name="fb_login_protocol_scheme">fb582381345488259</string>
     <string name="forgot_password"><u>Forgot password?</u></string>
     <string name="sign_up"><u>Sign Up!</u></string>
-    <string name="Sign_in_anonymously"><u>Sign in anonymously</u></string>
+    <string name="skip"><u>Skip</u></string>
     <string name="please_sign_in">Please Sign In...</string>
     <string name="in_order_to_make_a_purchase_nyou_need_to_sign_in_your_account">In order to make a purchase You need to sign in your account.</string>
     <string name="sign_in">Sign-In</string>

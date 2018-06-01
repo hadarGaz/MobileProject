@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/exercise2_main"
     tools:context="com.project.hadar.AcadeMovie.Activity.SignInActivity">
-
-
-    <ImageView
-        android:id="@+id/imgView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:src="@mipmap/exercise2_main"></ImageView>
 
 
     <EditText
@@ -48,7 +40,8 @@
         android:clickable="true"
         android:linksClickable="true"
         android:onClick="OnForgotPasswordClick"
-        android:text="@string/forgot_password" />
+        android:text="@string/forgot_password"
+        android:textColor="@android:color/holo_blue_bright" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_sign_in_button"
@@ -57,18 +50,6 @@
         android:layout_below="@+id/buttonFacebook"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="-179dp" />
-
-
-    <Button
-        android:id="@+id/SignInButton"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/textViewForgotPassword"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="23dp"
-        android:background="@drawable/button_bg"
-        android:onClick="onSignInClick"
-        android:text="Sign-in" />
 
 
     <com.facebook.login.widget.LoginButton
@@ -118,7 +99,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="13dp"
         android:onClick="onSignInAnonymouslyClick"
-        android:text="Skip"
+        android:text="@string/skip"
         android:textColor="@android:color/holo_blue_bright"
         android:visibility="visible" />
 
@@ -144,6 +125,30 @@
         android:layout_toLeftOf="@+id/editTextPassword"
         android:paddingRight="5dp"
         android:src="@mipmap/pass3_icon" />
+
+    <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_width="139dp"
+        android:layout_height="57dp"
+        android:layout_alignEnd="@+id/google_sign_in_button"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="224dp"
+        android:background="@android:color/black"
+        android:onClick="onSignInClick"
+        android:scaleType="fitXY"
+        android:src="@mipmap/movie_white" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/textViewSignUpAnonymously"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="245dp"
+        android:text="Sign-in"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 
 </android.widget.RelativeLayout>
