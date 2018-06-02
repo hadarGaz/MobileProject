@@ -390,6 +390,10 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
 
                 DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
                 userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
+                String productName = m_movie.getM_name();
+
+                String sku = BillingClient.SkuType.INAPP;
+                m_BillingManager.initiatePurchaseFlow(productName, sku);
 
                 Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
                 reservationSummaryIntent.putExtra("Movie", m_movie);
