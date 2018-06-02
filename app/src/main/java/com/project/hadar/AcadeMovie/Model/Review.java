@@ -1,4 +1,4 @@
-package com.project.hadar.AcadeMovie.model;
+package com.project.hadar.AcadeMovie.Model;
 
 
 import java.io.Serializable;

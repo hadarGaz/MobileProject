@@ -1,6 +1,6 @@
-package com.project.hadar.AcadeMovie.adapter;
+package com.project.hadar.AcadeMovie.Adapter;
 
-import com.project.hadar.AcadeMovie.model.Movie;
+import com.project.hadar.AcadeMovie.Model.Movie;
 
 public class MovieWithKey
 {

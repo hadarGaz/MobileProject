@@ -1,6 +1,5 @@
-package com.project.hadar.AcadeMovie.adapter;
+package com.project.hadar.AcadeMovie.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,10 +20,9 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.project.hadar.AcadeMovie.Activity.ReservationSummaryActivity;
 import com.project.hadar.AcadeMovie.Activity.SelectTicketsActivity;
 import com.project.hadar.AcadeMovie.Analytics.AnalyticsManager;
-import com.project.hadar.AcadeMovie.model.Movie;
+import com.project.hadar.AcadeMovie.Model.Movie;
 import com.project.hadar.AcadeMovie.R;
-import com.project.hadar.AcadeMovie.model.ProfileWidget;
-import com.project.hadar.AcadeMovie.model.UserDetails;
+import com.project.hadar.AcadeMovie.Model.UserDetails;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;

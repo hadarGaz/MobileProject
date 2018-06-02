@@ -3,8 +3,8 @@ package com.project.hadar.AcadeMovie.Analytics;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.project.hadar.AcadeMovie.model.Movie;
-import com.project.hadar.AcadeMovie.model.UserDetails;
+import com.project.hadar.AcadeMovie.Model.Movie;
+import com.project.hadar.AcadeMovie.Model.UserDetails;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.HashMap;

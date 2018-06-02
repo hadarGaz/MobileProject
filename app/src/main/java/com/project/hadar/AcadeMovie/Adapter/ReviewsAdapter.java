@@ -1,4 +1,4 @@
-package com.project.hadar.AcadeMovie.adapter;
+package com.project.hadar.AcadeMovie.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +10,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.project.hadar.AcadeMovie.R;
-import com.project.hadar.AcadeMovie.model.Review;
+import com.project.hadar.AcadeMovie.Model.Review;
 
 import java.util.List;
 

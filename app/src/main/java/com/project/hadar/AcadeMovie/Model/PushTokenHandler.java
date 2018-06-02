@@ -1,4 +1,4 @@
-package com.project.hadar.AcadeMovie.model;
+package com.project.hadar.AcadeMovie.Model;
 
 import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;

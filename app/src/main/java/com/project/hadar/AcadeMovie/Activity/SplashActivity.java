@@ -6,8 +6,8 @@ import android.os.Bundle;
 
 import com.project.hadar.AcadeMovie.Analytics.AnalyticsManager;
 import com.project.hadar.AcadeMovie.R;
-import com.project.hadar.AcadeMovie.model.GifPlayer;
-import com.project.hadar.AcadeMovie.model.UserDetails;
+import com.project.hadar.AcadeMovie.Model.GifPlayer;
+import com.project.hadar.AcadeMovie.Model.UserDetails;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;

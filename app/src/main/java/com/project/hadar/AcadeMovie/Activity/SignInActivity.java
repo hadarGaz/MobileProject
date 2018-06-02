@@ -14,9 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.project.hadar.AcadeMovie.R;
-import com.project.hadar.AcadeMovie.model.GifPlayer;
-import com.project.hadar.AcadeMovie.model.DetailsValidation;
-import com.project.hadar.AcadeMovie.model.UserDetails;
+import com.project.hadar.AcadeMovie.Model.GifPlayer;
+import com.project.hadar.AcadeMovie.Model.DetailsValidation;
+import com.project.hadar.AcadeMovie.Model.UserDetails;
 import com.project.hadar.AcadeMovie.Analytics.*;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;

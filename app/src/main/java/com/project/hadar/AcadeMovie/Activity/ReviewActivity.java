@@ -10,9 +10,9 @@ import android.widget.Toast;
 
 import com.project.hadar.AcadeMovie.Analytics.AnalyticsManager;
 import com.project.hadar.AcadeMovie.R;
-import com.project.hadar.AcadeMovie.model.Movie;
-import com.project.hadar.AcadeMovie.model.Review;
-import com.project.hadar.AcadeMovie.model.UserDetails;
+import com.project.hadar.AcadeMovie.Model.Movie;
+import com.project.hadar.AcadeMovie.Model.Review;
+import com.project.hadar.AcadeMovie.Model.UserDetails;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

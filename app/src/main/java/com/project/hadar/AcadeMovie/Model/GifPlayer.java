@@ -1,4 +1,4 @@
-package com.project.hadar.AcadeMovie.model;
+package com.project.hadar.AcadeMovie.Model;
 
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;

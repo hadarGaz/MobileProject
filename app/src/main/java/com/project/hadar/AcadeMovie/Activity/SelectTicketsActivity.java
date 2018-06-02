@@ -12,13 +12,16 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.android.billingclient.api.BillingClient;
 import com.bumptech.glide.Glide;
 import com.project.hadar.AcadeMovie.Analytics.AnalyticsManager;
+import com.project.hadar.AcadeMovie.Model.BillingManager;
+import com.project.hadar.AcadeMovie.Model.MoviePurchase;
 import com.project.hadar.AcadeMovie.R;
-import com.project.hadar.AcadeMovie.model.Movie;
-import com.project.hadar.AcadeMovie.model.ProfileWidget;
-import com.project.hadar.AcadeMovie.model.Purchase;
-import com.project.hadar.AcadeMovie.model.UserDetails;
+import com.project.hadar.AcadeMovie.Model.Movie;
+import com.project.hadar.AcadeMovie.Model.ProfileWidget;
+import com.project.hadar.AcadeMovie.Model.Purchase;
+import com.project.hadar.AcadeMovie.Model.UserDetails;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -32,11 +35,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class SelectTicketsActivity extends YouTubeBaseActivity{
-
+public class SelectTicketsActivity extends YouTubeBaseActivity implements BillingManager.BillingUpdatesListener
+{
     private static final String TAG = "SelectTicketsActivity";
     private static final int MAX_CHAR = 5;
     private static final String STANDARD = "Standard";
@@ -65,6 +72,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     private UserDetails m_userDetails;
     private String m_key;
     private AnalyticsManager m_analyticsManager = AnalyticsManager.getInstance();
+    private BillingManager m_BillingManager;
 
 
     @Override
@@ -75,12 +83,12 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_tickets);
 
+        m_BillingManager = new BillingManager(this, this);
         findViews();
         getIntentInput();
 
         //get m_userDetails from DB (only after getting m_userDetails we can continue to other function)
         getUserDetailsAndContinueOnCreate();
-
 
         Log.e(TAG, "onCreate() << ");
     }
@@ -119,7 +127,8 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         storageReference.child("Movie Pictures/" + m_movie.getM_thumbImage())
                 .getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                .addOnSuccessListener(new OnSuccessListener<Uri>()
+                {
                     @Override
                     public void onSuccess(Uri uri) {
                         Log.e(TAG,"pic src= "+ uri.toString());
@@ -463,5 +472,87 @@ public class SelectTicketsActivity extends YouTubeBaseActivity{
     private void displayUserImage()
     {
         ProfileWidget.displayUserImage(getApplicationContext(), m_profileWidgetImageButton, m_userDetails);
+    }
+
+    @Override
+    public void onBillingClientSetupFinished()
+    {
+        Log.e(TAG,"onBillingSetupFinished() >>");
+
+        Log.e(TAG,"onBillingSetupFinished() <<");
+    }
+
+    @Override
+    public void onConsumeFinished(String token, @BillingClient.BillingResponse int result)
+    {
+        Log.e(TAG,"onConsumeFinished() >> result:"+result+" ,token:"+token);
+
+        if(result == BillingClient.BillingResponse.OK)
+        {
+            Toast.makeText(getApplicationContext(), "Purchase completed successfully!", Toast.LENGTH_LONG).show();
+        }
+
+        else
+        {
+            Toast.makeText(getApplicationContext(), "Purchase failed.", Toast.LENGTH_LONG).show();
+        }
+
+        Log.e(TAG,"onConsumeFinished() <<");
+    }
+
+    @Override
+    public void onPurchasesUpdated(int resultCode, List<com.android.billingclient.api.Purchase> purchases)
+    {
+        Log.e(TAG,"onPurchasesUpdated() >> ");
+
+        if (resultCode != BillingClient.BillingResponse.OK)
+        {
+            Log.e(TAG,"onPurchasesUpdated() << Error:" + resultCode);
+            return;
+        }
+
+        for (com.android.billingclient.api.Purchase purchase : purchases)
+        {
+            Log.e(TAG, "onPurchasesUpdated() >> " + purchase.toString());
+
+            Toast.makeText(this, "onPurchasesUpdated() >> " + purchase.getSku(), Toast.LENGTH_LONG).show();
+
+            if (purchase.getSku().contains("credit"))
+            {
+                Log.e(TAG, "onPurchasesUpdated() >> consuming " + purchase.getSku());
+                //Only consume  one time product (subscription can't be consumed).
+                m_BillingManager.consumeAsync(purchase.getPurchaseToken());
+                updateUserPurchaseOnDatabase(purchase);
+            }
+        }
+
+        Log.e(TAG,"onPurchasesUpdated() <<");
+    }
+
+    private void updateUserPurchaseOnDatabase(com.android.billingclient.api.Purchase purchase)
+    {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        MoviePurchase newPurchase = new MoviePurchase();
+        newPurchase.setTime(Calendar.getInstance().getTime().toString());
+        newPurchase.setSku(purchase.getSku());
+        newPurchase.setOrderId(purchase.getOrderId());
+        newPurchase.setToken(purchase.getPurchaseToken());
+        newPurchase.setAmount(m_spinnerStandard.getSelectedItemPosition() + m_spinnerStudent.getSelectedItemPosition() + m_spinnerSoldier.getSelectedItemPosition());
+
+        if(m_userDetails.getM_MoviesPurchases() == null)
+        {
+            List<MoviePurchase> moviePurchasesList = new ArrayList<>();
+            moviePurchasesList.add(newPurchase);
+            m_userDetails.setM_MoviesPurchases(moviePurchasesList);
+        }
+
+        else
+        {
+            m_userDetails.getM_MoviesPurchases().add(newPurchase);
+        }
+
+        userRef.child("MoviesPurchases").setValue(m_userDetails.getM_MoviesPurchases());
     }
 }

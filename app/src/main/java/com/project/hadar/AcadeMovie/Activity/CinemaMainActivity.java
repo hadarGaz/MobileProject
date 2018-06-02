@@ -20,12 +20,12 @@ import android.widget.ImageButton;
 
 import com.project.hadar.AcadeMovie.Analytics.AnalyticsManager;
 import com.project.hadar.AcadeMovie.R;
-import com.project.hadar.AcadeMovie.adapter.MoviesAdapter;
-import com.project.hadar.AcadeMovie.adapter.MovieWithKey;
-import com.project.hadar.AcadeMovie.model.GifPlayer;
-import com.project.hadar.AcadeMovie.model.Movie;
-import com.project.hadar.AcadeMovie.model.ProfileWidget;
-import com.project.hadar.AcadeMovie.model.UserDetails;
+import com.project.hadar.AcadeMovie.Adapter.MoviesAdapter;
+import com.project.hadar.AcadeMovie.Adapter.MovieWithKey;
+import com.project.hadar.AcadeMovie.Model.GifPlayer;
+import com.project.hadar.AcadeMovie.Model.Movie;
+import com.project.hadar.AcadeMovie.Model.ProfileWidget;
+import com.project.hadar.AcadeMovie.Model.UserDetails;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;

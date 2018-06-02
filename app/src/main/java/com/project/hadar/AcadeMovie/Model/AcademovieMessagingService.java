@@ -1,8 +1,7 @@
-package com.project.hadar.AcadeMovie.model;
+package com.project.hadar.AcadeMovie.Model;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,7 +15,7 @@ import android.util.Log;
 import com.project.hadar.AcadeMovie.Activity.SelectTicketsActivity;
 import com.project.hadar.AcadeMovie.Activity.SplashActivity;
 import com.project.hadar.AcadeMovie.R;
-import com.project.hadar.AcadeMovie.adapter.MovieWithKey;
+import com.project.hadar.AcadeMovie.Adapter.MovieWithKey;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

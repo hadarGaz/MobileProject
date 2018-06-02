@@ -1,10 +1,9 @@
-package com.project.hadar.AcadeMovie.model;
+package com.project.hadar.AcadeMovie.Model;
 
 import android.net.Uri;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseUser;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +16,17 @@ public class UserDetails implements Serializable
     private double m_totalPurchaseAmount=0;
     private int m_totalTicketsCount=0;
     private Map<String,Purchase> m_moviesPurchaseMap = new HashMap<>();
+    private List<MoviePurchase> m_MoviesPurchases = null;
+
+    public List<MoviePurchase> getM_MoviesPurchases()
+    {
+        return m_MoviesPurchases;
+    }
+
+    public void setM_MoviesPurchases(List<MoviePurchase> i_MoviesPurchases)
+    {
+        this.m_MoviesPurchases = i_MoviesPurchases;
+    }
 
     public UserDetails()
     {
