@@ -67,6 +67,7 @@ public class CinemaMainActivity extends AppCompatActivity
 
         getUserDetailsAndContinueOnCreate();
 
+        GifPlayer.stopGif();
         GifPlayer.setCinemaAnim(true);
         Log.e(TAG, "gif source= "+ GifPlayer.s_LoadingBar.getId());
         GifPlayer.playGif();
@@ -90,6 +91,7 @@ public class CinemaMainActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface i_dialogInterface, int i_num)
                     {
+                        GifPlayer.stopGif();
                         Intent exitIntent = new Intent(Intent.ACTION_MAIN);
                         exitIntent.addCategory(Intent.CATEGORY_HOME);
                         exitIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

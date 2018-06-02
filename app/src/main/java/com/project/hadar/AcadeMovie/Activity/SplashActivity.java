@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.project.hadar.AcadeMovie.Analytics.AnalyticsManager;
 import com.project.hadar.AcadeMovie.R;
+import com.project.hadar.AcadeMovie.model.GifPlayer;
 import com.project.hadar.AcadeMovie.model.UserDetails;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -24,6 +25,11 @@ public class SplashActivity extends AppCompatActivity
         super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+
+        GifPlayer.s_LoadingBar =findViewById(R.id.counter);
+        GifPlayer.setSplashAnim(true);
+        GifPlayer.playGif();
+
         m_googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
         m_firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         AnalyticsManager.getInstance().init(getApplicationContext());
@@ -41,6 +47,7 @@ public class SplashActivity extends AppCompatActivity
                 try
                 {
                     sleep(3000);
+
                     moveToNextActivity();
                 }
 
@@ -53,6 +60,7 @@ public class SplashActivity extends AppCompatActivity
 
         myThread.start();
     }
+
 
     private void moveToNextActivity()
     {
@@ -73,7 +81,6 @@ public class SplashActivity extends AppCompatActivity
         }
         else
             nextActivityIntent = new Intent(getApplicationContext(), SignInActivity.class);
-
 
         startActivity(nextActivityIntent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

@@ -84,6 +84,7 @@ public class SignInActivity extends Activity
         super.onCreate(i_savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        GifPlayer.stopGif();
         m_sourceActivity = getIntent().getStringExtra("Source Activity");
         m_firebaseAuth = FirebaseAuth.getInstance();
         m_FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
