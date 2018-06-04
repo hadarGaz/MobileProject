@@ -242,36 +242,6 @@
         app:layout_constraintStart_toEndOf="@+id/textViewSoldierPrice"
         app:layout_constraintTop_toBottomOf="@+id/SpinnerStudent" />
 
-    <TextView
-        android:id="@+id/textViewTotalPriceStandard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="34dp"
-        android:layout_marginTop="17dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/SpinnerStandard"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
-
-    <TextView
-        android:id="@+id/textViewTotalPriceStudent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="20dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/SpinnerStudent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTotalPriceStandard" />
-
-    <TextView
-        android:id="@+id/textViewTotalPriceSoldier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="27dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/SpinnerSoldieer"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTotalPriceStudent" />
-
     <View
         android:id="@+id/viewr"
         android:layout_width="320dp"
@@ -287,10 +257,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
-        android:layout_marginTop="20dp"
         android:text="TextView"
         app:layout_constraintStart_toEndOf="@+id/SpinnerSoldieer"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTotalPriceSoldier" />
+        tools:layout_editor_absoluteY="502dp" />
 
     <ImageButton
         android:id="@+id/imageButton"

@@ -13,6 +13,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.SkuDetails;
+import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.bumptech.glide.Glide;
 import com.project.hadar.AcadeMovie.Analytics.AnalyticsManager;
 import com.project.hadar.AcadeMovie.Model.BillingManager;
@@ -61,11 +64,13 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
     private TextView m_textViewStandardPrice;
     private TextView m_textViewStudentPrice;
     private TextView m_textViewSoldierPrice;
+    private String m_ItemPrice;
     private TextView m_textViewTotalPriceStandard;
     private TextView m_textViewTotalPriceStudent;
     private TextView m_textViewTotalPriceSoldier;
     private TextView m_textViewTotalPriceForMovie;
     private Spinner m_spinnerStandard;
+    SkuDetailsResponseListener m_ResponseListener;
     private Spinner m_spinnerStudent;
     private Spinner m_spinnerSoldier;
     private Movie m_movie;
@@ -89,6 +94,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
 
         //get m_userDetails from DB (only after getting m_userDetails we can continue to other function)
         getUserDetailsAndContinueOnCreate();
+        getItemPrice();
 
         Log.e(TAG, "onCreate() << ");
     }
@@ -214,11 +220,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
         m_textViewStudentPrice = findViewById(R.id.textViewStudentPrice);
         m_textViewSoldierPrice = findViewById(R.id.textViewSoldierPrice);
         m_textViewTotalPriceForMovie = findViewById(R.id.textViewTotalPriceForMovie);
-        m_textViewTotalPriceStandard = findViewById(R.id.textViewTotalPriceStandard);
-        m_textViewTotalPriceStudent = findViewById(R.id.textViewTotalPriceStudent);
-        m_textViewTotalPriceSoldier = findViewById(R.id.textViewTotalPriceSoldier);
         m_youtubePlayButton=findViewById(R.id.youtube_play_button);
-
 
         Log.e(TAG, "findViews() << ");
     }
@@ -322,7 +324,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
     {
         Log.e(TAG, "spinnerItemSelected() >> " +i_TicketType);
 
-        TextView textView = null;
+        /*TextView textView = null;
         double pricePerTicketType = 0;
         switch (i_TicketType)
         {
@@ -354,10 +356,50 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
                 Double.valueOf(m_textViewSoldierPrice.getText().toString());
 
 
-        m_textViewTotalPriceForMovie.setText(limitStrToMaxChar(String.valueOf(totalPrice)));
+        m_textViewTotalPriceForMovie.setText(limitStrToMaxChar(String.valueOf(totalPrice)));*/
+
+        int totalTickets = m_spinnerStandard.getSelectedItemPosition() + m_spinnerStudent.getSelectedItemPosition()
+                          +m_spinnerSoldier.getSelectedItemPosition();
+
+        String newPrice = totalTickets == 0 ? "0" : m_ItemPrice;
+
+        m_textViewTotalPriceForMovie.setText(newPrice);
 
         Log.e(TAG, "spinnerItemSelected() >> " +i_TicketType);
 
+    }
+
+    private void getItemPrice()
+    {
+        m_ResponseListener = new SkuDetailsResponseListener()
+        {
+            @Override
+            public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList)
+            {
+                if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null)
+                {
+                    for (SkuDetails details : skuDetailsList)
+                    {
+                       m_ItemPrice = details.getPrice();
+                    }
+                }
+            }
+        };
+
+        BillingClient billingClient = m_BillingManager.getBillingClient();
+
+        List<String> skuList = new ArrayList<>(1);
+        skuList.add(m_movie.getM_name().toLowerCase());
+
+        SkuDetailsParams skuDetailsParams = SkuDetailsParams.newBuilder().setSkusList(skuList).build();
+        billingClient.querySkuDetailsAsync(skuDetailsParams,
+                new SkuDetailsResponseListener()
+                {
+                    @Override
+                    public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
+                        m_ResponseListener.onSkuDetailsResponse(responseCode, skuDetailsList);
+                    }
+                });
     }
 
     private boolean didUserPickAnyTicket()
@@ -390,16 +432,10 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
 
                 DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
                 userRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(m_userDetails);
+
                 String productName = m_movie.getM_name();
-
                 String sku = BillingClient.SkuType.INAPP;
-                m_BillingManager.initiatePurchaseFlow(productName, sku);
-
-                Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
-                reservationSummaryIntent.putExtra("Movie", m_movie);
-                reservationSummaryIntent.putExtra("Key", m_key);
-                startActivity(reservationSummaryIntent);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                m_BillingManager.initiatePurchaseFlow(productName.toLowerCase() + "_3", sku);
 
                 Log.e(TAG, "onClickBuyTickets() << ");
             }
@@ -504,6 +540,15 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
         Log.e(TAG,"onConsumeFinished() <<");
     }
 
+    private void moveToReservationSummaryActivity()
+    {
+        Intent reservationSummaryIntent = new Intent(getApplicationContext(), ReservationSummaryActivity.class);
+        reservationSummaryIntent.putExtra("Movie", m_movie);
+        reservationSummaryIntent.putExtra("Key", m_key);
+        startActivity(reservationSummaryIntent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
     @Override
     public void onPurchasesUpdated(int resultCode, List<com.android.billingclient.api.Purchase> purchases)
     {
@@ -518,21 +563,18 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
         for (com.android.billingclient.api.Purchase purchase : purchases)
         {
             Log.e(TAG, "onPurchasesUpdated() >> " + purchase.toString());
-
             Toast.makeText(this, "onPurchasesUpdated() >> " + purchase.getSku(), Toast.LENGTH_LONG).show();
-
-            if (purchase.getSku().contains("credit"))
-            {
-                Log.e(TAG, "onPurchasesUpdated() >> consuming " + purchase.getSku());
-                //Only consume  one time product (subscription can't be consumed).
-                m_BillingManager.consumeAsync(purchase.getPurchaseToken());
-                updateUserPurchaseOnDatabase(purchase);
-            }
+            Log.e(TAG, "onPurchasesUpdated() >> consuming " + purchase.getSku());
+            m_BillingManager.consumeAsync(purchase.getPurchaseToken());
+            updateUserPurchaseOnDatabase(purchase);
         }
+
+        moveToReservationSummaryActivity();
 
         Log.e(TAG,"onPurchasesUpdated() <<");
     }
 
+    @SuppressWarnings("all")
     private void updateUserPurchaseOnDatabase(com.android.billingclient.api.Purchase purchase)
     {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users")
