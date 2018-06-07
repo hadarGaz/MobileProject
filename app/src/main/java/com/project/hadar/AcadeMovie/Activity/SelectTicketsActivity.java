@@ -13,9 +13,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.bumptech.glide.Glide;
 import com.project.hadar.AcadeMovie.Analytics.AnalyticsManager;
 import com.project.hadar.AcadeMovie.Model.BillingManager;
@@ -64,13 +61,9 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
     private TextView m_textViewStandardPrice;
     private TextView m_textViewStudentPrice;
     private TextView m_textViewSoldierPrice;
-    private String m_ItemPrice;
-    private TextView m_textViewTotalPriceStandard;
-    private TextView m_textViewTotalPriceStudent;
-    private TextView m_textViewTotalPriceSoldier;
+    private String m_ItemPrice = "5.99";
     private TextView m_textViewTotalPriceForMovie;
     private Spinner m_spinnerStandard;
-    SkuDetailsResponseListener m_ResponseListener;
     private Spinner m_spinnerStudent;
     private Spinner m_spinnerSoldier;
     private Movie m_movie;
@@ -78,7 +71,6 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
     private String m_key;
     private AnalyticsManager m_analyticsManager = AnalyticsManager.getInstance();
     private BillingManager m_BillingManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -94,7 +86,6 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
 
         //get m_userDetails from DB (only after getting m_userDetails we can continue to other function)
         getUserDetailsAndContinueOnCreate();
-        getItemPrice();
 
         Log.e(TAG, "onCreate() << ");
     }
@@ -257,8 +248,8 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
         Log.e(TAG, "setPrices() >> ");
 
         m_textViewStandardPrice.setText(limitStrToMaxChar(String.valueOf(m_movie.getM_price())));
-        m_textViewStudentPrice.setText(limitStrToMaxChar(String.valueOf(m_movie.getM_price()-5)));
-        m_textViewSoldierPrice.setText(limitStrToMaxChar(String.valueOf(m_movie.getM_price()-10)));
+        m_textViewStudentPrice.setText(limitStrToMaxChar(String.valueOf(m_movie.getM_price())));
+        m_textViewSoldierPrice.setText(limitStrToMaxChar(String.valueOf(m_movie.getM_price())));
 
         Log.e(TAG, "setPrices() << ");
 
@@ -324,40 +315,6 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
     {
         Log.e(TAG, "spinnerItemSelected() >> " +i_TicketType);
 
-        /*TextView textView = null;
-        double pricePerTicketType = 0;
-        switch (i_TicketType)
-        {
-            case STANDARD:
-                pricePerTicketType = (Double.valueOf(m_textViewStandardPrice.getText().toString()));
-                textView = m_textViewTotalPriceStandard;
-                break;
-            case STUDENT:
-                pricePerTicketType = (Double.valueOf(m_textViewStudentPrice.getText().toString()));
-                textView = m_textViewTotalPriceStudent;
-                break;
-            case SOLDIER:
-                pricePerTicketType = (Double.valueOf(m_textViewSoldierPrice.getText().toString()));
-                textView = m_textViewTotalPriceSoldier;
-                break;
-        }
-
-        double priceTotalTicketType = pricePerTicketType * i_Quantity;
-        if(textView != null)
-        {
-            textView.setText(limitStrToMaxChar(String.valueOf(priceTotalTicketType)));
-        }
-
-        double totalPrice = m_spinnerStandard.getSelectedItemPosition() *
-                Double.valueOf(m_textViewStandardPrice.getText().toString());
-        totalPrice = totalPrice + m_spinnerStudent.getSelectedItemPosition() *
-                Double.valueOf(m_textViewStudentPrice.getText().toString());
-        totalPrice = totalPrice + m_spinnerSoldier.getSelectedItemPosition() *
-                Double.valueOf(m_textViewSoldierPrice.getText().toString());
-
-
-        m_textViewTotalPriceForMovie.setText(limitStrToMaxChar(String.valueOf(totalPrice)));*/
-
         int totalTickets = m_spinnerStandard.getSelectedItemPosition() + m_spinnerStudent.getSelectedItemPosition()
                           +m_spinnerSoldier.getSelectedItemPosition();
 
@@ -367,39 +324,6 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
 
         Log.e(TAG, "spinnerItemSelected() >> " +i_TicketType);
 
-    }
-
-    private void getItemPrice()
-    {
-        m_ResponseListener = new SkuDetailsResponseListener()
-        {
-            @Override
-            public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList)
-            {
-                if (responseCode == BillingClient.BillingResponse.OK && skuDetailsList != null)
-                {
-                    for (SkuDetails details : skuDetailsList)
-                    {
-                       m_ItemPrice = details.getPrice();
-                    }
-                }
-            }
-        };
-
-        BillingClient billingClient = m_BillingManager.getBillingClient();
-
-        List<String> skuList = new ArrayList<>(1);
-        skuList.add(m_movie.getM_name().toLowerCase());
-
-        SkuDetailsParams skuDetailsParams = SkuDetailsParams.newBuilder().setSkusList(skuList).build();
-        billingClient.querySkuDetailsAsync(skuDetailsParams,
-                new SkuDetailsResponseListener()
-                {
-                    @Override
-                    public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
-                        m_ResponseListener.onSkuDetailsResponse(responseCode, skuDetailsList);
-                    }
-                });
     }
 
     private boolean didUserPickAnyTicket()
@@ -435,7 +359,7 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
 
                 String productName = m_movie.getM_name();
                 String sku = BillingClient.SkuType.INAPP;
-                m_BillingManager.initiatePurchaseFlow(productName.toLowerCase() + "_3", sku);
+                m_BillingManager.initiatePurchaseFlow(productName.toLowerCase() + "_purchase", sku);
 
                 Log.e(TAG, "onClickBuyTickets() << ");
             }
@@ -563,7 +487,6 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
         for (com.android.billingclient.api.Purchase purchase : purchases)
         {
             Log.e(TAG, "onPurchasesUpdated() >> " + purchase.toString());
-            Toast.makeText(this, "onPurchasesUpdated() >> " + purchase.getSku(), Toast.LENGTH_LONG).show();
             Log.e(TAG, "onPurchasesUpdated() >> consuming " + purchase.getSku());
             m_BillingManager.consumeAsync(purchase.getPurchaseToken());
             updateUserPurchaseOnDatabase(purchase);
@@ -585,20 +508,22 @@ public class SelectTicketsActivity extends YouTubeBaseActivity implements Billin
         newPurchase.setSku(purchase.getSku());
         newPurchase.setOrderId(purchase.getOrderId());
         newPurchase.setToken(purchase.getPurchaseToken());
-        newPurchase.setAmount(m_spinnerStandard.getSelectedItemPosition() + m_spinnerStudent.getSelectedItemPosition() + m_spinnerSoldier.getSelectedItemPosition());
 
-        if(m_userDetails.getM_MoviesPurchases() == null)
+        /** Each product can be purchased only once, therfore amount is set to 1. **/
+        newPurchase.setAmount(1);
+
+        if(m_userDetails.getMoviesPurchases() == null)
         {
             List<MoviePurchase> moviePurchasesList = new ArrayList<>();
             moviePurchasesList.add(newPurchase);
-            m_userDetails.setM_MoviesPurchases(moviePurchasesList);
+            m_userDetails.setMoviesPurchases(moviePurchasesList);
         }
 
         else
         {
-            m_userDetails.getM_MoviesPurchases().add(newPurchase);
+            m_userDetails.getMoviesPurchases().add(newPurchase);
         }
 
-        userRef.child("MoviesPurchases").setValue(m_userDetails.getM_MoviesPurchases());
+        userRef.child("MoviesPurchases").setValue(m_userDetails.getMoviesPurchases());
     }
 }

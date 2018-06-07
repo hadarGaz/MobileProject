@@ -34,6 +34,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -289,7 +291,7 @@ public class ReservationSummaryActivity extends AppCompatActivity
         Intent intent = new Intent(getApplicationContext(),ReviewActivity.class);
         intent.putExtra("Movie", m_movie);
         intent.putExtra("Key", m_key);
-        intent.putExtra("UserDetails", m_userDetails);
+        intent.putExtra("UserEmail", m_userDetails.getUserEmail());
         startActivity(intent);
 
         Log.e(TAG, "onAddReviewClick() <<");

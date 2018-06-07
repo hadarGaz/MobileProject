@@ -34,11 +34,6 @@ public class BillingManager implements PurchasesUpdatedListener
         void onPurchasesUpdated(int resultCode,List<Purchase> purchases);
     }
 
-    public BillingClient getBillingClient()
-    {
-        return m_BillingClient;
-    }
-
     public BillingManager(Activity activity, final BillingUpdatesListener updatesListener)
     {
         Log.d(TAG, "Creating Billing client.");

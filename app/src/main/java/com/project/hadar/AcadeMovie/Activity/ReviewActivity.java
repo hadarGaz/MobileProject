@@ -25,7 +25,7 @@ public class ReviewActivity extends Activity
     private final String TAG = "ReviewActivity";
     private final int NEW_RATING = -1;
     private Movie m_movie;
-    private UserDetails m_user;
+    private String m_userEmail;
     private int prevRating = NEW_RATING;
     private TextView m_textViewReview;
     private RatingBar m_rating;
@@ -45,7 +45,7 @@ public class ReviewActivity extends Activity
 
         String movieKey = getIntent().getStringExtra("Key");
         m_movie = (Movie) getIntent().getSerializableExtra("Movie");
-        m_user = (UserDetails) getIntent().getSerializableExtra("UserDetails");
+        m_userEmail = getIntent().getStringExtra("UserEmail");
 
         m_textViewReview = findViewById(R.id.new_user_review);
         m_rating = findViewById(R.id.new_user_rating);
@@ -114,7 +114,7 @@ public class ReviewActivity extends Activity
     private void createUserReview()
     {
         m_userReview = new Review(m_textViewReview.getText().toString(), (int) m_rating.getRating(),
-                                  m_user.getUserEmail());
+                                  m_userEmail);
     }
 
     @SuppressWarnings("ConstantConditions")

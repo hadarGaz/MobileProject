@@ -4,6 +4,7 @@ import android.net.Uri;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseUser;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,16 +17,16 @@ public class UserDetails implements Serializable
     private double m_totalPurchaseAmount=0;
     private int m_totalTicketsCount=0;
     private Map<String,Purchase> m_moviesPurchaseMap = new HashMap<>();
-    private List<MoviePurchase> m_MoviesPurchases = null;
+    private List<MoviePurchase> MoviesPurchases = new ArrayList<>();
 
-    public List<MoviePurchase> getM_MoviesPurchases()
+    public List<MoviePurchase> getMoviesPurchases()
     {
-        return m_MoviesPurchases;
+        return MoviesPurchases;
     }
 
-    public void setM_MoviesPurchases(List<MoviePurchase> i_MoviesPurchases)
+    public void setMoviesPurchases(List<MoviePurchase> MoviesPurchases)
     {
-        this.m_MoviesPurchases = i_MoviesPurchases;
+        this.MoviesPurchases = MoviesPurchases;
     }
 
     public UserDetails()

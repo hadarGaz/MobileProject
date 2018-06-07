@@ -54,6 +54,6 @@
         android:layout_alignTop="@+id/imageView6"
         android:layout_toEndOf="@+id/imageView6"
         android:text="AcadeMovie"
-        android:textSize="50sp" />
+        android:textSize="30sp" />
 
 </RelativeLayout>
